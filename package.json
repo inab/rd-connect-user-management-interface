@@ -1,0 +1,37 @@
+{
+    "name": "rd-connect-user-management-interface",
+    "version": "0.0.0",
+    "private": true,
+    "license": "see LICENSE file",
+    "description": "Code implementing the UI to manage users of RD-Connect Project.",
+    "main": "server.js",
+    "dependencies": {
+        "body-parser": "^1.4.3",
+        "express": "^4.4.5"
+    },
+    "devDependencies": {
+        "bower": "^1.7.9"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/inab/rd-connect-user-management-interface.git"
+    },
+    "keywords": [
+        "react",
+        "UI",
+        "user",
+        "manager"
+    ],
+    "author": "Andrés Cañada <acanada@cnio.es>",
+    "bugs": {
+        "url": "https://github.com/inab/rd-connect-user-management-interface/issues"
+    },
+    "homepage": "https://github.com/inab/rd-connect-user-management-interface",
+    "engines" : {
+        "node" : "0.12.x"
+    }
+}

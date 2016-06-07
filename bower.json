@@ -3,13 +3,13 @@
   "version": "0.0.1",
   "description": "Code implementing the UI to manage users of RD-Connect Project.",
   "dependencies": {
-    "react": "0.12.x",
-    "bootstrap": "^3.3.6"
+    "react": "0.14.x",
+    "react-bootstrap": "0.29.0"
   },
   "devDependencies": {},
   "authors": [
     {
-      "name": "AndrŽs Ca–ada",
+      "name": "Andres Canada",
       "email": "acanada@cnio.es"
     }
   ],
@@ -26,5 +26,8 @@
     "public/lib/",
     "test",
     "tests"
-  ]
+  ],
+  "resolutions": {
+    "react": ">=0.14.0"
+  }
 }

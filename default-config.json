@@ -1,0 +1,6 @@
+{
+	"esHost": "http://blueprint-data.bsc.es/elasticsearch",
+	"dataRelease": "August 2015",
+	"debug": true,
+	"dataDesc": "This release includes data from {{termNodes.length}} cell types, including {{numCellularLines}} cell lines."
+}

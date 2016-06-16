@@ -3,10 +3,19 @@
   "version": "0.0.1",
   "description": "Code implementing the UI to manage users of RD-Connect Project.",
   "dependencies": {
-    "react": "0.14.x",
-    "react-bootstrap": "0.29.0"
+    "react": "~0.14.x",
+    "react-bootstrap": "0.29.0",
+    "jquery": "^2.2.4",
+    "marked": "^0.3.5",
+    "babel": "#d54d59ff74b1d32ff678ae7f7edc554cba6cb58e",
+    "react-sidenav":"#4d00e842b4890cca971e9d3c2fe8c8a2eb9fc7ee"
   },
   "devDependencies": {},
+  "overrides": {
+    "babel": {
+      "main": "browser.js"
+    }
+  },
   "authors": [
     {
       "name": "Andres Canada",

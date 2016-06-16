@@ -21,6 +21,7 @@ module.exports = function (grunt) {
     app: bowerConfig.appPath || 'public',
     dist: 'dist'
   };
+  grunt.log.warn(appConfig.app);
   var userManagementInterfaceConfigFile = process.env.RDCONNECT_USER_MANAGEMENT_CONFIG || 'default-config';
   if(userManagementInterfaceConfigFile.indexOf('/') === -1 ) {
 	  userManagementInterfaceConfigFile = './' + userManagementInterfaceConfigFile;

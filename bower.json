@@ -8,12 +8,16 @@
     "jquery": "^2.2.4",
     "marked": "^0.3.5",
     "babel": "#d54d59ff74b1d32ff678ae7f7edc554cba6cb58e",
-    "react-sidenav":"#4d00e842b4890cca971e9d3c2fe8c8a2eb9fc7ee"
+    "js-polyfills": "^0.1.x",
+    "uniloc": "unicorn-standard/uniloc#b6e5a50d9c17bda3b2da19774b7c7560c0ea72bd"
   },
   "devDependencies": {},
   "overrides": {
     "babel": {
       "main": "browser.js"
+    },
+    "uniloc": {
+      "main": "uniloc.js"
     }
   },
   "authors": [

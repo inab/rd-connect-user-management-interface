@@ -1,0 +1,55 @@
+body {
+  font-family: Tahoma, sans-serif;
+  margin: 0;
+}
+
+.UsersView-title {
+  font-size: 24px;
+  padding: 0 24px;
+}
+
+.UsersView-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid #f0f0f0;
+}
+
+.UserItem {
+  margin: 0;
+  padding: 8px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.UserItem-firstName {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0;
+}
+.UserItem-email {
+  font-size: 14px;
+  margin-top: 4px;
+  font-style: italic;
+  color: #888;
+}
+.UserItem-institutionName {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+
+.UserForm {
+  padding: 8px 24px;
+}
+.UserForm > input,
+.UserForm > textarea {
+  display: block;
+  width: 240px;
+  padding: 4px 8px;
+  margin-bottom: 8px;
+  border-radius: 3px;
+  border: 1px solid #888;
+  font-size: 14px;
+}
+.UserForm > input.UserForm-error {
+  border-color: #b30e2f;
+}

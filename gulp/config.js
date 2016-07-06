@@ -30,6 +30,12 @@ module.exports = {
             entries: src + '/app/app.jsx',
             dest: dest,
             outputName: 'app.js'
-        }]
+        },
+        {
+            entries: src + '/app/beforeBody.js',
+            dest: dest,
+            outputName: 'beforeBody.js'
+        }
+        ]
     }
 };

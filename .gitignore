@@ -1,4 +1,5 @@
 /node_modules
 /.idea
 /build
+/bower_components
 .DS_Store

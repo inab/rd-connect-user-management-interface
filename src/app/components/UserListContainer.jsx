@@ -1,5 +1,5 @@
 var React = require('react');
-var jQuery = require('jQuery');
+var jQuery = require('jquery');
 var UserList = require('./UserList.jsx');
 
 var UserListContainer = React.createClass({
@@ -14,7 +14,7 @@ var UserListContainer = React.createClass({
 	        	console.log(this.state.data);
 	      	}.bind(this),
 	      	error: function(xhr, status, err) {
-	        	console.error("json/users.json", status, err.toString());
+	        	console.error("json/users.json", status, err);
 	      	}.bind(this)
 	    });
 	},

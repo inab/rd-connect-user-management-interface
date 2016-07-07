@@ -19,5 +19,11 @@ Now you can run your local server:
 gulp
 ```
 
+or
+
+```
+npm run gulp
+```
+
 ## Acknowledgements
 This project is based on a very heavily upgraded version of [react-bootstrap-starter](https://github.com/jogleasonjr/react-bootstrap-starter) sample [react-bootstrap](https://github.com/react-bootstrap/react-bootstrap/) project that uses [gulp](https://github.com/gulpjs/gulp), [reactify](https://github.com/andreypopp/reactify), [browserify](https://github.com/substack/node-browserify), and [browser-sync](https://github.com/BrowserSync/browser-sync). Inspired by [material-ui](https://github.com/callemall/material-ui).

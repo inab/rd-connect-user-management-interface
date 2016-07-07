@@ -1,16 +1,24 @@
 var React = require('react');
-var Bootstrap = require('react-bootstrap');
 
 //var Navigation = require('./navigation.jsx');
 
 var User = React.createClass({
   render: function() {
-    return (
-      <div className="user">
-          <strong>{this.props.cn}:</strong> {this.props.email}
-        {this.props.children}
-      </div>
-    );
+    if(this.props.brief) {
+    	return (
+	      <div className="user">
+	          <strong>{this.props.user.cn}:</strong> {this.props.user.email}
+	        {this.props.children}
+	      </div>
+	    );
+    } else {
+    	return (
+	      <div className="user">
+	          <strong>First name: {this.props.user.firstName}; Surname: {this.props.user.surname};</strong> {this.props.user.email}
+	        {this.props.children}
+	      </div>
+	    );
+    }
   }
 });
 

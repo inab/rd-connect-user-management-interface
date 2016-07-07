@@ -1,14 +1,11 @@
 var React = require('react');
-var Bootstrap = require('react-bootstrap');
 var jQuery = require('jQuery');
-var UserList = require('./UserList.jsx');    
-var UserForm = require('./UserForm.jsx');    
-//var Navigation = require('./navigation.jsx');
+var UserList = require('./UserList.jsx');
 
-var UserBox = React.createClass({
+var UserListContainer = React.createClass({
 	loadUsersFromServer: function() {
 	    jQuery.ajax({
-	    	url: "/json/users.json",
+	    	url: "json/users.json",
 	    	dataType: 'json',
 	      	cache: false,
 	      	success: function(data) {
@@ -17,7 +14,7 @@ var UserBox = React.createClass({
 	        	console.log(this.state.data);
 	      	}.bind(this),
 	      	error: function(xhr, status, err) {
-	        	console.error("/json/users.json", status, err.toString());
+	        	console.error("json/users.json", status, err.toString());
 	      	}.bind(this)
 	    });
 	},
@@ -30,13 +27,9 @@ var UserBox = React.createClass({
 	},
   	render: function() {
     	return (
-	     	<div className="userBox">
-	        	<h1>Users</h1>
-	        	<UserList data={this.state.data} />
-	        	<UserForm />
-	     	</div>
+        	<UserList data={this.state.data} />
     	);
   	}
 });
 
-module.exports = UserBox;
+module.exports = UserListContainer;

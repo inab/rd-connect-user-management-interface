@@ -1,13 +1,13 @@
 var React = require('react');
 
-//var Navigation = require('./navigation.jsx');
+import { Link } from 'react-router';
 
 var User = React.createClass({
   render: function() {
     if(this.props.brief) {
     	return (
 	      <div className="user">
-	          <strong>{this.props.user.cn}:</strong> {this.props.user.email}
+	          <strong>{this.props.user.cn}:</strong> {this.props.user.email} <Link to="/groupList">(Edit User)</Link>
 	        {this.props.children}
 	      </div>
 	    );

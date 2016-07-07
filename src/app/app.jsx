@@ -5,6 +5,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
         injectTapEventPlugin = require("react-tap-event-plugin"),
         Main = require('./components/main.jsx');
     var UserListBox = require('./components/UserListBox.jsx');    
+    var UserForm = require('./components/UserForm.jsx');
     var UserNew = require('./components/UserNew.jsx');
     var OrganizationList = require('./components/OrganizationList.jsx');    
     var OrganizationNew = require('./components/OrganizationNew.jsx');
@@ -30,6 +31,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 {/* add it here, as a child of `/` */}
                 <IndexRoute component={Home}/>
                 <Route path="/userList" component={UserListBox} />
+                <Route path="/userEdit/:uid" component={UserForm} />
                 <Route path="/userNew" component={UserNew} />
                 <Route path="/organizationList" component={OrganizationList} />
                 <Route path="/organizationNew" component={OrganizationNew} />

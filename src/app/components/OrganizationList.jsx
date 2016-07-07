@@ -1,9 +1,9 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 
-var Navigation = require('./navigation.jsx');
+//var Navigation = require('./navigation.jsx');
 
-var ListOrganizations = React.createClass({
+var OrganizationList = React.createClass({
 
     render: function () {
         return (
@@ -18,4 +18,4 @@ var ListOrganizations = React.createClass({
 
 });
 
-module.exports = ListOrganizations;
+module.exports = OrganizationList;

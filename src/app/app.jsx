@@ -4,15 +4,15 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     	ReactDOM = require('react-dom'),
         injectTapEventPlugin = require("react-tap-event-plugin"),
         Main = require('./components/main.jsx');
-    var ListUsers = require('./components/ListUsers.jsx');    
-    var NewUser = require('./components/NewUser.jsx');
-    var ListOrganizations = require('./components/ListOrganizations.jsx');    
-    var NewOrganization = require('./components/NewOrganization.jsx');
-    var ListGroups = require('./components/ListGroups.jsx');    
-    var NewGroup = require('./components/NewGroup.jsx');
+    var UserBox = require('./components/UserBox.jsx');    
+    var UserList = require('./components/UserList.jsx');    
+    var UserNew = require('./components/UserNew.jsx');
+    var OrganizationList = require('./components/OrganizationList.jsx');    
+    var OrganizationNew = require('./components/OrganizationNew.jsx');
+    var GroupList = require('./components/GroupList.jsx');    
+    var GroupNew = require('./components/GroupNew.jsx');
     var Home = require('./components/Home.jsx');
-
-
+    
     //Needed for React Developer Tools
     window.React = React;
 
@@ -26,16 +26,16 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     // For more details see: https://facebook.github.io/react/docs/top-level-api.html#react.render
     console.log(React);
     ReactDOM.render((
-        <Router history={hashHistory}>
+        <Router history={hashHistory} >
             <Route path="/" component={Main}>
                 {/* add it here, as a child of `/` */}
                 <IndexRoute component={Home}/>
-                <Route path="/listUsers" component={ListUsers} />
-                <Route path="/newUser" component={NewUser} />
-                <Route path="/listOrganizations" component={ListOrganizations} />
-                <Route path="/newOrganization" component={NewOrganization} />
-                <Route path="/listGroups" component={ListGroups} />
-                <Route path="/newGroup" component={NewGroup} />
+                <Route path="/userList" component={UserBox} />
+                <Route path="/userNew" component={UserNew} />
+                <Route path="/organizationList" component={OrganizationList} />
+                <Route path="/organizationNew" component={OrganizationNew} />
+                <Route path="/groupList" component={GroupList} />
+                <Route path="/groupNew" component={GroupNew} />
             </Route>
         </Router>
         ), document.getElementById('content'));

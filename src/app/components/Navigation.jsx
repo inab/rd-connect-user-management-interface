@@ -10,7 +10,7 @@ var Navigation = React.createClass({
             <Navbar inverse fixedTop >
 	    	<Navbar.Header>
     		    <Navbar.Brand>
-                            <a style={{padding: 0}} href=""><img src="images/rdconnect-logo.jpg" alt={this.props.projectName} style={{height: '100%','padding-right': '1em','padding-left': '1em','background-color': 'white'}}/></a>
+                            <a style={{padding: 0}} href=""><img src="images/rdconnect-logo.jpg" alt={this.props.projectName} style={{height: '100%',paddingRight: '1em',paddingLeft: '1em',backgroundColor: 'white'}}/></a>
     		    </Navbar.Brand>
     		</Navbar.Header>
                 <Nav>

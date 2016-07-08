@@ -7,7 +7,7 @@ var User = React.createClass({
     if(this.props.brief) {
     	return (
 	      <div className="user">
-	          <strong>{this.props.user.cn}:</strong> {this.props.user.email} <Link to="/groupList">(Edit User)</Link>
+	          <strong>{this.props.user.cn}:</strong> {this.props.user.email} <Link to={"/userEdit/"+this.props.user.username}>(Edit User)</Link>
 	        {this.props.children}
 	      </div>
 	    );

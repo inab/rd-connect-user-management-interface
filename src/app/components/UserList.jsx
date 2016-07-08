@@ -1,7 +1,6 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 
-//var Navigation = require('./navigation.jsx');
 var User = require('./User.jsx');    
 
 var UserList = React.createClass({

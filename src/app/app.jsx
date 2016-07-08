@@ -5,8 +5,8 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
         injectTapEventPlugin = require("react-tap-event-plugin"),
         Main = require('./components/main.jsx');
     var UserListBox = require('./components/UserListBox.jsx');    
+    var UserFormContainer = require('./components/UserFormContainer.jsx');
     var UserForm = require('./components/UserForm.jsx');
-    var UserNew = require('./components/UserNew.jsx');
     var OrganizationList = require('./components/OrganizationList.jsx');    
     var OrganizationNew = require('./components/OrganizationNew.jsx');
     var GroupList = require('./components/GroupList.jsx');    
@@ -30,8 +30,8 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 {/* add it here, as a child of `/` */}
                 <IndexRoute component={Home}/>
                 <Route path="/userList" component={UserListBox} />
-                <Route path="/userEdit/:uid" component={UserForm} />
-                <Route path="/userNew" component={UserNew} />
+                <Route path="/userEdit/:username" component={UserFormContainer} />
+                <Route path="/userNew" component={UserForm} />
                 <Route path="/organizationList" component={OrganizationList} />
                 <Route path="/organizationNew" component={OrganizationNew} />
                 <Route path="/groupList" component={GroupList} />

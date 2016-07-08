@@ -36,7 +36,7 @@ gulp.task('browserify', function(callback) {
       bundleLogger.start(bundleConfig.outputName);
 
       return bundler
-        .transform("babelify", {presets: ["es2015", "react"]})
+//        .transform("babelify", {presets: ["es2015", "react"]})
         .bundle()
         // Report compile errors
         .on('error', handleErrors)

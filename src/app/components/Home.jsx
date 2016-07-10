@@ -1,8 +1,13 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 
-//var Navigation = require('./navigation.jsx');
+const Home = props => (
+	<div className="starter-template">
+        <h1>Home1</h1>
+    </div>
+);
 
+/*
 var Home = React.createClass({
 
     render: function () {
@@ -14,5 +19,5 @@ var Home = React.createClass({
     }
 
 });
-
+*/
 module.exports = Home;

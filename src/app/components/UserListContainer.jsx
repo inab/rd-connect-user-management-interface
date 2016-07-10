@@ -11,7 +11,7 @@ var UserListContainer = React.createClass({
 	      	success: function(data) {
 	      		console.log("success!");
 	        	this.setState({data: data});
-	        	console.log(this.state.data);
+	        	//console.log(this.state.data);
 	      	}.bind(this),
 	      	error: function(xhr, status, err) {
 	        	console.error("json/users.json", status, err);
@@ -23,7 +23,7 @@ var UserListContainer = React.createClass({
 	},
 	componentDidMount: function() {
 	    this.loadUsersFromServer();
-	    setInterval(this.loadUsersFromServer, 20000);
+	    //setInterval(this.loadUsersFromServer, 20000);
 	},
   	render: function() {
     	return (

@@ -19,7 +19,10 @@
       [
         "babelify",
         {
-		"presets": ["es2015", "react"]
+          "presets": [
+            "es2015",
+            "react"
+          ]
         }
       ]
     ]
@@ -52,6 +55,7 @@
     "jquery": "^3.0.0",
     "react": "^15.2.0",
     "react-bootstrap": "^0.29.5",
+    "react-jsonschema-form": "^0.37.0",
     "react-tap-event-plugin": "^1.0.0",
     "tipso": "^1.0.8"
   }

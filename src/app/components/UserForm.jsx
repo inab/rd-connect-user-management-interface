@@ -4,36 +4,14 @@ import Form from "react-jsonschema-form";
 
 var UserForm = React.createClass({
 	propTypes:{
+		schema: React.PropTypes.object.isRequired,
 		data: React.PropTypes.object.isRequired
   	},
+  	
   	render: function() {
-
-  		//var userSchema = this.props.data["schema"];
-  		//console.log(userSchema);
+  		var schema = this.props.schema;  		
+  		//console.log(schema);
   		//console.log(testSchema);
-  		//const schema = testSchema;
-		const schema = {
-		  type: "object",
-		  properties: {
-		    foo: {
-		      type: "object",
-		      properties: {
-		        bar: {type: "string"}
-		      }
-		    },
-		    baz: {
-		      type: "array",
-		      items: {
-		        type: "object",
-		        properties: {
-		          description: {
-		            "type": "string"
-		          }
-		        }
-		      }
-		    }
-		  }
-		};
 		const uiSchema = {
 		  foo: {
 		    bar: {
@@ -49,8 +27,9 @@ var UserForm = React.createClass({
 		    }
 		  }
 		}
+		
 		const formData = {
-		  title: "Simple Schema example",
+		  title: "User Data",
 		  done: true
 		};
 		const log = (type) => console.log.bind(console, type);
@@ -59,7 +38,7 @@ var UserForm = React.createClass({
 	    return (
 	      <Form schema={schema}
 	        //uiSchema={uiSchema}
-	        formData={formData}
+	        //formData={formData}
 	        onChange={log("changed")}
 	        onSubmit={onSubmit}
 	        onError={onError} />

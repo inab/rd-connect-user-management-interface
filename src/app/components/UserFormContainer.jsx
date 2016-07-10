@@ -3,46 +3,64 @@ var jQuery = require('jquery');
 var UserForm = require('./UserForm.jsx');
 
 var UserFormContainer = React.createClass({
-  	loadUserDataFromServer: function(){
-		alert("Inside loadUserDataFromServer");
-		jQuery.when(
+  getInitialState: function() {
+    return { schema: null, data: null };
+  },
+  
+  loadUserSchema: function() {
+	  jQuery.get('json/userValidation.json').done(function(schema) {
+      this.setState({schema: schema});
+    }.bind(this));
+  },
+  loadUserData: function() {
+	  jQuery.get('json/user-a.canada.json').done(function(data) {
+      this.setState({data: data});
+      this.loadUserSchema();
+    }.bind(this));
+  },
+  componentDidMount: function() {
+    	this.loadUserData();
+  },
 
-			jQuery.get("json/userValidation.json", function(schema) {
-				//alert("Getting userValidation");
-				//console.log(schema);
-			    //this.setState({schema: schema});
-			}, "json"),
+  render: function() {
+    if (this.state.schema && this.state.data) {
+      return (
+      	<div>
+	    	<UserForm   schema={this.state.schema}  data={this.state.data}  />
+	    </div>
+      )
+    }
 
-		  	jQuery.get("json/user-"+this.props.params.username+".json", function(data) {
-				//alert("Getting userData");    
-				//console.log(data);
-			    //this.setState(Object.assign(this.state, {data:data})); 
-			}, "json")
-
-		).then(function(schema,data) {
-
-		  	// All have been resolved (or rejected), do your thing
-		  	//alert("Well done!");
-		  	return(data,schema);
-
-		});
+    return <div>Loading...</div>;
+  }
+});
+/*
+var UserFormContainer = React.createClass({
+	getInitialState: function() {
+    	return {
+      		schema: {},
+      		data: {}
+    	};
+  	},
+  	componentDidMount: function() {
+    	this.serverRequest = jQuery.get("json/userValidation.json", function (schema) {
+      		this.setState({
+        		schema: schema
+      		});
+    	}.bind(this));
+  	},
+  	componentWillUnmount: function() {
+	    this.serverRequest.abort();
 	},
-	componentWillMount: function() {
-		alert("Inside componentWillMount");
-	    
-	},
-	componentDidMount: function() {
-		alert("Inside componentDidMount");
-	    return (this.loadUserDataFromServer());
-	    //setInterval(this.loadUserFromServer, 200000);
-	},
-  	render: function() {
-  		console.log("Rendering Bitches!");
-  		console.log(this.data);
-    	return (
-        	<UserForm   />
-    	);
+	render: function() {
+		//console.log(this.state.schema);
+	    return (
+	      <div>
+	        	<UserForm   schema={this.state.schema}  />
+	      </div>
+	    );
   	}
 });
+*/
 
 module.exports = UserFormContainer;

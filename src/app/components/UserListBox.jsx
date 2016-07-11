@@ -1,7 +1,7 @@
 var React = require('react');
 var UserListContainer = require('./UserListContainer.jsx');    
 
-const UserListBox = (props) => (
+const UserListBox = ({props}) => (
 	<div className="userBox">
     	<h1>Users</h1>
     	<UserListContainer />

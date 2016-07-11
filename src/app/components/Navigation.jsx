@@ -15,7 +15,7 @@ var Navigation = React.createClass({
     		</Navbar.Header>
                 <Nav>
                     <LinkContainer to='/' onlyActiveOnIndex={true}><MenuItem eventKey={1}>Home</MenuItem></LinkContainer>
-                    <NavDropdown eventKey={2} title="Users">
+                    <NavDropdown id="NavDropdown-Users" eventKey={2} title="Users">
                         <LinkContainer to="/userList"><MenuItem eventKey="1">List Users</MenuItem></LinkContainer>
                         <LinkContainer to="/userNew"><MenuItem eventKey="2">New User</MenuItem></LinkContainer>
                         <LinkContainer to="/userAction3"><MenuItem eventKey="3">Users Action 3</MenuItem></LinkContainer>
@@ -24,7 +24,7 @@ var Navigation = React.createClass({
                         <LinkContainer to="/userAction5"><MenuItem eventKey="5">Separated Users link</MenuItem></LinkContainer>
 
                     </NavDropdown>
-                    <NavDropdown eventKey={3} title="Organizations">
+                    <NavDropdown id="NavDropdown-Organizations" eventKey={3} title="Organizations">
                         <LinkContainer to="/organizationList"><MenuItem eventKey="1">List Organizations</MenuItem></LinkContainer>
                         <LinkContainer to="/organizationNew"><MenuItem eventKey="2">New Organization</MenuItem></LinkContainer>
                         <LinkContainer to="/organizationAction3"><MenuItem eventKey="3">Organizations Action 3</MenuItem></LinkContainer>
@@ -33,7 +33,7 @@ var Navigation = React.createClass({
                         <LinkContainer to="/organizationAction5"><MenuItem eventKey="5">Separated Organizations link</MenuItem></LinkContainer>
                         
                     </NavDropdown>
-                    <NavDropdown eventKey={4} title="Groups">
+                    <NavDropdown id="NavDropdown-Groups" eventKey={4} title="Groups">
                         <LinkContainer to="/groupList"><MenuItem eventKey="1">List Groups</MenuItem></LinkContainer>
                         <LinkContainer to="/groupNew"><MenuItem eventKey="2">New Group</MenuItem></LinkContainer>
                         <LinkContainer to="/groupAction3"><MenuItem eventKey="3">Groups Action 3</MenuItem></LinkContainer>

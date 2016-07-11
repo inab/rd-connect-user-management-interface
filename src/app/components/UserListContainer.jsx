@@ -12,12 +12,14 @@ var UserListContainer = React.createClass({
 	    	dataType: 'json',
 	      	cache: false,
 	      	success: function(data) {
-	      		console.log("success!");
+	      		//console.log("success!");
 	        	this.setState({data: data});
 	        	//console.log(this.state.data);
 	      	}.bind(this),
 	      	error: function(xhr, status, err) {
-	        	console.error("json/users.json", status, err);
+	        	//console.error("json/users.json", status, err);
+	        	console.error(xhr.status);
+	        	this.setState({error: xhr.status + ' (Retrieving users)'});
 	      	}.bind(this)
 	    });
 	},
@@ -29,10 +31,20 @@ var UserListContainer = React.createClass({
 	    //setInterval(this.loadUsersFromServer, 20000);
 	},
   	render: function() {
-    	return (
-        	<UserList data={this.state.data} />
-    	);
-  	}
+  		
+  		if (this.state.error) {
+	      	return (
+	      		<div>Error {this.state.error}</div>
+	      	)
+	    }
+  		if (this.state.data) {
+	    	return (
+	    		<div>
+	      			<UserList data={this.state.data} />
+	      		</div>
+	      	)
+	    }
+	}
 });
 
 module.exports = UserListContainer;

@@ -7,8 +7,8 @@ var UserListContainer = React.createClass({
 	    jQuery.ajax({
 	    	url: "json/users.json",
 	    	headers: {
-			'X-CAS-Referer': window.location.href
-		},
+				'X-CAS-Referer': window.location.href
+			},
 	    	dataType: 'json',
 	      	cache: false,
 	      	success: function(data) {

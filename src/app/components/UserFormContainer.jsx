@@ -1,6 +1,6 @@
 var React = require('react');
 var jQuery = require('jquery');
-var UserForm = require('./UserForm.jsx');
+var UserEditForm = require('./UserEditForm.jsx');
 
 var UserFormContainer = React.createClass({
   getInitialState: function() {
@@ -84,7 +84,7 @@ var UserFormContainer = React.createClass({
     if (this.state.schema && this.state.data) {
       return (
       	<div>
-	    	<UserForm   schema={this.state.schema}  data={this.state.data}  />
+	    	<UserEditForm   schema={this.state.schema}  data={this.state.data}  />
 	    </div>
       )
     }

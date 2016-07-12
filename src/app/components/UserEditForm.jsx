@@ -11,7 +11,7 @@ function userValidation(formData,errors) {
 		return errors;
 }
 
-var UserForm = React.createClass({
+var UserEditForm = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
 		data: React.PropTypes.object.isRequired
@@ -128,4 +128,4 @@ var UserForm = React.createClass({
 	    );
 	 }
 });
-module.exports = UserForm;
+module.exports = UserEditForm;

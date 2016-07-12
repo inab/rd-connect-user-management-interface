@@ -100,7 +100,6 @@ var UserForm = React.createClass({
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateUserData({formData});
 		const onError = (errors) => console.log("I have", errors.length, "errors to fix");
-		const onHide = () => this.setState(Object.create({},this.state,{showModal:null, error: false}));
 		console.log("Error: ", this.state.error);
 		console.log("Show: ", this.state.showModal);
 		

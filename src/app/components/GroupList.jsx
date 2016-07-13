@@ -1,18 +1,23 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 
-//var Navigation = require('./navigation.jsx');
+var Group = require('./Group.jsx');
 
-var GroupList = React.createClass({
-
-    render: function () {
-        return (
-                    <div className="starter-template">
-                        <h1>List Groups</h1>
-                    </div>
-        );
-    }
-
-});
+const GroupList = ({data}) => {
+  return (
+    <div>
+      <h3> List of Groups </h3>
+      <ul className="GroupList">
+        {data.map((group,index) => {
+          return (
+            <li className="list-group-item" key={ group.cn}>
+              <Group group={group}></Group>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  );
+};
 
 module.exports = GroupList;

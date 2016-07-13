@@ -7,10 +7,13 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     var UserListBox = require('./components/UserListBox.jsx');    
     var UserFormContainer = require('./components/UserFormContainer.jsx');
     var UserEditForm = require('./components/UserEditForm.jsx');
+    var UserNew = require('./components/UserNew.jsx');
     var OrganizationalUnitListBox = require('./components/OrganizationalUnitListBox.jsx');    
     var OrganizationalUnitFormContainer = require('./components/OrganizationalUnitFormContainer.jsx');
     var OrganizationalUnitNew = require('./components/OrganizationalUnitNew.jsx');
-    var GroupList = require('./components/GroupList.jsx');    
+    var GroupListBox = require('./components/GroupListBox.jsx');    
+    var GroupEditFormContainer = require('./components/GroupEditFormContainer.jsx');
+    var GroupEditForm = require('./components/GroupEditForm.jsx');
     var GroupNew = require('./components/GroupNew.jsx');
     var Home = require('./components/Home.jsx');
 
@@ -32,11 +35,12 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 <IndexRoute component={Home}/>
                 <Route path="/userList" component={UserListBox} />
                 <Route path="/userEdit/:username" component={UserFormContainer} />
-                <Route path="/userNew" component={UserEditForm} />
+                <Route path="/userNew" component={UserNew} />
                 <Route path="/organizationList" component={OrganizationalUnitListBox} />
                 <Route path="/organizationEdit/:organizationalUnit" component={OrganizationalUnitFormContainer} />
                 <Route path="/organizationNew" component={OrganizationalUnitNew} />
-                <Route path="/groupList" component={GroupList} />
+                <Route path="/groupList" component={GroupListBox} />
+                <Route path="/groupEdit/:groupName" component={GroupEditFormContainer} />
                 <Route path="/groupNew" component={GroupNew} />
             </Route>
         </Router>

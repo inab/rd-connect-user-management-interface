@@ -14,7 +14,8 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     var GroupListBox = require('./components/GroupListBox.jsx');    
     var GroupEditFormContainer = require('./components/GroupEditFormContainer.jsx');
     var GroupEditForm = require('./components/GroupEditForm.jsx');
-    var GroupNew = require('./components/GroupNew.jsx');
+    var GroupNewFormContainer = require('./components/GroupNewFormContainer.jsx');
+    var GroupNewForm = require('./components/GroupNewForm.jsx');
     var Home = require('./components/Home.jsx');
 
     //Needed for React Developer Tools
@@ -41,7 +42,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 <Route path="/organizationNew" component={OrganizationalUnitNewFormContainer} />
                 <Route path="/groupList" component={GroupListBox} />
                 <Route path="/groupEdit/:groupName" component={GroupEditFormContainer} />
-                <Route path="/groupNew" component={GroupNew} />
+                <Route path="/groupNew" component={GroupNewFormContainer} />
             </Route>
         </Router>
         ), document.getElementById('content'));

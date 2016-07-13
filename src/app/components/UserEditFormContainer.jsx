@@ -2,7 +2,7 @@ var React = require('react');
 var jQuery = require('jquery');
 var UserEditForm = require('./UserEditForm.jsx');
 
-var UserFormContainer = React.createClass({
+var UserEditFormContainer = React.createClass({
   getInitialState: function() {
     return { schema: null, data: null };
   },
@@ -98,4 +98,4 @@ var UserFormContainer = React.createClass({
     return <div>Loading...</div>;
   }
 });
-module.exports = UserFormContainer;
+module.exports = UserEditFormContainer;

@@ -5,9 +5,9 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
         injectTapEventPlugin = require("react-tap-event-plugin"),
         Main = require('./components/main.jsx');
     var UserListBox = require('./components/UserListBox.jsx');    
-    var UserFormContainer = require('./components/UserFormContainer.jsx');
+    var UserEditFormContainer = require('./components/UserEditFormContainer.jsx');
     var UserEditForm = require('./components/UserEditForm.jsx');
-    var UserNew = require('./components/UserNew.jsx');
+    var UserNewFormContainer = require('./components/UserNewFormContainer.jsx');
     var OrganizationalUnitListBox = require('./components/OrganizationalUnitListBox.jsx');    
     var OrganizationalUnitFormContainer = require('./components/OrganizationalUnitFormContainer.jsx');
     var OrganizationalUnitNew = require('./components/OrganizationalUnitNew.jsx');
@@ -34,8 +34,8 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 {/* add it here, as a child of `/` */}
                 <IndexRoute component={Home}/>
                 <Route path="/userList" component={UserListBox} />
-                <Route path="/userEdit/:username" component={UserFormContainer} />
-                <Route path="/userNew" component={UserNew} />
+                <Route path="/userEdit/:username" component={UserEditFormContainer} />
+                <Route path="/userNew" component={UserNewFormContainer} />
                 <Route path="/organizationList" component={OrganizationalUnitListBox} />
                 <Route path="/organizationEdit/:organizationalUnit" component={OrganizationalUnitFormContainer} />
                 <Route path="/organizationNew" component={OrganizationalUnitNew} />

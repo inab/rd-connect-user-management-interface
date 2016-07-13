@@ -2,7 +2,7 @@ var React = require('react');
 var jQuery = require('jquery');
 var OrganizationalUnitEditForm = require('./OrganizationalUnitEditForm.jsx');
 
-var OrganizationalUnitFormContainer = React.createClass({
+var OrganizationalUnitEditFormContainer = React.createClass({
   getInitialState: function() {
     return { schema: null, data: null };
   },
@@ -21,7 +21,7 @@ var OrganizationalUnitFormContainer = React.createClass({
       		this.setState({schema: schema});
     	}.bind(this))
 		.fail(function(jqXhr) {
-		    console.log('failed to retrieve user Schema',jqXhr);
+		    console.log('failed to retrieve Organizationa Unit Schema',jqXhr);
 		    var responseText="";
 		    if (jqXhr.status === 0) {
 			    responseText='Not connect: Verify Network.';
@@ -98,4 +98,4 @@ var OrganizationalUnitFormContainer = React.createClass({
     return <div>Loading...</div>;
   }
 });
-module.exports = OrganizationalUnitFormContainer;
+module.exports = OrganizationalUnitEditFormContainer;

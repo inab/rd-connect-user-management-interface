@@ -57,6 +57,7 @@ var UserNewForm = React.createClass({
 		}.bind(this));
   	},
   	render: function() {
+  		const formData = undefined;
   		var schema = this.props.schema;
 		//we delete groups from new user form since  "ui:widget" : "hidden" doesn't work for arrays
 		delete schema.properties.groups;
@@ -122,7 +123,7 @@ var UserNewForm = React.createClass({
 				</Bootstrap.Modal>
 	      		<Form schema={schema}
 			        uiSchema={uiSchema}
-			        //formData={data}
+			        formData={formData}
 			        onChange={log("changed")}
 			        onSubmit={onSubmit}
 			        onError={onError}

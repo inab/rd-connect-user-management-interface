@@ -9,8 +9,8 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     var UserEditForm = require('./components/UserEditForm.jsx');
     var UserNewFormContainer = require('./components/UserNewFormContainer.jsx');
     var OrganizationalUnitListBox = require('./components/OrganizationalUnitListBox.jsx');    
-    var OrganizationalUnitFormContainer = require('./components/OrganizationalUnitFormContainer.jsx');
-    var OrganizationalUnitNew = require('./components/OrganizationalUnitNew.jsx');
+    var OrganizationalUnitEditFormContainer = require('./components/OrganizationalUnitEditFormContainer.jsx');
+    var OrganizationalUnitNewFormContainer = require('./components/OrganizationalUnitNewFormContainer.jsx');
     var GroupListBox = require('./components/GroupListBox.jsx');    
     var GroupEditFormContainer = require('./components/GroupEditFormContainer.jsx');
     var GroupEditForm = require('./components/GroupEditForm.jsx');
@@ -37,8 +37,8 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 <Route path="/userEdit/:username" component={UserEditFormContainer} />
                 <Route path="/userNew" component={UserNewFormContainer} />
                 <Route path="/organizationList" component={OrganizationalUnitListBox} />
-                <Route path="/organizationEdit/:organizationalUnit" component={OrganizationalUnitFormContainer} />
-                <Route path="/organizationNew" component={OrganizationalUnitNew} />
+                <Route path="/organizationEdit/:organizationalUnit" component={OrganizationalUnitEditFormContainer} />
+                <Route path="/organizationNew" component={OrganizationalUnitNewFormContainer} />
                 <Route path="/groupList" component={GroupListBox} />
                 <Route path="/groupEdit/:groupName" component={GroupEditFormContainer} />
                 <Route path="/groupNew" component={GroupNew} />

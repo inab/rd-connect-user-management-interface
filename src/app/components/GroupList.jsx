@@ -2,16 +2,18 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 
 var Group = require('./Group.jsx');
-import { Panel, Table, ListGroup, ListGroupItem, Button, Checkbox } from 'react-bootstrap';
+import { Row, Col, Code, Panel, Table, ListGroup, ListGroupItem, Button, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router';
 
 
 const GroupList = ({data}) => {
-    console.log("Data so far is: ", data);
+  //console.log("Data so far is: ", data);
 
-    return (
-      <div>
-        <h3> List of Groups </h3>
+  return (
+    <div>
+      <h3> List of Groups </h3>
+      <Row className="show-grid">
+        <Col xs={12} md={10} >
           <Panel collapsible defaultExpanded center header="Whatever">
             <Table responsive>
               <thead>
@@ -40,8 +42,10 @@ const GroupList = ({data}) => {
               </tbody>
             </Table>
           </Panel>
+        </Col>
+      </Row>
     </div>
-    );
+  );
 }
 
 module.exports = GroupList;

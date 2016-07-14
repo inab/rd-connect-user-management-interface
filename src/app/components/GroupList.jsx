@@ -4,11 +4,16 @@ var Bootstrap = require('react-bootstrap');
 var Group = require('./Group.jsx');
 import { Row, Col, Code, Panel, Table, ListGroup, ListGroupItem, Button, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router';
-
+var Underscore = require('underscore');
 
 const GroupList = ({data}) => {
   //console.log("Data so far is: ", data);
-
+  console.log("Data so far is: ", data);
+  var sortedData=Underscore
+    .chain(data)
+    .sortBy(function(groupObjects){ return groupObjects.cn; })
+    .value()
+  console.log("sortedData so far is: ", sortedData);
   return (
     <div>
       <h3> List of Groups </h3>
@@ -26,7 +31,7 @@ const GroupList = ({data}) => {
                 </tr>
               </thead>
               <tbody>
-              {data.map(function(group,i){
+              {sortedData.map(function(group,i){
                 var listOwners=group.owner.join(", ");
                 var listMembers=group.members.join(", ");
                 return(

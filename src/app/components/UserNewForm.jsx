@@ -2,6 +2,7 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from "react-jsonschema-form";
+import { Row, Col, Code } from 'react-bootstrap';
 //var ModalError = require("./ModalError.jsx");
 
 function userValidation(formData,errors) {
@@ -121,14 +122,23 @@ var UserNewForm = React.createClass({
             			<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
 					</Bootstrap.Modal.Footer>
 				</Bootstrap.Modal>
-	      		<Form schema={schema}
-			        uiSchema={uiSchema}
-			        formData={formData}
-			        onChange={log("changed")}
-			        onSubmit={onSubmit}
-			        onError={onError}
-			        validate={userValidation}
-			        liveValidate= {true} />
+				<Row className="show-grid">
+      				<Col xs={12} md={8}>
+      					<code>
+      						<Form schema={schema}
+					        uiSchema={uiSchema}
+					        formData={formData}
+					        onChange={log("changed")}
+					        onSubmit={onSubmit}
+					        onError={onError}
+					        validate={userValidation}
+					        liveValidate= {true} />
+      					</code>
+      				</Col>
+      				<Col xs={6} md={4}>
+      					<code></code>
+      				</Col>
+    			</Row>
 		    </div>
 	    );
 	 }

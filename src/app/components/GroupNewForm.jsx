@@ -2,7 +2,7 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from "react-jsonschema-form";
-//var ModalError = require("./ModalError.jsx");
+import { Row, Col, Code } from 'react-bootstrap';
 
 function groupValidation(formData,errors) {
 		return errors;
@@ -60,7 +60,7 @@ var GroupNewForm = React.createClass({
   		const formData = undefined;
   		console.log(schema);
 		const uiSchema = {
-			
+		
 		};
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.addGroupData({formData});
@@ -81,14 +81,23 @@ var GroupNewForm = React.createClass({
             			<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
 					</Bootstrap.Modal.Footer>
 				</Bootstrap.Modal>
-	      		<Form schema={schema}
-			        uiSchema={uiSchema}
-			        formData={formData}
-			        onChange={log("changed")}
-			        onSubmit={onSubmit}
-			        onError={onError}
-			        validate={groupValidation}
-			        liveValidate= {true} />
+				<Row className="show-grid">
+      				<Col xs={12} md={8}>
+      					<code>
+				      		<Form schema={schema}
+						        uiSchema={uiSchema}
+						        formData={formData}
+						        onChange={log("changed")}
+						        onSubmit={onSubmit}
+						        onError={onError}
+						        validate={groupValidation}
+						        liveValidate= {true} />
+      					</code>
+      				</Col>
+      				<Col xs={6} md={4}>
+      					<code></code>
+      				</Col>
+    			</Row>
 		    </div>
 	    );
 	 }

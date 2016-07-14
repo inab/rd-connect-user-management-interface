@@ -3,7 +3,7 @@ var Bootstrap = require('react-bootstrap');
 
 const Home = props => (
 	<div className="starter-template">
-        <h1>Home1</h1>
+        <h1>Home</h1>
     </div>
 );
 

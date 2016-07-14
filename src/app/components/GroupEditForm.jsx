@@ -2,7 +2,7 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from "react-jsonschema-form";
-//var ModalError = require("./ModalError.jsx");
+import { Row, Col, Code } from 'react-bootstrap';
 
 /*function groupValidation(formData,errors) {
 	if (formData.userPassword !== formData.userPassword2) {
@@ -84,14 +84,23 @@ var GroupEditForm = React.createClass({
             			<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
 					</Bootstrap.Modal.Footer>
 				</Bootstrap.Modal>
-	      		<Form schema={schema}
-			        //uiSchema={uiSchema}
-			        formData={data}
-			        onChange={log("changed")}
-			        onSubmit={onSubmit}
-			        onError={onError}
-			        //validate={groupValidation}
-			        liveValidate= {true} />
+				<Row className="show-grid">
+      				<Col xs={12} md={8}>
+      					<code>
+      						<Form schema={schema}
+					        //uiSchema={uiSchema}
+					        formData={data}
+					        onChange={log("changed")}
+					        onSubmit={onSubmit}
+					        onError={onError}
+					        //validate={groupValidation}
+					        liveValidate= {true} />
+      					</code>
+      				</Col>
+      				<Col xs={6} md={4}>
+      					<code></code>
+      				</Col>
+    			</Row>
 		    </div>
 	    );
 	 }

@@ -2,12 +2,19 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 var GroupEditForm = require('./GroupEditForm.jsx');
+var GroupNewForm = require('./GroupNewForm.jsx');
 import { Row, Col, Code } from 'react-bootstrap';
 import {ReactRouter, Router, Route, Link, History} from 'react-router';
 
-var GroupEditFormContainer = React.createClass({
+var GroupFormContainer = React.createClass({
   	getInitialState: function() {
-    	return { schema: null, data: null, error: null, showModal: false };
+    	return { 
+    		schema: null, 
+    		data: null, 
+    		error: null, 
+    		showModal: false, 
+    		task: this.props.route.task
+    	};
   	},
   	close(){
 		this.setState({showModal: false});
@@ -92,11 +99,19 @@ var GroupEditFormContainer = React.createClass({
   mixins: [ History ], //This is to browse history back when group is not found after showing modal error
   render: function() {
     if (this.state.schema && this.state.data) {
-      return (
-      	<div>
-	    	<GroupEditForm   schema={this.state.schema}  data={this.state.data}  />
-	    </div>
-      )
+    	if(this.state.task=="edit"){
+    		return (
+		      	<div>
+			    	<GroupEditForm schema={this.state.schema}  data={this.state.data}  />
+			    </div>
+		    );
+    	}else if(this.state.task=="view"){
+    		return (
+		      	<div>
+			    	<GroupViewForm schema={this.state.schema}  data={this.state.data}  />
+			    </div>
+		    );	
+    	}
     }
     if (this.state.error) {
       return (
@@ -118,4 +133,4 @@ var GroupEditFormContainer = React.createClass({
     return <div>Loading...</div>;
   }
 });
-module.exports = GroupEditFormContainer;
+module.exports = GroupFormContainer;

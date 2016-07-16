@@ -7,14 +7,15 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     var UserListBox = require('./components/users/UserListBox.jsx');    
     var UserFormContainer = require('./components/users/UserFormContainer.jsx');
     var UserNewFormContainer = require('./components/users/UserNewFormContainer.jsx');
+    
     var OrganizationalUnitListBox = require('./components/organizationalUnits/OrganizationalUnitListBox.jsx');    
-    var OrganizationalUnitEditFormContainer = require('./components/organizationalUnits/OrganizationalUnitEditFormContainer.jsx');
-    var OrganizationalUnitViewFormContainer = require('./components/organizationalUnits/OrganizationalUnitViewFormContainer.jsx');
+    var OrganizationalUnitFormContainer = require('./components/organizationalUnits/OrganizationalUnitFormContainer.jsx');
     var OrganizationalUnitNewFormContainer = require('./components/organizationalUnits/OrganizationalUnitNewFormContainer.jsx');
+    
     var GroupListBox = require('./components/groups/GroupListBox.jsx');    
-    var GroupEditFormContainer = require('./components/groups/GroupEditFormContainer.jsx');
-    var GroupViewFormContainer = require('./components/groups/GroupViewFormContainer.jsx');
+    var GroupFormContainer = require('./components/groups/GroupFormContainer.jsx');
     var GroupNewFormContainer = require('./components/groups/GroupNewFormContainer.jsx');
+    
     var Home = require('./components/Home.jsx');
 
     //Needed for React Developer Tools
@@ -38,12 +39,12 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 <Route path="/userView/:username" component={UserFormContainer} task={'view'}/>
                 <Route path="/userNew" component={UserNewFormContainer} />
                 <Route path="/organizationList" component={OrganizationalUnitListBox} />
-                <Route path="/organizationEdit/:organizationalUnit" component={OrganizationalUnitEditFormContainer} />
-                <Route path="/organizationView/:organizationalUnit" component={OrganizationalUnitViewFormContainer} />
+                <Route path="/organizationEdit/:organizationalUnit" component={OrganizationalUnitFormContainer} task={'edit'} />
+                <Route path="/organizationView/:organizationalUnit" component={OrganizationalUnitFormContainer} task={'view'} />
                 <Route path="/organizationNew" component={OrganizationalUnitNewFormContainer} />
                 <Route path="/groupList" component={GroupListBox} />
-                <Route path="/groupEdit/:groupName" component={GroupEditFormContainer} />
-                <Route path="/groupView/:groupName" component={GroupViewFormContainer} />
+                <Route path="/groupEdit/:groupName" component={GroupFormContainer} task={'edit'} />
+                <Route path="/groupView/:groupName" component={GroupFormContainer} task={'view'} />
                 <Route path="/groupNew" component={GroupNewFormContainer} />
             </Route>
         </Router>

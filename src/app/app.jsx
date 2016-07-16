@@ -4,18 +4,18 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     	ReactDOM = require('react-dom'),
         injectTapEventPlugin = require("react-tap-event-plugin"),
         Main = require('./components/main.jsx');
-    var UserListBox = require('./components/UserListBox.jsx');    
-    var UserEditFormContainer = require('./components/UserEditFormContainer.jsx');
-    var UserViewFormContainer = require('./components/UserViewFormContainer.jsx');
-    var UserNewFormContainer = require('./components/UserNewFormContainer.jsx');
-    var OrganizationalUnitListBox = require('./components/OrganizationalUnitListBox.jsx');    
-    var OrganizationalUnitEditFormContainer = require('./components/OrganizationalUnitEditFormContainer.jsx');
-    var OrganizationalUnitViewFormContainer = require('./components/OrganizationalUnitViewFormContainer.jsx');
-    var OrganizationalUnitNewFormContainer = require('./components/OrganizationalUnitNewFormContainer.jsx');
-    var GroupListBox = require('./components/GroupListBox.jsx');    
-    var GroupEditFormContainer = require('./components/GroupEditFormContainer.jsx');
-    var GroupViewFormContainer = require('./components/GroupViewFormContainer.jsx');
-    var GroupNewFormContainer = require('./components/GroupNewFormContainer.jsx');
+    var UserListBox = require('./components/users/UserListBox.jsx');    
+    var UserEditFormContainer = require('./components/users/UserEditFormContainer.jsx');
+    var UserViewFormContainer = require('./components/users/UserViewFormContainer.jsx');
+    var UserNewFormContainer = require('./components/users/UserNewFormContainer.jsx');
+    var OrganizationalUnitListBox = require('./components/organizationalUnits/OrganizationalUnitListBox.jsx');    
+    var OrganizationalUnitEditFormContainer = require('./components/organizationalUnits/OrganizationalUnitEditFormContainer.jsx');
+    var OrganizationalUnitViewFormContainer = require('./components/organizationalUnits/OrganizationalUnitViewFormContainer.jsx');
+    var OrganizationalUnitNewFormContainer = require('./components/organizationalUnits/OrganizationalUnitNewFormContainer.jsx');
+    var GroupListBox = require('./components/groups/GroupListBox.jsx');    
+    var GroupEditFormContainer = require('./components/groups/GroupEditFormContainer.jsx');
+    var GroupViewFormContainer = require('./components/groups/GroupViewFormContainer.jsx');
+    var GroupNewFormContainer = require('./components/groups/GroupNewFormContainer.jsx');
     var Home = require('./components/Home.jsx');
 
     //Needed for React Developer Tools

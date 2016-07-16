@@ -3,7 +3,6 @@ var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from "react-jsonschema-form";
 import { Row, Col, Code } from 'react-bootstrap';
-//var ModalError = require("./ModalError.jsx");
 
 function userValidation(formData,errors) {
 	if (formData.userPassword !== formData.userPassword2) {

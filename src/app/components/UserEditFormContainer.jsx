@@ -29,22 +29,22 @@ var UserEditFormContainer = React.createClass({
       		this.setState({schema: schema});
     	}.bind(this))
 		.fail(function(jqXhr) {
-		    console.log('failed to retrieve user Schema',jqXhr);
+		    console.log('Failed to retrieve user Schema',jqXhr);
 		    var responseText="";
 		    if (jqXhr.status === 0) {
-			    responseText='Not connect: Verify Network.';
+			    responseText='Failed to retrieve user Schema. Not connect: Verify Network.';
 			} else if (jqXhr.status == 404) {
-			    responseText='Validation Schema not found [404]';
+			    responseText='Failed to retrieve user Schema. Validation Schema not found [404]';
 			} else if (jqXhr.status == 500) {
-			    responseText='Internal Server Error [500].';
+			    responseText='Failed to retrieve user Schema. Internal Server Error [500].';
 			} else if (textStatus === 'parsererror') {
-			    responseText='Requested JSON parse failed.';
+			    responseText='Failed to retrieve user Schema. Requested JSON parse failed.';
 			} else if (textStatus === 'timeout') {
-			    responseText='Time out error.';
+			    responseText='Failed to retrieve user Schema. Time out error.';
 			} else if (textStatus === 'abort') {
-			    responseText='Ajax request aborted.';
+			    responseText='Failed to retrieve user Schema. Ajax request aborted.';
 			} else {
-			    responseText='Uncaught Error: ' + jqXHR.responseText;
+			    responseText='Failed to retrieve user Schema. Uncaught Error: ' + jqXHR.responseText;
 			}
 		    this.setState({error: responseText, showModal: true});
 		}.bind(this));
@@ -64,22 +64,22 @@ var UserEditFormContainer = React.createClass({
   			this.loadUserSchema();
 		}.bind(this))
 		.fail(function(jqXhr, textStatus, errorThrown) {
-		    console.log('failed to retrieve user Information',jqXhr);
+		    console.log('Failed to retrieve user Information',jqXhr);
 		    var responseText="";
 		    if (jqXhr.status === 0) {
-			    responseText='Not connect: Verify Network.';
+			    responseText='Failed to retrieve user Information. Not connect: Verify Network.';
 			} else if (jqXhr.status == 404) {
-			    responseText='Requested User not found [404]';
+			    responseText='Failed to retrieve user Information. Requested User not found [404]';
 			} else if (jqXhr.status == 500) {
-			    responseText='Internal Server Error [500].';
+			    responseText='Failed to retrieve user Information. Internal Server Error [500].';
 			} else if (textStatus === 'parsererror') {
-			    responseText='Requested JSON parse failed.';
+			    responseText='Failed to retrieve user Information. Requested JSON parse failed.';
 			} else if (textStatus === 'timeout') {
-			    responseText='Time out error.';
+			    responseText='Failed to retrieve user Information. Time out error.';
 			} else if (textStatus === 'abort') {
-			    responseText='Ajax request aborted.';
+			    responseText='Failed to retrieve user Information. Ajax request aborted.';
 			} else {
-			    responseText='Uncaught Error: ' + jqXHR.responseText;
+			    responseText='Failed to retrieve user Information. Uncaught Error: ' + jqXHR.responseText;
 			}
 		    this.setState({error: responseText, showModal: true});
 		}.bind(this));

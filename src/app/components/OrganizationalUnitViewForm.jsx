@@ -3,19 +3,16 @@ var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from "react-jsonschema-form";
 import { Row, Col, Code } from 'react-bootstrap';
+//var ModalError = require("./ModalError.jsx");
 
 function organizationalUnitValidation(formData,errors) {
-	var imageString = formData.picture;
-	var prefix = 'data:image/jpeg';
-	var prefix2 = 'data:image/jpeg';
-
-	if ((imageString.startsWith(prefix))==false && (imageString.startsWith(prefix2))==false){
-		errors.picture.addError("Invalid image format");
-	}
+	//if (formData.userPassword !== formData.userPassword2) {
+	//    errors.userPassword2.addError("Passwords don't match");
+	//}
 		return errors;
 }
 
-var OrganizationalUnitEditForm = React.createClass({
+var OrganizationalUnitViewForm = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
 		data: React.PropTypes.object.isRequired
@@ -32,8 +29,6 @@ var OrganizationalUnitEditForm = React.createClass({
   	updateOrganizationalUnitData: function(formData){
   		console.log("yay I'm valid!");
   		//console.log(formData);
-  		var organizationalUnitData = Object.create({},formData);
-  		//delete userData.userPassword2;
   		jQuery.ajax({
 		    type: 'PUT',
 		    url: '/some/url',
@@ -56,9 +51,9 @@ var OrganizationalUnitEditForm = React.createClass({
 			} else if (textStatus === 'timeout') {
 			    responseText='Failed to Update Organizational Unit Information. Time out error.';
 			} else if (textStatus === 'abort') {
-			    responseText='Ajax request aborted.';
+			    responseText='Failed to Update Organizational Unit Information. Ajax request aborted.';
 			} else {
-			    responseText='Uncaught Error: ' + jqXHR.responseText;
+			    responseText='Failed to Update Organizational Unit Information. Uncaught Error: ' + jqXHR.responseText;
 			}
 		    this.setState({error: responseText, showModal: true});
 		}.bind(this));
@@ -66,76 +61,12 @@ var OrganizationalUnitEditForm = React.createClass({
   	render: function() {
   		var schema = this.props.schema;
 		var data = this.props.data;
-
-		schema = {
-			"id": "http://rd-connect.eu/cas/json-schemas/userValidation#CASOrganizationalUnit",
-			"$schema": "http://json-schema.org/draft-04/hyper-schema#",
-			"title": "RD-Connect CAS organizational unit",
-			"type": "object",
-			"properties": {
-				"organizationalUnit": {
-					"title": "Organizational Unit (acronym)",
-					"type": "string",
-					"minLength": 1
-				},
-				"description": {
-					"title": "Organizational Unit (long name)",
-					"type": "string",
-					"minLength": 1
-				},
-				"picture": {
-					"title": "A picture with the organizational unit logotype, or a group snapshot",
-					"type": "string",
-					"format": "data-url",
-					"media": {
-						"type": "image/jpeg",
-						"binaryEncoding": "base64"
-					}
-				},
-				"links": {
-					"title": "Optional links related to the user",
-					"type": "array",
-					"items": {
-						"type": "object",
-						"properties": {
-							"uri": {
-								"title": "The URI of the link related to the organizational UNIT",
-								"type": "string",
-								"format": "uri"
-							},
-							"label": {
-								"title": "The type of URI",
-								"type": "string",
-								"enum": ["Publication","LinkedIn","OrganizationalUnitProfile"]
-							}
-						},
-						"additionalProperties": false,
-						"required": [
-							"uri",
-							"label"
-						]
-					}
-				}
-			},
-			"additionalProperties": false,
-			"required": [
-				"organizationalUnit",
-				"description"
-			],
-			"dependencies": {
-			}
-		}
-  		console.log(schema);
-  		console.log(data);
-		/*const uiSchema = {
-			
-		};
-		*/
+		
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateOrganizationalUnitData({formData});
 		const onError = (errors) => console.log("I have", errors.length, "errors to fix");
-		console.log("Error: ", this.state.error);
-		console.log("Show: ", this.state.showModal);
+		//console.log("Error: ", this.state.error);
+		//console.log("Show: ", this.state.showModal);
 		
 	    return (
 			<div>				
@@ -159,7 +90,7 @@ var OrganizationalUnitEditForm = React.createClass({
 					        onChange={log("changed")}
 					        onSubmit={onSubmit}
 					        onError={onError}
-					        validate={organizationalUnitValidation}
+					        validate={userValidation}
 					        liveValidate= {true} />
       					</code>
       				</Col>
@@ -171,4 +102,4 @@ var OrganizationalUnitEditForm = React.createClass({
 	    );
 	 }
 });
-module.exports = OrganizationalUnitEditForm;
+module.exports = OrganizationalUnitViewForm;

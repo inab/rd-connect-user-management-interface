@@ -10,6 +10,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     var UserNewFormContainer = require('./components/UserNewFormContainer.jsx');
     var OrganizationalUnitListBox = require('./components/OrganizationalUnitListBox.jsx');    
     var OrganizationalUnitEditFormContainer = require('./components/OrganizationalUnitEditFormContainer.jsx');
+    var OrganizationalUnitViewFormContainer = require('./components/OrganizationalUnitViewFormContainer.jsx');
     var OrganizationalUnitNewFormContainer = require('./components/OrganizationalUnitNewFormContainer.jsx');
     var GroupListBox = require('./components/GroupListBox.jsx');    
     var GroupEditFormContainer = require('./components/GroupEditFormContainer.jsx');
@@ -40,6 +41,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 <Route path="/userNew" component={UserNewFormContainer} />
                 <Route path="/organizationList" component={OrganizationalUnitListBox} />
                 <Route path="/organizationEdit/:organizationalUnit" component={OrganizationalUnitEditFormContainer} />
+                <Route path="/organizationView/:organizationalUnit" component={OrganizationalUnitViewFormContainer} />
                 <Route path="/organizationNew" component={OrganizationalUnitNewFormContainer} />
                 <Route path="/groupList" component={GroupListBox} />
                 <Route path="/groupEdit/:groupName" component={GroupEditFormContainer} />

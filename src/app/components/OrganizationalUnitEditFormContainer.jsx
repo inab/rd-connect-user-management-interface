@@ -1,13 +1,21 @@
 var React = require('react');
+var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 var OrganizationalUnitEditForm = require('./OrganizationalUnitEditForm.jsx');
+import { Row, Col, Code } from 'react-bootstrap';
+import {ReactRouter, Router, Route, Link, History} from 'react-router';
 
 var OrganizationalUnitEditFormContainer = React.createClass({
-  getInitialState: function() {
-    return { schema: null, data: null };
-  },
-  
-  loadOrganizationalUnitSchema: function() {
+  	getInitialState: function() {
+    	return {  schema: null, data: null, error: null, showModal: false };
+  	},
+  	close(){
+		this.setState({showModal: false});
+	},
+	open(){
+		this.setState({showModal: true});
+	},
+  	loadOrganizationalUnitSchema: function() {
 	  	jQuery.ajax({
 	  		url: 'json/organizationalUnitValidation.json',
 	  		type: 'GET',
@@ -21,24 +29,24 @@ var OrganizationalUnitEditFormContainer = React.createClass({
       		this.setState({schema: schema});
     	}.bind(this))
 		.fail(function(jqXhr) {
-		    console.log('failed to retrieve Organizationa Unit Schema',jqXhr);
+		    console.log('Failed to retrieve Organizationa Unit Schema',jqXhr);
 		    var responseText="";
 		    if (jqXhr.status === 0) {
-			    responseText='Not connect: Verify Network.';
+			    responseText='Failed to retrieve Organizationa Unit Schema. Not connect: Verify Network.';
 			} else if (jqXhr.status == 404) {
-			    responseText='Validation Schema not found [404]';
+			    responseText='Failed to retrieve Organizationa Unit Schema. Validation Schema not found [404]';
 			} else if (jqXhr.status == 500) {
-			    responseText='Internal Server Error [500].';
+			    responseText='Failed to retrieve Organizationa Unit Schema. Internal Server Error [500].';
 			} else if (textStatus === 'parsererror') {
-			    responseText='Requested JSON parse failed.';
+			    responseText='Failed to retrieve Organizationa Unit Schema. Requested JSON parse failed.';
 			} else if (textStatus === 'timeout') {
-			    responseText='Time out error.';
+			    responseText='Failed to retrieve Organizationa Unit Schema. Time out error.';
 			} else if (textStatus === 'abort') {
-			    responseText='Ajax request aborted.';
+			    responseText='Failed to retrieve Organizationa Unit Schema. Ajax request aborted.';
 			} else {
-			    responseText='Uncaught Error: ' + jqXHR.responseText;
+			    responseText='Failed to retrieve Organizationa Unit Schema. Uncaught Error: ' + jqXHR.responseText;
 			}
-		    this.setState({error: responseText});
+		    this.setState({error: responseText, showModal: true});
 		}.bind(this));
   },
   loadOrganizationalUnitData: function() {
@@ -56,30 +64,30 @@ var OrganizationalUnitEditFormContainer = React.createClass({
   			this.loadOrganizationalUnitSchema();
 		}.bind(this))
 		.fail(function(jqXhr, textStatus, errorThrown) {
-		    console.log('failed to retrieve Organizational Unit Information',jqXhr);
+		    console.log('Failed to retrieve Organizational Unit Information',jqXhr);
 		    var responseText="";
 		    if (jqXhr.status === 0) {
-			    responseText='Not connect: Verify Network.';
+			    responseText='Failed to retrieve Organizational Unit Information. Not connect: Verify Network.';
 			} else if (jqXhr.status == 404) {
-			    responseText='Requested User not found [404]';
+			    responseText='Failed to retrieve Organizational Unit Information. Requested User not found [404]';
 			} else if (jqXhr.status == 500) {
-			    responseText='Internal Server Error [500].';
+			    responseText='Failed to retrieve Organizational Unit Information. Internal Server Error [500].';
 			} else if (textStatus === 'parsererror') {
-			    responseText='Requested JSON parse failed.';
+			    responseText='Failed to retrieve Organizational Unit Information. Requested JSON parse failed.';
 			} else if (textStatus === 'timeout') {
-			    responseText='Time out error.';
+			    responseText='Failed to retrieve Organizational Unit Information. Time out error.';
 			} else if (textStatus === 'abort') {
-			    responseText='Ajax request aborted.';
+			    responseText='Failed to retrieve Organizational Unit Information. Ajax request aborted.';
 			} else {
-			    responseText='Uncaught Error: ' + jqXHR.responseText;
+			    responseText='Failed to retrieve Organizational Unit Information. Uncaught Error: ' + jqXHR.responseText;
 			}
-		    this.setState({error: responseText});
+		    this.setState({error: responseText, showModal: true});
 		}.bind(this));
   },
   componentDidMount: function() {
     	this.loadOrganizationalUnitData();
   },
-
+  mixins: [ History ], //This is to browse history back when organizational unit is not found after showing modal error
   render: function() {
     if (this.state.schema && this.state.data) {
       return (
@@ -91,7 +99,17 @@ var OrganizationalUnitEditFormContainer = React.createClass({
     if (this.state.error) {
       return (
       	<div>
-	    	Error: {this.state.error}
+	    	<Bootstrap.Modal show={this.state.showModal} onHide={this.history.goBack} error={this.state.error}>
+      			<Bootstrap.Modal.Header closeButton>
+        			<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
+      				</Bootstrap.Modal.Header>
+      			<Bootstrap.Modal.Body>
+        			<h4>{this.state.error}</h4>
+      			</Bootstrap.Modal.Body>
+      			<Bootstrap.Modal.Footer>
+        			<Bootstrap.Button onClick={this.history.goBack}>Close</Bootstrap.Button>
+				</Bootstrap.Modal.Footer>
+			</Bootstrap.Modal>
 	    </div>
       )
     }

@@ -14,29 +14,8 @@ const UserList = ({data}) => {
       .toArray()
       .sortBy(function(ouObjects){ return ouObjects[0].organizationalUnit; })
       .value()
-    
-    //console.log("GroupData is: ",groupData);
 
-/*
-    for (var ou in groupData){
-        var arrayOrg=groupData[ou];
-        //console.log(arrayOrg);
-        var organizationalUnit = arrayOrg[0].organizationalUnit;
-        //console.log("*********"+organizationalUnit+"*********");
-        for(var org in arrayOrg){
-          var user = (arrayOrg[org]);
-          //console.log(user.username);
-        }
-    }
-    */
-    /* var keys = [];
-    for (var key in groupData) {
-      if (groupData.hasOwnProperty(key)) {
-        keys.push(key);
-      }
-    }
-    console.log(keys);
-    */
+      
     return (
     <div>
       <h3> List of Users </h3>

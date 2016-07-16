@@ -14,6 +14,7 @@ const GroupList = ({data}) => {
     .sortBy(function(groupObjects){ return groupObjects.cn; })
     .value()
   console.log("sortedData so far is: ", sortedData);
+  
   return (
     <div>
       <h3> List of Groups </h3>
@@ -40,7 +41,7 @@ const GroupList = ({data}) => {
                       <td>{group.description}</td>
                       <td>{listOwners}</td>
                       <td>{listMembers}</td>
-                      <td><Link to={"/groupEdit/"+group.cn}>Edit</Link></td>
+                      <td><Link to={"/groupView/"+group.cn}>View</Link>/<Link to={"/groupEdit/"+group.cn}>Edit</Link></td>
                     </tr>
                 );
               })}

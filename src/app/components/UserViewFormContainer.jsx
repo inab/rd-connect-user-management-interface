@@ -1,6 +1,6 @@
 var React = require('react');
 var jQuery = require('jquery');
-var UserViewForm = require('./UserEditForm.jsx');
+var UserViewForm = require('./UserViewForm.jsx');
 
 var UserViewFormContainer = React.createClass({
   getInitialState: function() {

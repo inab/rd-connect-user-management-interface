@@ -2,12 +2,20 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 var UserEditForm = require('./UserEditForm.jsx');
+var UserViewForm = require('./UserViewForm.jsx');
 import { Row, Col, Code } from 'react-bootstrap';
 import {ReactRouter, Router, Route, Link, History} from 'react-router';
 
-var UserEditFormContainer = React.createClass({
+var UserFormContainer = React.createClass({
   	getInitialState: function() {
-   		return { schema: null, data: null, error: null, showModal: false };
+  		//console.log("task", this.props.route.task);
+   		return { 
+   			schema: null,
+   			data: null,
+   			error: null,
+   			showModal: false,
+   			task: this.props.route.task
+   		};
   	},
   	close(){
 		this.setState({showModal: false});
@@ -89,12 +97,22 @@ var UserEditFormContainer = React.createClass({
   },
   mixins: [ History ], //This is to browse history back when user is not found after showing modal error
   render: function() {
+  	//console.log("schema: ", this.state.schema);
+  	//console.log("data: ", this.state.data);
     if (this.state.schema && this.state.data) {
-      return (
-      	<div>
-	    	<UserEditForm   schema={this.state.schema}  data={this.state.data}  />
-	    </div>
-      )
+    	if(this.state.task=="edit"){
+    		return (
+		      	<div>
+			    	<UserEditForm schema={this.state.schema}  data={this.state.data}  />
+			    </div>
+		    );
+    	}else if(this.state.task=="view"){
+    		return (
+		      	<div>
+			    	<UserViewForm schema={this.state.schema}  data={this.state.data}  />
+			    </div>
+		    );	
+    	}
     }
     if (this.state.error) {
       return (
@@ -116,4 +134,4 @@ var UserEditFormContainer = React.createClass({
     return <div>Loading...</div>;
   }
 });
-module.exports = UserEditFormContainer;
+module.exports = UserFormContainer;

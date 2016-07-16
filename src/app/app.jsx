@@ -6,7 +6,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
         Main = require('./components/main.jsx');
     var UserListBox = require('./components/UserListBox.jsx');    
     var UserEditFormContainer = require('./components/UserEditFormContainer.jsx');
-    var UserEditForm = require('./components/UserEditForm.jsx');
+    var UserViewFormContainer = require('./components/UserViewFormContainer.jsx');
     var UserNewFormContainer = require('./components/UserNewFormContainer.jsx');
     var OrganizationalUnitListBox = require('./components/OrganizationalUnitListBox.jsx');    
     var OrganizationalUnitEditFormContainer = require('./components/OrganizationalUnitEditFormContainer.jsx');
@@ -36,6 +36,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 <IndexRoute component={Home}/>
                 <Route path="/userList" component={UserListBox} />
                 <Route path="/userEdit/:username" component={UserEditFormContainer} />
+                <Route path="/userView/:username" component={UserViewFormContainer} />
                 <Route path="/userNew" component={UserNewFormContainer} />
                 <Route path="/organizationList" component={OrganizationalUnitListBox} />
                 <Route path="/organizationEdit/:organizationalUnit" component={OrganizationalUnitEditFormContainer} />

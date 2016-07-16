@@ -90,7 +90,7 @@ var OrganizationalUnitViewForm = React.createClass({
 					        onChange={log("changed")}
 					        onSubmit={onSubmit}
 					        onError={onError}
-					        validate={userValidation}
+					        validate={organizationalUnitValidation}
 					        liveValidate= {true} />
       					</code>
       				</Col>

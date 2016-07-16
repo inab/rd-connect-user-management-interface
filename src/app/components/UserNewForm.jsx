@@ -96,10 +96,18 @@ var UserNewForm = React.createClass({
 				"ui:placeholder": "************"
 			},
 			"cn": {
-				"ui:readonly": true,
+				"ui:widget": "hidden",
 			},
 			"organizationalUnit": {
 				"ui:widget": "select",
+				"type": "string"
+			},
+			"registeredAddress": {
+				"ui:widget": "textarea",
+				"type": "string"
+			},
+			"postalAddress": {
+				"ui:widget": "textarea",
 				"type": "string"
 			}
 		};
@@ -132,7 +140,7 @@ var UserNewForm = React.createClass({
 					        onSubmit={onSubmit}
 					        onError={onError}
 					        validate={userValidation}
-					        liveValidate= {true} />
+					        liveValidate= {false} />
       					</code>
       				</Col>
       				<Col xs={6} md={4}>

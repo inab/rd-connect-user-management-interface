@@ -17,7 +17,7 @@ const UserList = ({data}) => {
     
     //console.log("GroupData is: ",groupData);
 
-
+/*
     for (var ou in groupData){
         var arrayOrg=groupData[ou];
         //console.log(arrayOrg);
@@ -28,6 +28,7 @@ const UserList = ({data}) => {
           //console.log(user.username);
         }
     }
+    */
     /* var keys = [];
     for (var key in groupData) {
       if (groupData.hasOwnProperty(key)) {
@@ -40,7 +41,7 @@ const UserList = ({data}) => {
     <div>
       <h3> List of Users </h3>
           {groupData.map(function(ou,i){
-              organizationalUnit=ou[0].organizationalUnit;
+              var organizationalUnit=ou[0].organizationalUnit;
               var headerText=organizationalUnit;
               return(
                 <Row className="show-grid">
@@ -67,7 +68,7 @@ const UserList = ({data}) => {
                               <td>{user.cn}</td>
                               <td>{user.userCategory}</td>
                               <td><Checkbox checked={isChecked} readOnly /></td>
-                              <td><Link to={"/userEdit/"+user.username}>Edit User</Link></td>
+                              <td><Link to={"/userView/"+user.username}>View </Link>/<Link to={"/userEdit/"+user.username}> Edit</Link></td>
                             </tr>
                           );
                         })}

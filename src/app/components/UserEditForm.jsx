@@ -97,6 +97,14 @@ var UserEditForm = React.createClass({
 			"groups": {
 				"ui:readonly": true,
 			},
+			"registeredAddress": {
+				"ui:widget": "textarea",
+				"type": "string"
+			},
+			"postalAddress": {
+				"ui:widget": "textarea",
+				"type": "string"
+			}
 		};
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateUserData({formData});

@@ -91,7 +91,7 @@ var GroupNewForm = React.createClass({
 						        onSubmit={onSubmit}
 						        onError={onError}
 						        validate={groupValidation}
-						        liveValidate= {true} />
+						        liveValidate= {false} />
       					</code>
       				</Col>
       				<Col xs={6} md={4}>

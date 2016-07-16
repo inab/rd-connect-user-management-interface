@@ -1,13 +1,21 @@
 var React = require('react');
+var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 var UserEditForm = require('./UserEditForm.jsx');
+import { Row, Col, Code } from 'react-bootstrap';
+import {ReactRouter, Router, Route, Link, History} from 'react-router';
 
 var UserEditFormContainer = React.createClass({
-  getInitialState: function() {
-    return { schema: null, data: null };
-  },
-  
-  loadUserSchema: function() {
+  	getInitialState: function() {
+   		return { schema: null, data: null, error: null, showModal: false };
+  	},
+  	close(){
+		this.setState({showModal: false});
+	},
+	open(){
+		this.setState({showModal: true});
+	},
+  	loadUserSchema: function() {
 	  	jQuery.ajax({
 	  		url: 'json/userValidation.json',
 	  		type: 'GET',
@@ -38,7 +46,7 @@ var UserEditFormContainer = React.createClass({
 			} else {
 			    responseText='Uncaught Error: ' + jqXHR.responseText;
 			}
-		    this.setState({error: responseText});
+		    this.setState({error: responseText, showModal: true});
 		}.bind(this));
   },
   loadUserData: function() {
@@ -73,13 +81,13 @@ var UserEditFormContainer = React.createClass({
 			} else {
 			    responseText='Uncaught Error: ' + jqXHR.responseText;
 			}
-		    this.setState({error: responseText});
+		    this.setState({error: responseText, showModal: true});
 		}.bind(this));
   },
   componentDidMount: function() {
     	this.loadUserData();
   },
-
+  mixins: [ History ], //This is to browse history back when user is not found after showing modal error
   render: function() {
     if (this.state.schema && this.state.data) {
       return (
@@ -91,7 +99,17 @@ var UserEditFormContainer = React.createClass({
     if (this.state.error) {
       return (
       	<div>
-	    	Error: {this.state.error}
+	    	<Bootstrap.Modal show={this.state.showModal} onHide={this.history.goBack} error={this.state.error}>
+      			<Bootstrap.Modal.Header closeButton>
+        			<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
+      				</Bootstrap.Modal.Header>
+      			<Bootstrap.Modal.Body>
+        			<h4>{this.state.error}</h4>
+      			</Bootstrap.Modal.Body>
+      			<Bootstrap.Modal.Footer>
+        			<Bootstrap.Button onClick={this.history.goBack}>Close</Bootstrap.Button>
+				</Bootstrap.Modal.Footer>
+			</Bootstrap.Modal>
 	    </div>
       )
     }

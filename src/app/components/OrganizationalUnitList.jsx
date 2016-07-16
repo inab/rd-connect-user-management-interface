@@ -38,7 +38,7 @@ const OrganizationalUnitList = ({data}) => {
                       <td><strong>{organizationalUnit}</strong></td>
                       <td><img src={"data:image/jpeg;base64,"+ou.picture} alt="image Organizational Unit" /></td>
                       <td>{ou.description}</td>
-                      <td>Links</td>
+                      <td>links</td>
                       <td><Link to={"/organizationEdit/"+ou.organizationalUnit}>Edit</Link></td>
                     </tr>
                   );

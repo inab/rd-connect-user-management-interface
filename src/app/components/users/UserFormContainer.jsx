@@ -3,6 +3,7 @@ var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 var UserEditForm = require('./UserEditForm.jsx');
 var UserViewForm = require('./UserViewForm.jsx');
+var UserEnableDisableForm = require('./UserEnableDisableForm.jsx');
 import { Row, Col, Code } from 'react-bootstrap';
 import {ReactRouter, Router, Route, Link, History} from 'react-router';
 
@@ -110,6 +111,12 @@ var UserFormContainer = React.createClass({
     		return (
 		      	<div>
 			    	<UserViewForm schema={this.state.schema}  data={this.state.data}  />
+			    </div>
+		    );	
+    	}else if(this.state.task=="enable_disable"){
+    		return (
+		      	<div>
+			    	<UserEnableDisableForm schema={this.state.schema}  data={this.state.data}  />
 			    </div>
 		    );	
     	}

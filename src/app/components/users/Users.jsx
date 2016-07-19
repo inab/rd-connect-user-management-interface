@@ -47,7 +47,7 @@ const Users = ({data}) => {
                               <td>{user.cn}</td>
                               <td>{user.userCategory}</td>
                               <td><Checkbox checked={isChecked} readOnly /></td>
-                              <td><Link to={"/users/view/"+user.username}>View </Link>/<Link to={"/users/edit/"+user.username}> Edit</Link></td>
+                              <td><Link to={"/users/view/"+user.username}>View </Link>/<Link to={"/users/edit/"+user.username}> Edit</Link>/<Link to={"/users/enable-disable/"+user.username}> Enable/Disable</Link></td>
                             </tr>
                           );
                         })}

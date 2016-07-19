@@ -5,13 +5,10 @@ import Form from "react-jsonschema-form";
 import { Row, Col, Code } from 'react-bootstrap';
 
 function userValidation(formData,errors) {
-	if (formData.userPassword !== formData.userPassword2) {
-	    errors.userPassword2.addError("Passwords don't match");
-	}
-		return errors;
+	return errors;
 }
 
-var UserEditForm = React.createClass({
+var UserEnableDisableForm = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
 		data: React.PropTypes.object.isRequired
@@ -27,13 +24,17 @@ var UserEditForm = React.createClass({
 	},
   	updateUserData: function({formData}){
   		console.log("yay I'm valid!");
-  		console.log("El formData contiene: ",formData);
+  		//console.log("formData contiene: ", formData);
   		var userData = Object.assign({},formData);
-  		delete userData.userPassword2;
-  		console.log("El userData contiene: ",userData);
+  		var enabled=formData.enabled;
+  		if (enabled){
+  			var urlEnabled="/some/url/enable";
+  		}else{
+  			var urlEnabled="/some/url/disable";
+  		}
   		jQuery.ajax({
 		    type: 'PUT',
-		    url: '/some/url',
+		    url: urlEnabled,
 		    data: userData
 		})
 		.done(function(data) {
@@ -61,51 +62,32 @@ var UserEditForm = React.createClass({
 		}.bind(this));
   	},
   	render: function() {
-  		var schema = this.props.schema;
-  		// Replicating userPassword for schema validation and Ordering Schema for ui:order
-  		//Adding a userPassword2 field to validate userPassword change
-  		schema.properties.userPassword2 = schema.properties.userPassword;
-  		//First we create an array with the fields with the desired order.
-  		var order = ["username","cn","givenName","surname","userPassword","userPassword2"];
-  		//We filter all the properties retrieving only the elements that are not in "order" array
-		var userSchemaKeys = Object.keys(schema.properties).filter(function(elem) {
-  			return order.indexOf(elem)==-1;
-  		});
-  		//We concatenate order with userSchemaKeys, retrieving the ordered schema as desired
-  		var schemaOrdered = order.concat(userSchemaKeys);
-		
+  		var schema = {
+  			"type": "object",
+			"properties": {
+	  			"username": {
+					"title": "The username",
+					"type": "string",
+					"minLength": 1
+				},
+				"enabled": {
+					"title": "Click to enable/disable user",
+					"type": "boolean"
+				}
+			}
+		};
 		var data = this.props.data;
-  		delete data.userPassword;	
-  		console.log("SCHEMA: ",schema);
-  		console.log("DATA: ",data);
+		//We copy just the values related to enable/disable user operation from data (the whole user information data)
+		//This is the user's data to paint, then we manage the action
+		var enableDisableData= {
+			username: data.username,
+			enabled: data.enabled
+		};
+  		//console.log(schema);
+  		console.log("ENABLE/DISABLE data: ",enableDisableData);
 		const uiSchema = {
-			"ui:order": schemaOrdered,
-			"userPassword": {
-				"ui:widget": "password",
-				"ui:placeholder": "************",
-				"ui:help": "Hint: Make it strong!"
-			},
-			"userPassword2": {
-				"ui:widget": "password",
-				"ui:placeholder": "************",
-				"ui:help": "Passwords have to match!"
-			},
-			"cn": {
+			"username": {
 				"ui:readonly": true,
-			},
-			"organizationalUnit": {
-				"ui:readonly": true,
-			},
-			"groups": {
-				"ui:readonly": true,
-			},
-			"registeredAddress": {
-				"ui:widget": "textarea",
-				"type": "string"
-			},
-			"postalAddress": {
-				"ui:widget": "textarea",
-				"type": "string"
 			}
 		};
 		const log = (type) => console.log.bind(console, type);
@@ -132,7 +114,7 @@ var UserEditForm = React.createClass({
       					<code>
       						<Form schema={schema}
 					        uiSchema={uiSchema}
-					        formData={data}
+					        formData={enableDisableData}
 					        onChange={log("changed")}
 					        onSubmit={onSubmit}
 					        onError={onError}
@@ -148,4 +130,4 @@ var UserEditForm = React.createClass({
 	    );
 	 }
 });
-module.exports = UserEditForm;
+module.exports = UserEnableDisableForm;

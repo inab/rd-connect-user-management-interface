@@ -23,10 +23,10 @@ var UserNewForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
-  	addUserData: function(formData){
+  	addUserData: function({formData}){
   		console.log("yay I'm valid!");
   		//console.log(formData);
-  		var userData = Object.create({},formData);
+  		var userData = Object.assign({},formData);
   		delete userData.userPassword2;
   		jQuery.ajax({
 		    type: 'PUT',

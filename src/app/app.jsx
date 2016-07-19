@@ -37,6 +37,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 <Route path="/users" component={UsersBox} />
                 <Route path="/users/edit/:username" component={UserFormContainer} task={'edit'}/>
                 <Route path="/users/view/:username" component={UserFormContainer} task={'view'}/>
+                <Route path="/users/enable-disable/:username" component={UserFormContainer} task={'enable_disable'}/>
                 <Route path="/users/new" component={UserNewFormContainer} />
                 <Route path="/organizationalUnits" component={OrganizationalUnitsBox} />
                 <Route path="/organizationalUnits/edit/:organizationalUnit" component={OrganizationalUnitFormContainer} task={'edit'} />

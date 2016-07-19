@@ -18,6 +18,7 @@ var Navigation = React.createClass({
                     <NavDropdown id="NavDropdown-Users" eventKey={2} title="Users">
                         <LinkContainer to="/users"><MenuItem eventKey="1">List Users</MenuItem></LinkContainer>
                         <LinkContainer to="/users/new"><MenuItem eventKey="2">New User</MenuItem></LinkContainer>
+                        <LinkContainer to="/users/enable-disable"><MenuItem eventKey="3">Enable/Disable User</MenuItem></LinkContainer>
                         <MenuItem divider />
                         <LinkContainer to="/userAction5"><MenuItem eventKey="3">Separated Users link</MenuItem></LinkContainer>
 

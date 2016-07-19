@@ -1,8 +1,8 @@
 var React = require('react');
 var jQuery = require('jquery');
-var OrganizationalUnitList = require('./OrganizationalUnitList.jsx');
+var OrganizationalUnits = require('./OrganizationalUnits.jsx');
 
-var OrganizationalUnitListContainer = React.createClass({
+var OrganizationalUnitsContainer = React.createClass({
 	loadOrganizationalUnitsFromServer: function() {
 	    jQuery.ajax({
 	    	url: "json/organizationalUnits.json",
@@ -40,11 +40,11 @@ var OrganizationalUnitListContainer = React.createClass({
   		if (this.state.data) {
 	    	return (
 	    		<div>
-	      			<OrganizationalUnitList data={this.state.data} />
+	      			<OrganizationalUnits data={this.state.data} />
 	      		</div>
 	      	)
 	    }
 	}
 });
 
-module.exports = OrganizationalUnitListContainer;
+module.exports = OrganizationalUnitsContainer;

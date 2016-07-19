@@ -7,7 +7,7 @@ import { Link } from 'react-router';
 var Underscore = require('underscore');
 
 
-const OrganizationalUnitList = ({data}) => {
+const OrganizationalUnits = ({data}) => {
     console.log("Data so far is: ", data);
     var sortedData=Underscore
       .chain(data)
@@ -52,4 +52,4 @@ const OrganizationalUnitList = ({data}) => {
     );
 }
 
-module.exports = OrganizationalUnitList;
+module.exports = OrganizationalUnits;

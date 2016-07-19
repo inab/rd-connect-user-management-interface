@@ -1,11 +1,11 @@
 var React = require('react');
 var jQuery = require('jquery');
-var GroupList = require('./GroupList.jsx');
+var Users = require('./Users.jsx');
 
-var GroupListContainer = React.createClass({
-	loadGroupsFromServer: function() {
+var UsersContainer = React.createClass({
+	loadUsersFromServer: function() {
 	    jQuery.ajax({
-	    	url: "json/groups.json",
+	    	url: "json/users.json",
 	    	headers: {
 				'X-CAS-Referer': window.location.href
 			},
@@ -17,9 +17,9 @@ var GroupListContainer = React.createClass({
 	        	//console.log(this.state.data);
 	      	}.bind(this),
 	      	error: function(xhr, status, err) {
-	        	//console.error("json/groups.json", status, err);
+	        	//console.error("json/users.json", status, err);
 	        	console.error(xhr.status);
-	        	this.setState({error: xhr.status + ' (Retrieving groups)'});
+	        	this.setState({error: xhr.status + ' (Retrieving users)'});
 	      	}.bind(this)
 	    });
 	},
@@ -27,8 +27,8 @@ var GroupListContainer = React.createClass({
 		return {data: []};
 	},
 	componentDidMount: function() {
-	    this.loadGroupsFromServer();
-	    //setInterval(this.loadGroupsFromServer, 20000);
+	    this.loadUsersFromServer();
+	    //setInterval(this.loadUsersFromServer, 20000);
 	},
   	render: function() {
   		
@@ -40,11 +40,11 @@ var GroupListContainer = React.createClass({
   		if (this.state.data) {
 	    	return (
 	    		<div>
-	      			<GroupList data={this.state.data} />
+	      			<Users data={this.state.data} />
 	      		</div>
 	      	)
 	    }
 	}
 });
 
-module.exports = GroupListContainer;
+module.exports = UsersContainer;

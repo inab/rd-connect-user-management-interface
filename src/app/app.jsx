@@ -4,15 +4,15 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     	ReactDOM = require('react-dom'),
         injectTapEventPlugin = require("react-tap-event-plugin"),
         Main = require('./components/main.jsx');
-    var UserListBox = require('./components/users/UserListBox.jsx');    
+    var UsersBox = require('./components/users/UsersBox.jsx');    
     var UserFormContainer = require('./components/users/UserFormContainer.jsx');
     var UserNewFormContainer = require('./components/users/UserNewFormContainer.jsx');
     
-    var OrganizationalUnitListBox = require('./components/organizationalUnits/OrganizationalUnitListBox.jsx');    
+    var OrganizationalUnitsBox = require('./components/organizationalUnits/OrganizationalUnitsBox.jsx');    
     var OrganizationalUnitFormContainer = require('./components/organizationalUnits/OrganizationalUnitFormContainer.jsx');
     var OrganizationalUnitNewFormContainer = require('./components/organizationalUnits/OrganizationalUnitNewFormContainer.jsx');
     
-    var GroupListBox = require('./components/groups/GroupListBox.jsx');    
+    var GroupsBox = require('./components/groups/GroupsBox.jsx');    
     var GroupFormContainer = require('./components/groups/GroupFormContainer.jsx');
     var GroupNewFormContainer = require('./components/groups/GroupNewFormContainer.jsx');
     
@@ -34,15 +34,15 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
             <Route path="/" component={Main}>
                 {/* add it here, as a child of `/` */}
                 <IndexRoute component={Home}/>
-                <Route path="/userList" component={UserListBox} />
+                <Route path="/users" component={UsersBox} />
                 <Route path="/userEdit/:username" component={UserFormContainer} task={'edit'}/>
                 <Route path="/userView/:username" component={UserFormContainer} task={'view'}/>
                 <Route path="/userNew" component={UserNewFormContainer} />
-                <Route path="/organizationList" component={OrganizationalUnitListBox} />
+                <Route path="/organizationalUnits" component={OrganizationalUnitsBox} />
                 <Route path="/organizationEdit/:organizationalUnit" component={OrganizationalUnitFormContainer} task={'edit'} />
                 <Route path="/organizationView/:organizationalUnit" component={OrganizationalUnitFormContainer} task={'view'} />
                 <Route path="/organizationNew" component={OrganizationalUnitNewFormContainer} />
-                <Route path="/groupList" component={GroupListBox} />
+                <Route path="/groups" component={GroupsBox} />
                 <Route path="/groupEdit/:groupName" component={GroupFormContainer} task={'edit'} />
                 <Route path="/groupView/:groupName" component={GroupFormContainer} task={'view'} />
                 <Route path="/groupNew" component={GroupNewFormContainer} />

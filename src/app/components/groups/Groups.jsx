@@ -6,7 +6,7 @@ import { Row, Col, Code, Panel, Table, ListGroup, ListGroupItem, Button, Checkbo
 import { Link } from 'react-router';
 var Underscore = require('underscore');
 
-const GroupList = ({data}) => {
+const Groups = ({data}) => {
   //console.log("Data so far is: ", data);
   console.log("Data so far is: ", data);
   var sortedData=Underscore
@@ -54,4 +54,4 @@ const GroupList = ({data}) => {
   );
 }
 
-module.exports = GroupList;
+module.exports = Groups;

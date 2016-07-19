@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 var User = require('./User.jsx');
 
 
-const UserList = ({data}) => {
+const Users = ({data}) => {
     //console.log("Data so far is: ", data);
     var groupData=Underscore
       .chain(data)
@@ -61,4 +61,4 @@ const UserList = ({data}) => {
     </div>
     );
 }
-module.exports = UserList;
+module.exports = Users;

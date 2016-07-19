@@ -2,7 +2,8 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from "react-jsonschema-form";
-import { Row, Col, Code } from 'react-bootstrap';
+import { Row, Col, Code, Button } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 //var ModalError = require("./ModalError.jsx");
 
 function userValidation(formData,errors) {
@@ -26,40 +27,6 @@ var UserViewForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
-  	updateUserData: function(formData){
-  		console.log("yay I'm valid!");
-  		//console.log(formData);
-  		var userData = Object.create({},formData);
-  		delete userData.userPassword2;
-  		jQuery.ajax({
-		    type: 'PUT',
-		    url: '/some/url',
-		    data: userData
-		})
-		.done(function(data) {
-		    self.clearForm()
-		})
-		.fail(function(jqXhr) {
-		    console.log('Failed to Update User Information',jqXhr);
-		    var responseText="";
-		    if (jqXhr.status === 0) {
-			    responseText='Failed to Update User Information. Not connect: Verify Network.';
-			} else if (jqXhr.status == 404) {
-			    responseText='Failed to Update User Information. Not found [404]';
-			} else if (jqXhr.status == 500) {
-			    responseText='Failed to Update User Information. Internal Server Error [500].';
-			} else if (textStatus === 'parsererror') {
-			    responseText='Failed to Update User Information. Sent JSON parse failed.';
-			} else if (textStatus === 'timeout') {
-			    responseText='Failed to Update User Information. Time out error.';
-			} else if (textStatus === 'abort') {
-			    responseText='Ajax request aborted.';
-			} else {
-			    responseText='Uncaught Error: ' + jqXHR.responseText;
-			}
-		    this.setState({error: responseText, showModal: true});
-		}.bind(this));
-  	},
   	render: function() {
   		var schema = this.props.schema;
   		// Replicating userPassword for schema validation and Ordering Schema for ui:order
@@ -75,18 +42,31 @@ var UserViewForm = React.createClass({
   		var schemaOrdered = order.concat(userSchemaKeys);
 		
 		var data = this.props.data;
+		var username = data.username;
   		delete data.userPassword;	
   		console.log(schema);
   		console.log(data);
 		const uiSchema = {
 			"ui:order": schemaOrdered,
+
+			"username": {
+				"ui:readonly": true
+			},
+			"givenName": {
+				"ui:readonly": true
+			},
+			"surname": {
+				"ui:readonly": true
+			},
 			"userPassword": {
 				"ui:widget": "password",
-				"ui:placeholder": "************"
+				"ui:placeholder": "************",
+				"ui:readonly": true
 			},
 			"userPassword2": {
 				"ui:widget": "password",
-				"ui:placeholder": "************"
+				"ui:placeholder": "************",
+				"ui:readonly": true
 			},
 			"cn": {
 				"ui:readonly": true,
@@ -99,15 +79,32 @@ var UserViewForm = React.createClass({
 			},
 			"registeredAddress": {
 				"ui:widget": "textarea",
-				"type": "string"
+				"type": "string",
+				"ui:readonly": true
 			},
 			"postalAddress": {
 				"ui:widget": "textarea",
-				"type": "string"
+				"type": "string",
+				"ui:readonly": true
+			},
+			"telephoneNumber": {
+				"ui:readonly": true
+			},
+			"facsimileTelephoneNumber": {
+				"ui:readonly": true
+			},
+			"email": {
+				"ui:readonly": true
+			},
+			"links": {
+				"ui:readonly": true
+			},
+			"userCategory": {
+				"ui:disabled": true
 			}
 		};
 		const log = (type) => console.log.bind(console, type);
-		const onSubmit = ({formData}) => this.updateUserData({formData});
+		//const onSubmit = ({formData}) => this.updateUserData({formData});
 		const onError = (errors) => console.log("I have", errors.length, "errors to fix");
 		console.log("Error: ", this.state.error);
 		console.log("Show: ", this.state.showModal);
@@ -128,14 +125,20 @@ var UserViewForm = React.createClass({
 				<Row className="show-grid">
       				<Col xs={12} md={8}>
       					<code>
-      						<Form schema={schema}
-					        uiSchema={uiSchema}
-					        formData={data}
-					        onChange={log("changed")}
-					        onSubmit={onSubmit}
-					        onError={onError}
-					        validate={userValidation}
-					        liveValidate= {true} />
+      						<Form 
+      							schema={schema}
+					        	uiSchema={uiSchema}
+					        	formData={data}
+					        	onChange={log("changed")}
+					        	//onSubmit={onSubmit}
+					        	onError={onError}
+					        	validate={userValidation}
+					        	liveValidate= {true}
+					        >
+						        <div>
+						        	<LinkContainer to={{ pathname: '/UserEdit/'+username, query: { task: 'edit' } }}><Button>Edit</Button></LinkContainer>
+							    </div>
+					        </Form>
       					</code>
       				</Col>
       				<Col xs={6} md={4}>

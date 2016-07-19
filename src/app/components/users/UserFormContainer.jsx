@@ -8,7 +8,7 @@ import {ReactRouter, Router, Route, Link, History} from 'react-router';
 
 var UserFormContainer = React.createClass({
   	getInitialState: function() {
-  		//console.log("task", this.props.route.task);
+  		console.log("TASK: ", this.props.route.task);
    		return { 
    			schema: null,
    			data: null,

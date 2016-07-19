@@ -81,11 +81,13 @@ var UserEditForm = React.createClass({
 			"ui:order": schemaOrdered,
 			"userPassword": {
 				"ui:widget": "password",
-				"ui:placeholder": "************"
+				"ui:placeholder": "************",
+				"ui:help": "Hint: Make it strong!"
 			},
 			"userPassword2": {
 				"ui:widget": "password",
-				"ui:placeholder": "************"
+				"ui:placeholder": "************",
+				"ui:help": "Passwords have to match!"
 			},
 			"cn": {
 				"ui:readonly": true,

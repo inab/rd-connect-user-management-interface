@@ -26,9 +26,10 @@ var OrganizationalUnitViewForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
-  	updateOrganizationalUnitData: function(formData){
+  	updateOrganizationalUnitData: function({formData}){
   		console.log("yay I'm valid!");
   		//console.log(formData);
+  		var organizationalUnitData = Object.assign({},formData);
   		jQuery.ajax({
 		    type: 'PUT',
 		    url: '/some/url',

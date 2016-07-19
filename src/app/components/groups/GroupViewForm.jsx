@@ -23,10 +23,10 @@ var GroupViewForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
-  	updateGroupData: function(formData){
+  	updateGroupData: function({formData}){
   		console.log("yay I'm valid!");
   		//console.log(formData);
-  		var groupData = Object.create({},formData);
+  		var groupData = Object.assign({},formData);
   		
   		jQuery.ajax({
 		    type: 'PUT',

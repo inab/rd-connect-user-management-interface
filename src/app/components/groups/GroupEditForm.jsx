@@ -25,13 +25,14 @@ var GroupEditForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
-  	updateGroupData: function(formData){
+  	updateGroupData: function({formData}){
   		console.log("yay I'm valid!");
   		//console.log(formData);
+  		var groupData = Object.assign({},formData);
   		jQuery.ajax({
 		    type: 'PUT',
 		    url: '/some/url',
-		    data: formData
+		    data: groupData
 		})
 		.done(function(data) {
 		    self.clearForm()

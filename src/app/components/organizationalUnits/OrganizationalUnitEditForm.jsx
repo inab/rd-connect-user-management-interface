@@ -29,10 +29,10 @@ var OrganizationalUnitEditForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
-  	updateOrganizationalUnitData: function(formData){
+  	updateOrganizationalUnitData: function({formData}){
   		console.log("yay I'm valid!");
   		//console.log(formData);
-  		var organizationalUnitData = Object.create({},formData);
+  		var organizationalUnitData = Object.assign({},formData);
   		//delete userData.userPassword2;
   		jQuery.ajax({
 		    type: 'PUT',

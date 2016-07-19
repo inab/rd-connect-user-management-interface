@@ -136,7 +136,7 @@ var UserViewForm = React.createClass({
 					        	liveValidate= {true}
 					        >
 						        <div>
-						        	<LinkContainer to={{ pathname: '/UserEdit/'+username, query: { task: 'edit' } }}><Button>Edit</Button></LinkContainer>
+						        	<LinkContainer to={{ pathname: '/Users/edit/'+username, query: { task: 'edit' } }}><Button>Edit</Button></LinkContainer>
 							    </div>
 					        </Form>
       					</code>

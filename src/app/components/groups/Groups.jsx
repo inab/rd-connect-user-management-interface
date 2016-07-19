@@ -41,7 +41,7 @@ const Groups = ({data}) => {
                       <td>{group.description}</td>
                       <td>{listOwners}</td>
                       <td>{listMembers}</td>
-                      <td><Link to={"/groupView/"+group.cn}>View</Link>/<Link to={"/groupEdit/"+group.cn}>Edit</Link></td>
+                      <td><Link to={"/groups/view/"+group.cn}>View</Link>/<Link to={"/groups/edit/"+group.cn}>Edit</Link></td>
                     </tr>
                 );
               })}

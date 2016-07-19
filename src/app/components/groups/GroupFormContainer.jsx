@@ -2,7 +2,6 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 var GroupEditForm = require('./GroupEditForm.jsx');
-var GroupNewForm = require('./GroupNewForm.jsx');
 var GroupViewForm = require('./GroupViewForm.jsx');
 import { Row, Col, Code } from 'react-bootstrap';
 import {ReactRouter, Router, Route, Link, History} from 'react-router';

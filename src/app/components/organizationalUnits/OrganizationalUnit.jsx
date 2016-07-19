@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 const OrganizationalUnit = (props) => (
 	<div className="organizationalUnit">
-  		<strong>{props.organizationalUnit.organizationalUnit}:</strong> {props.organizationalUnit.description} <Link to={"/organizationEdit/"+props.organizationalUnit.organizationalUnit}>(Edit)</Link>
+  		<strong>{props.organizationalUnit.organizationalUnit}:</strong> {props.organizationalUnit.description} <Link to={"/organizationalUnits/edit/"+props.organizationalUnit.organizationalUnit}>(Edit)</Link>
     	{props.children}
   	</div>
 );

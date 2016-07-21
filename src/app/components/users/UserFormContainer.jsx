@@ -4,6 +4,7 @@ var jQuery = require('jquery');
 var UserEditForm = require('./UserEditForm.jsx');
 var UserViewForm = require('./UserViewForm.jsx');
 var UserEnableDisableForm = require('./UserEnableDisableForm.jsx');
+
 import { Row, Col, Code } from 'react-bootstrap';
 import {ReactRouter, Router, Route, Link, History} from 'react-router';
 
@@ -120,6 +121,7 @@ var UserFormContainer = React.createClass({
 			    </div>
 		    );	
     	}
+
     }
     if (this.state.error) {
       return (

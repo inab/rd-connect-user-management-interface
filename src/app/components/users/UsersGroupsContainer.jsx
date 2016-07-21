@@ -1,21 +1,14 @@
 var React = require('react');
 var jQuery = require('jquery');
-var Users = require('./Users.jsx');
 var UsersGroups = require('./UsersGroups.jsx');
 
-import {ReactRouter, Router, Route, Link, History} from 'react-router';
-
-var UsersContainer = React.createClass({
-	propTypes:{
-		task: React.PropTypes.string.isRequired
+var UsersGroupsContainer = React.createClass({
+  	getInitialState: function() {
+    	return { 
+    		data: []
+    	};
   	},
-	getInitialState: function() {
-		return {
-			data: []
-		};
-
-	},
-	loadUsersFromServer: function() {
+  	loadUsersFromServer: function() {
 	    jQuery.ajax({
 	    	url: "json/users.json",
 	    	headers: {
@@ -35,26 +28,29 @@ var UsersContainer = React.createClass({
 	      	}.bind(this)
 	    });
 	},
-	componentDidMount: function() {
-	    this.loadUsersFromServer();
-	    //setInterval(this.loadUsersFromServer, 20000);
-	},
+  	componentDidMount: function() {
+    	this.loadUsersFromServer();
+  	},
+
   	render: function() {
-  		
-  		if (this.state.error) {
-	      	return (
-	      		<div>Error {this.state.error}</div>
-	      	);
-	    }
-  		if (this.state.data) {
+  		//console.log("Schema: ", this.state.schema);
+  		//console.log("Data: ", this.state.data);
+  		//console.log("Groups: ", this.state.groups);
+    	if (this.state.data) {
 	    	return (
 	    		<div>
-	      			<Users data={this.state.data} task="viewEdit"/>
+	      			<UsersGroups data={this.state.data} />
 	      		</div>
-	      	);
+	      	);	      	
+    	}
+	    if (this.state.error) {
+	    	return (
+	      		<div>
+		    		Error: {this.state.error}
+		    	</div>
+	      	)
 	    }
 	    return <div>Loading...</div>;
 	}
 });
-
-module.exports = UsersContainer;
+module.exports = UsersGroupsContainer;

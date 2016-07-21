@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 var User = require('./User.jsx');
 
 
-const Users = ({data}) => {
+const UsersGroups = ({data}) => {
     //console.log("Data so far is: ", data);
     var groupData=Underscore
       .chain(data)
@@ -18,7 +18,7 @@ const Users = ({data}) => {
       
     return (
     <div>
-      <h3> List of Users </h3>
+      <h3> Lists of groups that a user is member of </h3>
           {groupData.map(function(ou,i){
               var organizationalUnit=ou[0].organizationalUnit;
               var headerText=organizationalUnit;
@@ -32,22 +32,17 @@ const Users = ({data}) => {
                             <th>#</th>
                             <th>User Name</th>
                             <th>Common Name</th>
-                            <th>User Category</th>
-                            <th>Enabled</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
                         {ou.map(function(user,j){
-                          var isChecked=user.enabled;
                           return (
                             <tr key={j}>
                               <td>{j}</td>
                               <td>{user.username}</td>
                               <td>{user.cn}</td>
-                              <td>{user.userCategory}</td>
-                              <td><Checkbox checked={isChecked} readOnly /></td>
-                              <td><Link to={"/users/view/"+user.username}>View </Link>/<Link to={"/users/edit/"+user.username}> Edit</Link>/<Link to={"/users/enable-disable/"+user.username}> Enable/Disable</Link></td>
+                              <td><Link to={"/users/groups/view/"+user.username}>List Groups</Link>/<Link to={"/users/groups/edit/"+user.username}> Edit Groups</Link></td>
                             </tr>
                           );
                         })}
@@ -61,4 +56,4 @@ const Users = ({data}) => {
     </div>
     );
 }
-module.exports = Users;
+module.exports = UsersGroups;

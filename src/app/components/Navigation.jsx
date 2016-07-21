@@ -18,19 +18,21 @@ var Navigation = React.createClass({
                     <NavDropdown id="NavDropdown-Users" eventKey={2} title="Users">
                         <LinkContainer to="/users"><MenuItem eventKey="1">List Users</MenuItem></LinkContainer>
                         <LinkContainer to="/users/new"><MenuItem eventKey="2">New User</MenuItem></LinkContainer>
-                        <LinkContainer to="/users/enable-disable"><MenuItem eventKey="3">Enable/Disable User</MenuItem></LinkContainer>
                         <MenuItem divider />
-                        <LinkContainer to="/userAction5"><MenuItem eventKey="3">Separated Users link</MenuItem></LinkContainer>
-
+                        <NavDropdown id="NavDropdown-Users-Actions"eventKey={3} title="User Actions">
+                            <LinkContainer to="/users/groups"><MenuItem eventKey="1">User's list of groups</MenuItem></LinkContainer>
+                            <LinkContainer to="/userAction2"><MenuItem eventKey="2">User's Documents </MenuItem></LinkContainer>
+                            <LinkContainer to="/users/enable-disable"><MenuItem eventKey="3">Enable/Disable User</MenuItem></LinkContainer>
+                        </NavDropdown>
                     </NavDropdown>
-                    <NavDropdown id="NavDropdown-Organizations" eventKey={3} title="Organizations">
+                    <NavDropdown id="NavDropdown-Organizations" eventKey={4} title="Organizations">
                         <LinkContainer to="/organizationalUnits"><MenuItem eventKey="1">List Organizations</MenuItem></LinkContainer>
                         <LinkContainer to="/organizationalUnits/new"><MenuItem eventKey="2">New Organization</MenuItem></LinkContainer>
                         <MenuItem divider />
                         <LinkContainer to="/organizationAction5"><MenuItem eventKey="3">Separated Organizations link</MenuItem></LinkContainer>
                         
                     </NavDropdown>
-                    <NavDropdown id="NavDropdown-Groups" eventKey={4} title="Groups">
+                    <NavDropdown id="NavDropdown-Groups" eventKey={5} title="Groups">
                         <LinkContainer to="/groups"><MenuItem eventKey="1">List Groups</MenuItem></LinkContainer>
                         <LinkContainer to="/groups/new"><MenuItem eventKey="2">New Group</MenuItem></LinkContainer>
                         <MenuItem divider />

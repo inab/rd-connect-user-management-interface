@@ -20,34 +20,52 @@ const Groups = ({data}) => {
       <h3> List of Groups </h3>
       <Row className="show-grid">
         <Col xs={12} md={10} >
-          <Panel collapsible defaultExpanded center header="Whatever">
-            <Table responsive>
-              <thead>
-                <tr>
-                  <th>Group Name</th>
-                  <th>Description</th>
-                  <th>Owner</th>
-                  <th>Members</th>
-                  <th>Edit</th>
-                </tr>
-              </thead>
-              <tbody>
               {sortedData.map(function(group,i){
-                var listOwners=group.owner.join(", ");
-                var listMembers=group.members.join(", ");
+                var listOwners=group.owner.sort();
+                var groupMembers=group.members.sort();
+                //var listMembers=group.members.join(", ");
                 return(
+                  <Panel collapsible defaultExpanded center>
+                    <Table responsive>
+                      <thead>
+                        <tr>
+                          <th>Group Name</th>
+                          <th>Description</th>
+                          <th>Owner</th>
+                          <th>Members</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
                     <tr key={i}>
                       <td><strong>{group.cn}</strong></td>
                       <td>{group.description}</td>
-                      <td>{listOwners}</td>
-                      <td>{listMembers}</td>
+                      <td>
+                        <ListGroup>
+                        {listOwners.map(function(owner, j){
+                            return(
+                                <ListGroupItem><Link to={"/users/view/"+owner}>{owner}</Link></ListGroupItem>
+                            );
+                          })}
+                        </ListGroup>
+                      </td>
+                      <td>
+                        <ListGroup>
+                        {groupMembers.map(function(member, j){
+                            return(
+                                <ListGroupItem><Link to={"/users/view/"+member}>{member}</Link></ListGroupItem>
+                            );
+                          })}
+                        </ListGroup>
+                      </td>
                       <td><Link to={"/groups/view/"+group.cn}>View</Link>/<Link to={"/groups/edit/"+group.cn}>Edit</Link></td>
                     </tr>
-                );
-              })}
-              </tbody>
+                    </tbody>
             </Table>
           </Panel>
+                );
+              })}
+              
         </Col>
       </Row>
     </div>

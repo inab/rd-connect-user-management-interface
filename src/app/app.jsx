@@ -15,7 +15,7 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     var OrganizationalUnitFormContainer = require('./components/organizationalUnits/OrganizationalUnitFormContainer.jsx');
     var OrganizationalUnitNewFormContainer = require('./components/organizationalUnits/OrganizationalUnitNewFormContainer.jsx');
     var OrganizationalUnitsUsersBox = require('./components/organizationalUnits/OrganizationalUnitsUsersBox.jsx');
-    var OrganizationalUnitsUsersFormContainer = require('./components/organizationalUnits/OrganizationalUnitsUsersFormContainer.jsx');
+    
     
     var GroupsBox = require('./components/groups/GroupsBox.jsx');    
     var GroupFormContainer = require('./components/groups/GroupFormContainer.jsx');
@@ -53,7 +53,6 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
                 <Route path="/organizationalUnits/view/:organizationalUnit" component={OrganizationalUnitFormContainer} task={'view'} />
                 <Route path="/organizationalUnits/new" component={OrganizationalUnitNewFormContainer} />
                 <Route path="/organizationalUnits/users" component={OrganizationalUnitsUsersBox} />
-                <Route path="/organizationalUnits/users/edit/:organizationalUnit" component={OrganizationalUnitsUsersFormContainer} />
 
                 <Route path="/groups" component={GroupsBox} />
                 <Route path="/groups/edit/:groupName" component={GroupFormContainer} task={'edit'} />

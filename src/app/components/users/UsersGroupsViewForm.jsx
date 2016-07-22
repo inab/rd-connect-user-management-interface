@@ -13,7 +13,8 @@ function userValidation(formData,errors) {
 var UsersGroupsViewForm = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.object.isRequired
+		data: React.PropTypes.object.isRequired,
+		groups: React.PropTypes.object.isRequired
   	},
   	getInitialState: function() {
 		return { error: null, showModal:false};
@@ -25,35 +26,35 @@ var UsersGroupsViewForm = React.createClass({
 		this.setState({showModal: true});
 	},
   	render: function() {
-  		var schema = this.props.schema;
-  		console.log("ORIGINAL SCHEMA: ", schema);
-  		var schema = {
-  			"type": "object",
-			"properties": {
-	  			"username": {
-					"title": "The username",
-					"type": "string",
-					"minLength": 1
-				},
-				"cn": {
-					"title": "Common name (usually givenName + surname)",
-					"type": "string",
-					"minLength": 1
-				},
-				"groups": {
-					"title": "The list of groups where this user is registered in",
-					"type": "array",
-					"uniqueItems": true,
-					"items": {
-						"type": "string",
-						"minLength": 1
-					}
-				}
+  		var originalSchema = this.props.schema;
+  		console.log("ORIGINAL SCHEMA: ", originalSchema);
+  		var newSchema= new Object();
+  		newSchema.type=originalSchema.type;
+  		newSchema.properties=new Object();
+  		newSchema.properties.username=originalSchema.properties.username;
+  		newSchema.properties.cn=originalSchema.properties.cn;
+  		console.log("All Available Groups are: ", this.props.groups);
+  		//We generate an array with all the available groups
+  		var arrayGroups=new Array();
+  		for(var i=0;i<this.props.groups.length;i++){
+  			arrayGroups.push(this.props.groups[i].cn);
+  		}
+  		arrayGroups.sort()
+
+  		newSchema.properties.groups={
+			"title": "The list of groups where this user is registered in",
+			"type": "array",
+			"uniqueItems": true,
+			"items": {
+				"type": "string",
+				"minLength": 1
+				
 			}
 		};
-  		console.log("NEW SCHEMA: ", schema);
+		newSchema.properties.groups.items.enum=arrayGroups;
+  		console.log("NEW SCHEMA: ", newSchema);		
 		var data = this.props.data;
-		console.log("Data: ", data);
+		console.log("DATA contains: ", data);
 		var username = data.username;
   		console.log(username);
 		const uiSchema = {
@@ -64,7 +65,8 @@ var UsersGroupsViewForm = React.createClass({
 				"ui:readonly": true
 			},
 			"groups": {
-				"ui:readonly": true
+				"ui:disabled": true,
+				"ui:widget": "checkboxes"
 			}
 		};
 		const log = (type) => console.log.bind(console, type);
@@ -89,7 +91,7 @@ var UsersGroupsViewForm = React.createClass({
       				<Col xs={12} md={8}>
       					<code>
       						<Form 
-      							schema={schema}
+      							schema={newSchema}
 					        	uiSchema={uiSchema}
 					        	formData={data}
 					        	onChange={log("changed")}

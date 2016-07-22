@@ -4,59 +4,15 @@ var OrganizationalUnitsUsersEditForm = require('./OrganizationalUnitsUsersEditFo
 
 var OrganizationalUnitsUsersFormContainer = React.createClass({
   	getInitialState: function() {
-  		console.log("TASK: ", this.props.route.task);
    		return { 
-   			schema: null,
-   			data: null,
-   			groups: null,
+   			users: null,
    			error: null,
-   			showModal: false,
-   			task: this.props.route.task
+   			showModal: false
    		};
   	},
-  	loadUserFromServer: function() {
-	    jQuery.ajax({
-	    	url: 'json/user-'+this.props.params.username+'.json',
-	    	headers: {
-				'X-CAS-Referer': window.location.href
-			},
-	    	dataType: 'json',
-	      	cache: false,
-	    })
-	    .done (function(data) {
-	      		//console.log("success!");
-	        	this.setState({data: data});
-	        	//console.log(this.state.data);
-	    }.bind(this))
-	    .fail (function(xhr, status, err) {
-	        	//console.error("json/users.json", status, err);
-	        	console.error(xhr.status);
-	        	this.setState({error: xhr.status + ' (Retrieving users)'});
-	    }.bind(this));
-	},
-  	loadGroupsFromServer: function() {
-	    jQuery.ajax({
-	    	url: "json/groups.json",
-	    	headers: {
-				'X-CAS-Referer': window.location.href
-			},
-	    	dataType: 'json',
-	      	cache: false,
-	     })
-	     .done (function(groups) {
-      		//console.log("success!");
-        	this.setState({groups: groups});
-        	this.loadUserFromServer();
-	    }.bind(this))
-	    .fail(function(xhr, status, err) {
-        	//console.error("json/OrganizationalUnitalUnits.json", status, err);
-        	console.error(xhr.status);
-        	this.setState({error: xhr.status + ' (Retrieving Groups)'});
-	    }.bind(this));
-	},
-  	loadUserSchema: function() {
+  	loadUsersFromOrganizationalUnit: function() {
 	  	jQuery.ajax({
-	  		url: 'json/userValidation.json',
+	  		url: 'json/users-from-'+this.props.params.organizationalUnit+'.json',
 	  		type: 'GET',
 	  		dataType: 'json',
 	  		headers: {
@@ -64,12 +20,11 @@ var OrganizationalUnitsUsersFormContainer = React.createClass({
 	  		},
 	  		contentType: 'application/json; charset=utf-8',
 	  	})
-	  	.done(function(schema) {
-      		this.setState({schema: schema});
-      		this.loadGroupsFromServer();
+	  	.done(function(users) {
+      		this.setState({users: users});
     	}.bind(this))
 		.fail(function(jqXhr) {
-		    console.log('failed to retrieve user Schema',jqXhr);
+		    console.log('failed to retrieve users',jqXhr);
 		    var responseText="";
 		    if (jqXhr.status === 0) {
 			    responseText='Not connect: Verify Network.';
@@ -90,30 +45,18 @@ var OrganizationalUnitsUsersFormContainer = React.createClass({
 		}.bind(this));
   	},
   	componentDidMount: function() {
-    	this.loadUserSchema();
+    	this.loadUsersFromOrganizationalUnit();
   	},
 
   	render: function() {
-  		console.log("Schema: ", this.state.schema);
-  		console.log("Data: ", this.state.data);
-  		console.log("Groups: ", this.state.groups);
-  		console.log("TASK: ", this.state.task);
+  		console.log("Users: ", this.state.users);
 
-    	if ((this.state.schema)&&(this.state.data)&&(this.state.groups)) {
-    		if(this.state.task=="users_groups_view"){
-		    	return (
-		    		<div>
-		      			<UsersGroupsViewForm schema={this.state.schema} data={this.state.data} />
-		      		</div>
-		      	);
-	      	}else if(this.state.task=="users_groups_edit"){
-		    	return (
-		    		<div>
-		      			<UsersGroupsEditForm schema={this.state.schema} data={this.state.data} groups={this.state.groups} />
-		      		</div>
-		      	);
-	      	}
-
+    	if (this.state.users) {
+	    	return (
+	    		<div>
+	      			<OrganizationalUnitsUsersEditForm users={this.state.users} />
+	      		</div>
+	      	);
     	}
 	    if (this.state.error) {
 	    	return (

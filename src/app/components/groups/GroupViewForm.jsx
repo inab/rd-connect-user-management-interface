@@ -63,6 +63,23 @@ var GroupViewForm = React.createClass({
   		console.log(schema);
   		console.log(data);
 
+  		const uiSchema = {
+  			"cn": {
+				"ui:readonly": true
+			},
+			"description": {
+				"ui:readonly": true
+			},
+			"members": {
+				"ui:readonly": true
+			},
+			"owner": {
+				"ui:readonly": true
+			},
+			"groupPurpose": {
+				"ui:readonly": true
+			},
+		};
 		
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateGroupData({formData});
@@ -87,7 +104,7 @@ var GroupViewForm = React.createClass({
       				<Col xs={12} md={8}>
       					<code>
       						<Form schema={schema}
-					        //uiSchema={uiSchema}
+					        uiSchema={uiSchema}
 					        formData={data}
 					        onChange={log("changed")}
 					        onSubmit={onSubmit}

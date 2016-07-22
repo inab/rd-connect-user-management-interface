@@ -104,7 +104,7 @@ var UsersGroupsFormContainer = React.createClass({
     		if(this.state.task=="users_groups_view"){
 		    	return (
 		    		<div>
-		      			<UsersGroupsViewForm schema={this.state.schema} data={this.state.data} />
+		      			<UsersGroupsViewForm schema={this.state.schema} data={this.state.data} groups={this.state.groups} />
 		      		</div>
 		      	);
 	      	}else if(this.state.task=="users_groups_edit"){

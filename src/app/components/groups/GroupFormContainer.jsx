@@ -10,7 +10,8 @@ var GroupFormContainer = React.createClass({
   	getInitialState: function() {
     	return { 
     		schema: null, 
-    		data: null, 
+    		data: null,
+    		users: null, 
     		error: null, 
     		showModal: false, 
     		task: this.props.route.task
@@ -22,6 +23,40 @@ var GroupFormContainer = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
+	loadUsers: function() {
+	  	jQuery.ajax({
+	  		url: 'json/users.json',
+	  		type: 'GET',
+	  		dataType: 'json',
+	  		headers: {
+	  			'X-CAS-Referer': window.location.href
+	  		},
+	  		contentType: 'application/json; charset=utf-8',
+	  	})
+	  	.done(function(users) {
+      		this.setState({users: users});
+    	}.bind(this))
+		.fail(function(jqXhr) {
+		    console.log('Failed to retrieve Users',jqXhr);
+		    var responseText="";
+		    if (jqXhr.status === 0) {
+			    responseText='Failed to retrieve Users. Not connect: Verify Network.';
+			} else if (jqXhr.status == 404) {
+			    responseText='Failed to retrieve Users. Validation Schema not found [404]';
+			} else if (jqXhr.status == 500) {
+			    responseText='Failed to retrieve Users. Internal Server Error [500].';
+			} else if (textStatus === 'parsererror') {
+			    responseText='Failed to retrieve Users. Requested JSON parse failed.';
+			} else if (textStatus === 'timeout') {
+			    responseText='Failed to retrieve Users. Time out error.';
+			} else if (textStatus === 'abort') {
+			    responseText='Failed to retrieve Users. Ajax request aborted.';
+			} else {
+			    responseText='Failed to retrieve Users. Uncaught Error: ' + jqXHR.responseText;
+			}
+		    this.setState({error: responseText, showModal: true});
+		}.bind(this));
+  	},
   	loadGroupSchema: function() {
 	  	jQuery.ajax({
 	  		url: 'json/groupValidation.json',
@@ -34,6 +69,7 @@ var GroupFormContainer = React.createClass({
 	  	})
 	  	.done(function(schema) {
       		this.setState({schema: schema});
+      		this.loadUsers();
     	}.bind(this))
 		.fail(function(jqXhr) {
 		    console.log('Failed to retrieve group Schema',jqXhr);
@@ -98,11 +134,14 @@ var GroupFormContainer = React.createClass({
 
   mixins: [ History ], //This is to browse history back when group is not found after showing modal error
   render: function() {
-    if (this.state.schema && this.state.data) {
+  	//console.log("Schema contains: ", this.state.schema);
+  	//console.log("Data contains: ", this.state.data);
+  	//console.log("Users contains: ", this.state.users);
+    if (this.state.schema && this.state.data && this.state.users) {
     	if(this.state.task=="edit"){
     		return (
 		      	<div>
-			    	<GroupEditForm schema={this.state.schema}  data={this.state.data}  />
+			    	<GroupEditForm schema={this.state.schema}  data={this.state.data}  users={this.state.users} />
 			    </div>
 		    );
     	}else if(this.state.task=="view"){

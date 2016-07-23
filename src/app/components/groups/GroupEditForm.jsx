@@ -14,10 +14,11 @@ import { Row, Col, Code } from 'react-bootstrap';
 var GroupEditForm = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.object.isRequired
+		data: React.PropTypes.object.isRequired,
+		users: React.PropTypes.array.isRequired
   	},
   	getInitialState: function() {
-		return { error: null, showModal:false};
+  		return { error: null, showModal:false};
 	},
 	close(){
 		this.setState({showModal: false});
@@ -26,7 +27,7 @@ var GroupEditForm = React.createClass({
 		this.setState({showModal: true});
 	},
   	updateGroupData: function({formData}){
-  		console.log("yay I'm valid!");
+  		//console.log("yay I'm valid!");
   		//console.log(formData);
   		var groupData = Object.assign({},formData);
   		jQuery.ajax({
@@ -60,17 +61,73 @@ var GroupEditForm = React.createClass({
   	},
   	render: function() {
   		var schema = this.props.schema;
+  		//We need to be sure that the new user added to this group is an existing user
+  		var newSchema= new Object();
+  		newSchema.type=schema.type;
+  		newSchema.properties=new Object();
+  		newSchema.additionalProperties=false;
+  		newSchema.dependencies=schema.dependencies;
+  		newSchema.properties.cn=schema.properties.cn;
+  		newSchema.properties.owner=schema.properties.owner;
+  		//We generate an array with all the available groups
+  		var arrayUsers=new Object();
+  		for(var i=0;i<this.props.users.length;i++){
+  			var cn=this.props.users[i].cn;
+  			var username = this.props.users[i].username;
+  			arrayUsers[cn]= username;
+  		}
+  		//console.log("arrayUsers contiene: ", arrayUsers);
+  		//Now we sort arrayUsers by the keys
+  		var arrayUsersSortable = [];
+		for (var user in arrayUsers)
+		      arrayUsersSortable.push([user, arrayUsers[user]])
+		arrayUsersSortable.sort(
+		    function(a, b) {
+		        return a[0] > b[0]
+		    }
+		)
+		//Now we generate the arrays for enum y enumNames from arrayUsesSortable
+		var usersEnum=[];
+		var usersEnumNames=[];
+		for(var i=0; i<89; i++){
+			usersEnum.push(arrayUsersSortable[i][1]);
+			usersEnumNames.push(arrayUsersSortable[i][0]);
+		}
+  		newSchema.properties.members={
+			"title": "Members inside "+ this.props.data.cn +" group: ",
+			"type": "array",
+			"uniqueItems": true,
+			"items": {
+				"type": "string",
+				"minLength": 1
+			}
+		};
+		//We set the enum property to usersEnum forcing the user to choose an existing user as member of this group
+		newSchema.properties.members.items.enum=usersEnum;
+		newSchema.properties.members.items.enumNames=usersEnumNames;
+
 		var data = this.props.data;
-  		console.log(schema);
-  		console.log(data);
-		/*const uiSchema = {
-		
-		};*/
+  		var newData = Object.create(data);
+  		
+  		newData.cn=data.cn; newData.owner=data.owner; newData.members=data.members;
+
+		const uiSchema = {
+			"cn": {
+				"ui:readonly": true
+			},
+			"owner": {
+				"ui:readonly": true
+			},
+			"members": {
+				"ui:widget": "select"
+				
+			}
+		};
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateGroupData({formData});
 		const onError = (errors) => console.log("I have", errors.length, "errors to fix");
-		console.log("Error: ", this.state.error);
-		console.log("Show: ", this.state.showModal);
+		//console.log("Error: ", this.state.error);
+		//console.log("Show: ", this.state.showModal);
 		
 	    return (
 			<div>				
@@ -88,9 +145,9 @@ var GroupEditForm = React.createClass({
 				<Row className="show-grid">
       				<Col xs={12} md={8}>
       					<code>
-      						<Form schema={schema}
-					        //uiSchema={uiSchema}
-					        formData={data}
+      						<Form schema={newSchema}
+					        uiSchema={uiSchema}
+					        formData={newData}
 					        onChange={log("changed")}
 					        onSubmit={onSubmit}
 					        onError={onError}

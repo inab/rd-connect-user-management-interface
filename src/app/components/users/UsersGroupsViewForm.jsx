@@ -1,10 +1,8 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
-import Form from "react-jsonschema-form";
-import { Row, Col, Code, Button } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
-//var ModalError = require("./ModalError.jsx");
+import Form from 'react-jsonschema-form';
+import { Row, Col, Button } from 'react-bootstrap';
+//var ModalError = require('./ModalError.jsx');
 
 function userValidation(formData,errors) {
 	return errors;
@@ -15,8 +13,8 @@ var UsersGroupsViewForm = React.createClass({
 		schema: React.PropTypes.object.isRequired,
 		data: React.PropTypes.object.isRequired,
 		groups: React.PropTypes.object.isRequired
-  	},
-  	getInitialState: function() {
+	},
+	getInitialState: function() {
 		return { error: null, showModal:false};
 	},
 	close(){
@@ -25,88 +23,86 @@ var UsersGroupsViewForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
-  	render: function() {
-  		var originalSchema = this.props.schema;
-  		console.log("ORIGINAL SCHEMA: ", originalSchema);
-  		var newSchema= new Object();
-  		newSchema.type=originalSchema.type;
-  		newSchema.properties=new Object();
-  		newSchema.properties.username=originalSchema.properties.username;
-  		newSchema.properties.cn=originalSchema.properties.cn;
-  		console.log("All Available Groups are: ", this.props.groups);
-  		//We generate an array with all the available groups
-  		var arrayGroups=new Array();
-  		for(var i=0;i<this.props.groups.length;i++){
-  			arrayGroups.push(this.props.groups[i].cn);
-  		}
-  		arrayGroups.sort()
-
-  		newSchema.properties.groups={
-			"title": "The list of groups where this user is registered in",
-			"type": "array",
-			"uniqueItems": true,
-			"items": {
-				"type": "string",
-				"minLength": 1
-				
+	render: function() {
+		var originalSchema = this.props.schema;
+		console.log('ORIGINAL SCHEMA: ', originalSchema);
+		var newSchema = {};
+		newSchema.type = originalSchema.type;
+		newSchema.properties = {};
+		newSchema.properties.username = originalSchema.properties.username;
+		newSchema.properties.cn = originalSchema.properties.cn;
+		console.log('All Available Groups are: ', this.props.groups);
+		//We generate an array with all the available groups
+		var arrayGroups = [];
+		for (var i = 0; i < this.props.groups.length; i++){
+			arrayGroups.push(this.props.groups[i].cn);
+		}
+		arrayGroups.sort();
+		newSchema.properties.groups = {
+			'title': 'The list of groups where this user is registered in',
+			'type': 'array',
+			'uniqueItems': true,
+			'items': {
+				'type': 'string',
+				'minLength': 1
 			}
 		};
-		newSchema.properties.groups.items.enum=arrayGroups;
-  		console.log("NEW SCHEMA: ", newSchema);		
+		newSchema.properties.groups.items.enum = arrayGroups;
+		console.log('NEW SCHEMA: ', newSchema);
 		var data = this.props.data;
-		console.log("DATA contains: ", data);
+		console.log('DATA contains: ', data);
 		var username = data.username;
-  		console.log(username);
+		console.log(username);
 		const uiSchema = {
-			"username": {
-				"ui:readonly": true
+			'username': {
+				'ui:readonly': true
 			},
-			"cn": {
-				"ui:readonly": true
+			'cn': {
+				'ui:readonly': true
 			},
-			"groups": {
-				"ui:disabled": true,
-				"ui:widget": "checkboxes"
+			'groups': {
+				'ui:disabled': true,
+				'ui:widget': 'checkboxes'
 			}
 		};
 		const log = (type) => console.log.bind(console, type);
 		//const onSubmit = ({formData}) => this.updateUserData({formData});
-		const onError = (errors) => console.log("I have", errors.length, "errors to fix");
-		console.log("Error: ", this.state.error);
-		console.log("Show: ", this.state.showModal);
-	    return (
-			<div>				
+		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
+		console.log('Error: ', this.state.error);
+		console.log('Show: ', this.state.showModal);
+		return (
+			<div>
 				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-          			<Bootstrap.Modal.Header closeButton>
-            			<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-          				</Bootstrap.Modal.Header>
-          			<Bootstrap.Modal.Body>
-            			<h4>{this.state.error}</h4>
-          			</Bootstrap.Modal.Body>
-          			<Bootstrap.Modal.Footer>
-            			<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
+					<Bootstrap.Modal.Header closeButton>
+						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
+						</Bootstrap.Modal.Header>
+					<Bootstrap.Modal.Body>
+						<h4>{this.state.error}</h4>
+					</Bootstrap.Modal.Body>
+					<Bootstrap.Modal.Footer>
+						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
 					</Bootstrap.Modal.Footer>
 				</Bootstrap.Modal>
 				<Row className="show-grid">
-      				<Col xs={12} md={8}>
-      					<code>
-      						<Form 
-      							schema={newSchema}
-					        	uiSchema={uiSchema}
-					        	formData={data}
-					        	onChange={log("changed")}
-					        	onError={onError}
-					        	validate={userValidation}
-					        	liveValidate= {true}
-					        />
-      					</code>
-      				</Col>
-      				<Col xs={6} md={4}>
-      					<code></code>
-      				</Col>
-    			</Row>
-		    </div>
-	    );
-	 }
+					<Col xs={12} md={8}>
+						<code>
+							<Form
+								schema={newSchema}
+								uiSchema={uiSchema}
+								formData={data}
+								onChange={log('changed')}
+								onError={onError}
+								validate={userValidation}
+								liveValidate
+							/>
+						</code>
+					</Col>
+					<Col xs={6} md={4}>
+						<code></code>
+					</Col>
+				</Row>
+			</div>
+		);
+	}
 });
 module.exports = UsersGroupsViewForm;

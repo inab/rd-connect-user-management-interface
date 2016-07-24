@@ -1,26 +1,24 @@
 import { Router, Route, hashHistory, IndexRoute } from 'react-router';
 (function () {
-    var React = require('react'),
-    	ReactDOM = require('react-dom'),
-        injectTapEventPlugin = require("react-tap-event-plugin"),
-        Main = require('./components/main.jsx');
-    var UsersBox = require('./components/users/UsersBox.jsx');    
+    var React = require('react');
+    var	ReactDOM = require('react-dom');
+    var injectTapEventPlugin = require('react-tap-event-plugin');
+    var Main = require('./components/main.jsx');
+
+    var MainLayout = require('./components/layout/MainLayout.jsx');
+    var SearchLayout = require('./components/layout/SearchLayout.jsx');
+    var UsersBox = require('./components/users/UsersBox.jsx');
     var UserFormContainer = require('./components/users/UserFormContainer.jsx');
     var UserNewFormContainer = require('./components/users/UserNewFormContainer.jsx');
-    var UsersGroupsBox = require('./components/users/UsersGroupsBox.jsx');    
-    var UsersGroupsContainer = require('./components/users/UsersGroupsContainer.jsx');    
-    var UsersGroupsFormContainer = require('./components/users/UsersGroupsFormContainer.jsx');    
-
-    var OrganizationalUnitsBox = require('./components/organizationalUnits/OrganizationalUnitsBox.jsx');    
+    var UsersGroupsBox = require('./components/users/UsersGroupsBox.jsx');
+    var UsersGroupsFormContainer = require('./components/users/UsersGroupsFormContainer.jsx');
+    var OrganizationalUnitsBox = require('./components/organizationalUnits/OrganizationalUnitsBox.jsx');
     var OrganizationalUnitFormContainer = require('./components/organizationalUnits/OrganizationalUnitFormContainer.jsx');
     var OrganizationalUnitNewFormContainer = require('./components/organizationalUnits/OrganizationalUnitNewFormContainer.jsx');
     var OrganizationalUnitsUsersBox = require('./components/organizationalUnits/OrganizationalUnitsUsersBox.jsx');
-    
-    
-    var GroupsBox = require('./components/groups/GroupsBox.jsx');    
+    var GroupsBox = require('./components/groups/GroupsBox.jsx');
     var GroupFormContainer = require('./components/groups/GroupFormContainer.jsx');
     var GroupNewFormContainer = require('./components/groups/GroupNewFormContainer.jsx');
-    
     var Home = require('./components/Home.jsx');
 
     //Needed for React Developer Tools

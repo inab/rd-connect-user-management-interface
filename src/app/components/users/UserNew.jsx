@@ -1,5 +1,4 @@
 var React = require('react');
-var Bootstrap = require('react-bootstrap');
 
 //var Navigation = require('./navigation.jsx');
 

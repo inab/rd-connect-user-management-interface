@@ -1,20 +1,22 @@
 import React from 'react';
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
 
 var Navigation = React.createClass({
-
+    propTypes:{
+        projectName: React.PropTypes.string.isRequired
+    },
     render: function() {
         return (
             <Navbar inverse fixedTop >
-	    	<Navbar.Header>
-    		    <Navbar.Brand>
-                            <a style={{padding: 0}} href=""><img src="images/rdconnect-logo.jpg" alt={this.props.projectName} style={{height: '100%',paddingRight: '1em',paddingLeft: '1em',backgroundColor: 'white'}}/></a>
-    		    </Navbar.Brand>
-    		</Navbar.Header>
+                <Navbar.Header>
+                    <Navbar.Brand>
+                        <a style={{padding: 0}} href=""><img src="images/rdconnect-logo.jpg" alt={this.props.projectName} style={{height: '100%',paddingRight: '1em',paddingLeft: '1em',backgroundColor: 'white'}}/></a>
+                    </Navbar.Brand>
+                </Navbar.Header>
                 <Nav>
-                    <LinkContainer to='/' onlyActiveOnIndex={true}><MenuItem eventKey={1}>Home</MenuItem></LinkContainer>
+                    <LinkContainer to="/" onlyActiveOnIndex><MenuItem eventKey={1}>Home</MenuItem></LinkContainer>
                     <NavDropdown id="NavDropdown-Users" eventKey={2} title="Users">
                         <LinkContainer to="/users"><MenuItem eventKey="1">List Users</MenuItem></LinkContainer>
                         <LinkContainer to="/users/new"><MenuItem eventKey="2">New User</MenuItem></LinkContainer>

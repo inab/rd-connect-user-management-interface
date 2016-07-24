@@ -1,30 +1,27 @@
 var React = require('react');
-var Bootstrap = require('react-bootstrap');
 
-var Group = require('./Group.jsx');
-import { Row, Col, Code, Panel, Table, ListGroup, ListGroupItem, Button, Checkbox } from 'react-bootstrap';
+import { Row, Col, Panel, Table, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Link } from 'react-router';
 var Underscore = require('underscore');
 
 const Groups = ({data}) => {
   //console.log("Data so far is: ", data);
-  console.log("Data so far is: ", data);
-  var sortedData=Underscore
+  console.log('Data so far is: ', data);
+  var sortedData = Underscore
     .chain(data)
     .sortBy(function(groupObjects){ return groupObjects.cn; })
-    .value()
-  console.log("sortedData so far is: ", sortedData);
-  
+    .value();
+  console.log('sortedData so far is: ', sortedData);
   return (
     <div>
       <h3> List of Groups </h3>
       <Row className="show-grid">
         <Col xs={12} md={10} >
               {sortedData.map(function(group,i){
-                var listOwners=group.owner.sort();
-                var groupMembers=group.members.sort();
+                var listOwners = group.owner.sort();
+                var groupMembers = group.members.sort();
                 //var listMembers=group.members.join(", ");
-                return(
+                return (
                   <Panel collapsible defaultExpanded center>
                     <Table responsive>
                       <thead>
@@ -43,8 +40,8 @@ const Groups = ({data}) => {
                       <td>
                         <ListGroup>
                         {listOwners.map(function(owner, j){
-                            return(
-                                <ListGroupItem><Link to={"/users/view/"+owner}>{owner}</Link></ListGroupItem>
+                            return (
+                                <ListGroupItem><Link to={'/users/view/' + owner}>{owner}</Link></ListGroupItem>
                             );
                           })}
                         </ListGroup>
@@ -52,24 +49,23 @@ const Groups = ({data}) => {
                       <td>
                         <ListGroup>
                         {groupMembers.map(function(member, j){
-                            return(
-                                <ListGroupItem><Link to={"/users/view/"+member}>{member}</Link></ListGroupItem>
+                            return (
+                                <ListGroupItem><Link to={'/users/view/' + member}>{member}</Link></ListGroupItem>
                             );
                           })}
                         </ListGroup>
                       </td>
-                      <td><Link to={"/groups/view/"+group.cn}>View</Link>/<Link to={"/groups/edit/"+group.cn}>Edit</Link></td>
+                      <td><Link to={'/groups/view/' + group.cn}>View</Link>/<Link to={'/groups/edit/' + group.cn}>Edit</Link></td>
                     </tr>
                     </tbody>
             </Table>
           </Panel>
                 );
               })}
-              
         </Col>
       </Row>
     </div>
   );
-}
+};
 
 module.exports = Groups;

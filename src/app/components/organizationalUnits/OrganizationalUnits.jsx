@@ -1,19 +1,17 @@
 var React = require('react');
-var Bootstrap = require('react-bootstrap');
 
-var OrganizationalUnit = require('./OrganizationalUnit.jsx');
-import { Row, Col, Code, Panel, Table, ListGroup, ListGroupItem, Button, Checkbox } from 'react-bootstrap';
+import { Row, Col, Panel, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 var Underscore = require('underscore');
 
 
 const OrganizationalUnits = ({data}) => {
-    console.log("Data so far is: ", data);
-    var sortedData=Underscore
+    console.log('Data so far is: ', data);
+    var sortedData = Underscore
       .chain(data)
       .sortBy(function(ouObjects){ return ouObjects.organizationalUnit; })
-      .value()
-    console.log("sortedData so far is: ", sortedData);
+      .value();
+    console.log('sortedData so far is: ', sortedData);
     return (
     <div>
         <Row className="show-grid">
@@ -31,15 +29,14 @@ const OrganizationalUnits = ({data}) => {
                 </thead>
                 <tbody>
                 {sortedData.map(function(ou,i){
-                  var organizationalUnit=ou.organizationalUnit;
-                  var headerText=organizationalUnit;
-                  return(
+                  var organizationalUnit = ou.organizationalUnit;
+                  return (
                     <tr key={i}>
                       <td><strong>{organizationalUnit}</strong></td>
-                      <td><img src={"data:image/jpeg;base64,"+ou.picture} alt="image Organizational Unit" /></td>
+                      <td><img src={'data:image/jpeg;base64,' + ou.picture} alt="image Organizational Unit" /></td>
                       <td>{ou.description}</td>
                       <td>links</td>
-                      <td><Link to={"/organizationalUnits/view/"+ou.organizationalUnit}>View </Link>/<Link to={"/organizationalUnits/edit/"+ou.organizationalUnit}> Edit</Link></td>
+                      <td><Link to={'/organizationalUnits/view/' + ou.organizationalUnit}>View </Link>/<Link to={'/organizationalUnits/edit/' + ou.organizationalUnit}> Edit</Link></td>
                     </tr>
                   );
                 })}
@@ -50,6 +47,6 @@ const OrganizationalUnits = ({data}) => {
         </Row>
     </div>
     );
-}
+};
 
 module.exports = OrganizationalUnits;

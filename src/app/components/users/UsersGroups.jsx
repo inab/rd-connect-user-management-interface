@@ -1,28 +1,25 @@
 var React = require('react');
-var Bootstrap = require('react-bootstrap');
-import { Row, Col, Code, Panel, Table, ListGroup, ListGroupItem, Button, Checkbox } from 'react-bootstrap';
+import { Row, Col, Panel, Table } from 'react-bootstrap';
 var Underscore = require('underscore');
 import { Link } from 'react-router';
-var User = require('./User.jsx');
 
 
 const UsersGroups = ({data}) => {
     //console.log("Data so far is: ", data);
-    var groupData=Underscore
+    var groupData = Underscore
       .chain(data)
       .groupBy('organizationalUnit')
       .toArray()
       .sortBy(function(ouObjects){ return ouObjects[0].organizationalUnit; })
-      .value()
+      .value();
 
-      
     return (
     <div>
       <h3> Lists of groups that a user is member of </h3>
           {groupData.map(function(ou,i){
-              var organizationalUnit=ou[0].organizationalUnit;
-              var headerText=organizationalUnit;
-              return(
+              var organizationalUnit = ou[0].organizationalUnit;
+              var headerText = organizationalUnit;
+              return (
                 <Row className="show-grid">
                   <Col xs={12} md={10} >
                     <Panel collapsible defaultExpanded header={headerText} key={i}>
@@ -42,7 +39,7 @@ const UsersGroups = ({data}) => {
                               <td>{j}</td>
                               <td>{user.username}</td>
                               <td>{user.cn}</td>
-                              <td><Link to={"/users/groups/view/"+user.username}>List Groups</Link>/<Link to={"/users/groups/edit/"+user.username}> Edit Groups</Link></td>
+                              <td><Link to={'/users/groups/view/' + user.username}>List Groups</Link>/<Link to={'/users/groups/edit/' + user.username}> Edit Groups</Link></td>
                             </tr>
                           );
                         })}
@@ -55,5 +52,5 @@ const UsersGroups = ({data}) => {
           })}
     </div>
     );
-}
+};
 module.exports = UsersGroups;

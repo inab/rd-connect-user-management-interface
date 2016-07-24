@@ -1,31 +1,28 @@
 var React = require('react');
-var Bootstrap = require('react-bootstrap');
-import { Row, Col, Code, Panel, PanelGroup, Table, ListGroup, ListGroupItem, Button, Checkbox, Accordion } from 'react-bootstrap';
+
+import { Panel, Table, Checkbox, Accordion } from 'react-bootstrap';
 var Underscore = require('underscore');
-import { Link, LinkContainer } from 'react-router';
 
 
 
 const OrganizationalUnitsUsers = ({data}) => {
     //console.log("Data so far is: ", data);
-    
-    var groupData=Underscore
+    var groupData = Underscore
       .chain(data)
       .groupBy('organizationalUnit')
       .toArray()
       .sortBy(function(ouObjects){ return ouObjects[0].organizationalUnit; })
-      .value()
+      .value();
 
-      
     return (
     <div>
       <h3> Users in Organizational Units </h3>
       <Accordion >
         {groupData.map(function(ou,i){
-        var organizationalUnit=ou[0].organizationalUnit;
-        var headerText=organizationalUnit;
-        var route="/organizationalUnits/users/edit/"+headerText;
-        return(
+        var organizationalUnit = ou[0].organizationalUnit;
+        var headerText = organizationalUnit;
+        var route = '/organizationalUnits/users/edit/' + headerText;
+        return (
           <Panel header={headerText} key={i} eventKey={i}>
             <Table responsive striped bordered condensed hover>
               <thead>
@@ -40,10 +37,10 @@ const OrganizationalUnitsUsers = ({data}) => {
               </thead>
               <tbody>
               {ou.map(function(user,j){
-                var isChecked=user.enabled;
+                var isChecked = user.enabled;
                 return (
                   <tr key={j}>
-                    <td>{j+1}</td>
+                    <td>{j + 1}</td>
                     <td>{user.username}</td>
                     <td>{user.cn}</td>
                     <td>{user.userCategory}</td>
@@ -67,5 +64,5 @@ const OrganizationalUnitsUsers = ({data}) => {
       </Accordion>
     </div>
   );
-}
+};
 module.exports = OrganizationalUnitsUsers;

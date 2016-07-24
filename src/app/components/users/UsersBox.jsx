@@ -1,11 +1,11 @@
 var React = require('react');
-var UsersContainer = require('./UsersContainer.jsx');    
+var UsersContainer = require('./UsersContainer.jsx');
 
-const UsersBox = ({props}) => (
+const UsersBox = () => (
 	<div className="userBox">
-    	<h1>Users</h1>
-    	<UsersContainer />
- 	</div>
+		<h1>Users</h1>
+		<UsersContainer />
+	</div>
 );
 
 module.exports = UsersBox;

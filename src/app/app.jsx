@@ -5,7 +5,6 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
     var injectTapEventPlugin = require('react-tap-event-plugin');
     var Main = require('./components/main.jsx');
 
-    var MainLayout = require('./components/layout/MainLayout.jsx');
     var SearchLayout = require('./components/layout/SearchLayout.jsx');
     var UsersBox = require('./components/users/UsersBox.jsx');
     var UserFormContainer = require('./components/users/UserFormContainer.jsx');
@@ -37,25 +36,30 @@ import { Router, Route, hashHistory, IndexRoute } from 'react-router';
             <Route path="/" component={Main}>
                 {/* add it here, as a child of `/` */}
                 <IndexRoute component={Home}/>
-                <Route path="/users" component={UsersBox}/>
-                <Route path="/users/edit/:username" component={UserFormContainer} task={'edit'}/>
-                <Route path="/users/view/:username" component={UserFormContainer} task={'view'}/>
-                <Route path="/users/enable-disable/:username" component={UserFormContainer} task={'enable_disable'}/>
-                <Route path="/users/new" component={UserNewFormContainer} />
-                <Route path="/users/groups" component={UsersGroupsBox} />
-                <Route path="/users/groups/view/:username" component={UsersGroupsFormContainer} task={'users_groups_view'}/>
-                <Route path="/users/groups/edit/:username" component={UsersGroupsFormContainer} task={'users_groups_edit'}/>
-
-                <Route path="/organizationalUnits" component={OrganizationalUnitsBox} />
-                <Route path="/organizationalUnits/edit/:organizationalUnit" component={OrganizationalUnitFormContainer} task={'edit'} />
-                <Route path="/organizationalUnits/view/:organizationalUnit" component={OrganizationalUnitFormContainer} task={'view'} />
-                <Route path="/organizationalUnits/new" component={OrganizationalUnitNewFormContainer} />
-                <Route path="/organizationalUnits/users" component={OrganizationalUnitsUsersBox} />
-
-                <Route path="/groups" component={GroupsBox} />
-                <Route path="/groups/edit/:groupName" component={GroupFormContainer} task={'edit'} />
-                <Route path="/groups/view/:groupName" component={GroupFormContainer} task={'view'} />
-                <Route path="/groups/new" component={GroupNewFormContainer} />
+                <Route path="/users">
+                    <Route path="list" component={UsersBox}/>
+                    <Route path="edit/:username" component={UserFormContainer} task={'edit'}/>
+                    <Route path="view/:username" component={UserFormContainer} task={'view'}/>
+                    <Route path="enable-disable/:username" component={UserFormContainer} task={'enable_disable'}/>
+                    <Route path="new" component={UserNewFormContainer} />
+                    <Route path="groups" component={UsersGroupsBox} />
+                    <Route path="groups/view/:username" component={UsersGroupsFormContainer} task={'users_groups_view'}/>
+                    <Route path="groups/edit/:username" component={UsersGroupsFormContainer} task={'users_groups_edit'}/>
+                </Route>
+                <Route path="/organizationalUnits">
+                    <Route path="list" component={OrganizationalUnitsBox} />
+                    <Route path="edit/:organizationalUnit" component={OrganizationalUnitFormContainer} task={'edit'} />
+                    <Route path="view/:organizationalUnit" component={OrganizationalUnitFormContainer} task={'view'} />
+                    <Route path="new" component={OrganizationalUnitNewFormContainer} />
+                    <Route path="users" component={OrganizationalUnitsUsersBox} />
+                </Route>
+                <Route path="/groups">
+                    <Route path="list" component={GroupsBox} />
+                    <Route path="edit/:groupName" component={GroupFormContainer} task={'edit'} />
+                    <Route path="view/:groupName" component={GroupFormContainer} task={'view'} />
+                    <Route path="new" component={GroupNewFormContainer} />
+                </Route>
+                
             </Route>
         </Router>
         ), document.getElementById('content'));

@@ -9,15 +9,17 @@ var Main = React.createClass({
     },
     render: function () {
         return (
-            <div>
-                <Navigation projectName="react-bootstrap-starter" />
-                <div className="container">
-                    {this.props.children || <Home />}
-                </div>
-            </div>
-        );
-    }
-
+      <div>
+        <header className="primary-header">
+            <Navigation projectName="react-bootstrap-starter" />
+        </header>
+        <aside className="primary-aside"></aside>
+        <main className = "container">
+          {this.props.children || <Home />}
+        </main>
+      </div>
+    );
+  }
 });
 
 module.exports = Main;

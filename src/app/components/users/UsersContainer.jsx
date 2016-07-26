@@ -4,9 +4,6 @@ var Users = require('./Users.jsx');
 
 
 var UsersContainer = React.createClass({
-	propTypes:{
-		task: React.PropTypes.string.isRequired
-	},
 	getInitialState: function() {
 		return {
 			data: []

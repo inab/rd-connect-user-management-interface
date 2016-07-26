@@ -16,7 +16,7 @@ const OrganizationalUnits = ({data}) => {
     <div>
         <Row className="show-grid">
           <Col xs={12} md={10} >
-            <Panel collapsible defaultExpanded center header="List of Organizational Units">
+            <Panel collapsible defaultExpanded header="List of Organizational Units">
               <Table responsive>
                 <thead>
                   <tr>

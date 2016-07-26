@@ -21,7 +21,7 @@ const Users = ({data}) => {
               var organizationalUnit = ou[0].organizationalUnit;
               var headerText = organizationalUnit;
               return (
-                <Row className="show-grid">
+                <Row className="show-grid" key={i}>
                   <Col xs={12} md={10} >
                     <Panel collapsible defaultExpanded header={headerText} key={i}>
                       <Table responsive>
@@ -58,5 +58,9 @@ const Users = ({data}) => {
           })}
     </div>
     );
+};
+Users.propTypes = {
+    data: React.PropTypes.array.isRequired,
+    task: React.PropTypes.string.isRequired
 };
 module.exports = Users;

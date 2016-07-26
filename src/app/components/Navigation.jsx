@@ -18,7 +18,7 @@ var Navigation = React.createClass({
                 <Nav>
                     <LinkContainer to="/" onlyActiveOnIndex><MenuItem eventKey={1}>Home</MenuItem></LinkContainer>
                     <NavDropdown id="NavDropdown-Users" eventKey={2} title="Users">
-                        <LinkContainer to="/users/list" activeClassName="active"><MenuItem eventKey="1">List Users</MenuItem></LinkContainer>
+                        <LinkContainer to="/users/list" ><MenuItem eventKey="1">List Users</MenuItem></LinkContainer>
                         <LinkContainer to="/users/new"><MenuItem eventKey="2">New User</MenuItem></LinkContainer>
                         <MenuItem divider />
                         <LinkContainer to="/users/groups"><MenuItem eventKey="1">User's list of groups</MenuItem></LinkContainer>

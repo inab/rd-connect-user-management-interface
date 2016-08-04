@@ -6,7 +6,7 @@ var GroupsContainer = React.createClass({
 	getInitialState: function() {
 		return {data: []};
 	},
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.loadGroupsFromServer();
 		//setInterval(this.loadGroupsFromServer, 20000);
 	},

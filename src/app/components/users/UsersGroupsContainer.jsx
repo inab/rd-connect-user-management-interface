@@ -8,7 +8,7 @@ var UsersGroupsContainer = React.createClass({
 			data: []
 		};
 	},
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.loadUsersFromServer();
 	},
 	loadUsersFromServer: function() {

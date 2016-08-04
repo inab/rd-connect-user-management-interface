@@ -6,7 +6,7 @@ var UserNewFormContainer = React.createClass({
 	getInitialState: function() {
 		return { schema: null };
 	},
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.loadUserSchema();
 	},
 	loadOrganizationalUnitsFromServer: function() {

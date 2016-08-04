@@ -20,7 +20,7 @@ var UserFormContainer = React.createClass({
 			task: this.props.route.task
 		};
 	},
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.loadUserData();
 	},
 	close(){

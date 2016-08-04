@@ -17,7 +17,7 @@ var OrganizationalUnitFormContainer = React.createClass({
 			task: this.props.route.task
 		};
 	},
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.loadOrganizationalUnitData();
 	},
 	close (){

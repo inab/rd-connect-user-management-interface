@@ -13,7 +13,7 @@ var OrganizationalUnitsUsersContainer = React.createClass({
 		};
 
 	},
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.loadUsersFromServer();
 		//setInterval(this.loadUsersFromServer, 20000);
 	},

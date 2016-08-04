@@ -15,7 +15,7 @@ var UsersGroupsFormContainer = React.createClass({
 			task: this.props.route.task
 		};
 	},
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.loadUserSchema();
 	},
 	loadUserFromServer: function() {

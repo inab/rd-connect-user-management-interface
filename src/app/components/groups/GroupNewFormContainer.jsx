@@ -6,7 +6,7 @@ var GroupNewFormContainer = React.createClass({
   getInitialState: function() {
     return { schema: null };
   },
-  componentDidMount: function() {
+  componentWillMount: function() {
 	this.loadGroupSchema();
   },
   loadGroupSchema: function() {

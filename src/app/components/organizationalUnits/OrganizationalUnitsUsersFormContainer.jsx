@@ -10,7 +10,7 @@ var OrganizationalUnitsUsersFormContainer = React.createClass({
 			showModal: false
 		};
 	},
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.loadUsersFromOrganizationalUnit();
 	},
 	loadUsersFromOrganizationalUnit: function() {

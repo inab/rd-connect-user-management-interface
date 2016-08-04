@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Link, Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
 
@@ -9,10 +9,10 @@ var Navigation = React.createClass({
     },
     render: function() {
         return (
-            <Navbar inverse fixedTop >
+            <Navbar fixedTop >
                 <Navbar.Header>
                     <Navbar.Brand>
-                        <a style={{padding: 0}} href=""><img src="images/rdconnect-logo.jpg" alt={this.props.projectName} style={{height: '100%',paddingRight: '1em',paddingLeft: '1em',backgroundColor: 'white'}}/></a>
+                        <LinkContainer to="/" ><img src="images/rdconnect-logo.jpg" alt={this.props.projectName} /></LinkContainer>
                     </Navbar.Brand>
                 </Navbar.Header>
                 <Nav>

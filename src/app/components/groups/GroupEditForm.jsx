@@ -2,14 +2,8 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from 'react-jsonschema-form';
-import { Row, Col } from 'react-bootstrap';
-
-/*function groupValidation(formData,errors) {
-	if (formData.userPassword !== formData.userPassword2) {
-	    errors.userPassword2.addError("Passwords don't match");
-	}
-		return errors;
-}*/
+import { Row, Col, Button } from 'react-bootstrap';
+var MultiselectField = require('./Multiselect.jsx');
 
 var GroupEditForm = React.createClass({
 	propTypes:{
@@ -18,7 +12,20 @@ var GroupEditForm = React.createClass({
 		users: React.PropTypes.array.isRequired
 	},
 	getInitialState: function() {
-		return { error: null, showModal:false};
+		return {
+			error: null,
+			showModal: false,
+			schema: null,
+			data: null,
+			users: null
+		};
+	},
+	componentWillMount: function(){
+		this.setState({
+			schema: this.props.schema,
+			data: this.props.data,
+			users: this.props.users
+		});
 	},
 	close(){
 		this.setState({showModal: false});
@@ -27,7 +34,9 @@ var GroupEditForm = React.createClass({
 		this.setState({showModal: true});
 	},
 	updateGroupData: function({formData}){
-		//console.log("yay I'm valid!");
+		//console.log('yay I\'m valid!');
+		formData.members = this.state.data.members;
+		console.log('Formdata contiene', formData);
 		//console.log(formData);
 		var groupData = Object.assign({},formData);
 		jQuery.ajax({
@@ -59,77 +68,69 @@ var GroupEditForm = React.createClass({
 			this.setState({error: responseText, showModal: true});
 		}.bind(this));
 	},
+	logChange: function(val){
+		console.log('Selected: ' + val);
+	},
+	handleChangeSelected:function(value){
+		//console.log(value);
+		var data = this.state.data;
+		if (value === null){
+			data.members = [];
+		}
+		else {
+			data.members = value.split(',');
+		}
+		this.setState({data:data});
+		console.log('this.state inside handleChangeSelected contains: ', this.state);
+	},
 	render: function() {
-		var schema = this.props.schema;
+		//console.log('Schema contains: ', this.state.schema);
+		//console.log('Users contains: ', this.state.users);
+		//console.log('Data contains: ', this.state.data);
 		//We need to be sure that the new user added to this group is an existing user
-		var newSchema = {};
-		newSchema.type = schema.type;
+		var newSchema = Object.create(this.state.schema);
+		newSchema.type = this.state.schema.type;
 		newSchema.properties = {};
 		newSchema.additionalProperties = false;
-		newSchema.dependencies = schema.dependencies;
-		newSchema.properties.cn = schema.properties.cn;
-		newSchema.properties.owner = schema.properties.owner;
-		//We generate an array with all the available groups
-		var arrayUsers = {};
-		for (var i = 0; i < this.props.users.length; i++){
-			var cn = this.props.users[i].cn;
-			var username = this.props.users[i].username;
-			arrayUsers[cn] = username;
-		}
-		//console.log("arrayUsers contiene: ", arrayUsers);
-		//Now we sort arrayUsers by the keys
-		var arrayUsersSortable = [];
-		for (var user in arrayUsers){
-			arrayUsersSortable.push([user, arrayUsers[user]]);
-			arrayUsersSortable.sort(
-				function(a, b) {
-					return a[0] > b[0];
-				}
-			);
-		}
-		//Now we generate the arrays for enum y enumNames from arrayUsesSortable
-		var usersEnum = [];
-		var usersEnumNames = [];
-		for (var i = 0; i < 89; i++){
-			usersEnum.push(arrayUsersSortable[i][1]);
-			usersEnumNames.push(arrayUsersSortable[i][0]);
-		}
-		newSchema.properties.members = {
-			'title': 'Members inside ' + this.props.data.cn + ' group: ',
-			'type': 'array',
-			'uniqueItems': true,
-			'items': {
-				'type': 'string',
-				'minLength': 1
-			}
-		};
-		//We set the enum property to usersEnum forcing the user to choose an existing user as member of this group
-		newSchema.properties.members.items.enum = usersEnum;
-		newSchema.properties.members.items.enumNames = usersEnumNames;
+		newSchema.dependencies = this.state.schema.dependencies;
+		newSchema.properties.cn = this.state.schema.properties.cn;
+		newSchema.properties.owner = this.state.schema.properties.owner;
+		newSchema.properties.description = this.state.schema.properties.description;
+		newSchema.properties.groupPurpose = this.state.schema.properties.groupPurpose;
+		//We don't add members to newSchema since this field validation will be done by the Multiselect component
+		//We generate an array with all the available users that will be used as "options" input for Multiselect component
+		//allowCreate=false (default) so only users inside options array will be allowed inside component
+		console.log('users contains: ', this.state.users);
+		var arrayUsers = Object.create(this.state.users);
+		console.log('arrayUsers contains: ', arrayUsers);
+		var options = [];
+		this.state.users.map(function(user, i){
+			arrayUsers[user.username] = user.cn;
+			options.push({'value':user.username, 'label': user.cn});
+		});
+		//Now we generate the initialSelected array. Which contains the users that already belongs to the group. This
+		//array will be passed as a prop to the MutiselectField component
+		console.log('ArrayUsers contiene: ', arrayUsers);
+		var initialMembersSelected = [];
+		this.state.data.members.map(function(memberUserName, k){
+			initialMembersSelected.push({'value':memberUserName, 'label': arrayUsers[memberUserName]});
+		});
+		console.log('New schema contains: ', newSchema);
+		var newData = Object.create(this.state.data);
 
-		var data = this.props.data;
-		var newData = Object.create(data);
-
-		newData.cn = data.cn;
-		newData.owner = data.owner;
-		newData.members = data.members;
+		newData.cn = this.state.data.cn;
+		newData.owner = this.state.data.owner;
+		//newData.members = this.props.data.members; //Managed by React-select Multiselect component
+		newData.description = this.state.data.description;
 
 		const uiSchema = {
 			'cn': {
 				'ui:readonly': true
-			},
-			'owner': {
-				'ui:readonly': true
-			},
-			'members': {
-				'ui:widget': 'select'
 			}
 		};
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateGroupData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
-		//console.log("Error: ", this.state.error);
-		//console.log("Show: ", this.state.showModal);
 		return (
 			<div>
 				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
@@ -145,20 +146,22 @@ var GroupEditForm = React.createClass({
 				</Bootstrap.Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
-						<code>
-							<Form schema={newSchema}
-							uiSchema={uiSchema}
-							formData={newData}
-							onChange={log('changed')}
-							onSubmit={onSubmit}
-							onError={onError}
-							//validate={groupValidation}
-							liveValidate
-							/>
-						</code>
+						<Form schema={newSchema}
+						uiSchema={uiSchema}
+						formData={newData}
+						onChange={log('changed')}
+						onSubmit={onSubmit}
+						onError={onError}
+						//validate={groupValidation}
+						liveValidate
+						>
+						<MultiselectField label="Members of this group" options={options} initialSelected={initialMembersSelected} onChangeSelected={this.handleChangeSelected}/>
+						<div className="button-submit">
+							<Button bsStyle="info" type="submit">Submit</Button>
+						</div>
+						</Form>
 					</Col>
 					<Col xs={6} md={4}>
-						<code></code>
 					</Col>
 				</Row>
 			</div>

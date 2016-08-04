@@ -1,6 +1,6 @@
 var React = require('react');
 
-import { Panel, Table, Checkbox, Accordion } from 'react-bootstrap';
+import { Panel, Table, Checkbox } from 'react-bootstrap';
 var Underscore = require('underscore');
 
 
@@ -17,11 +17,9 @@ const OrganizationalUnitsUsers = ({data}) => {
     return (
     <div>
       <h3> Users in Organizational Units </h3>
-      <Accordion >
         {groupData.map(function(ou,i){
         var organizationalUnit = ou[0].organizationalUnit;
         var headerText = organizationalUnit;
-        var route = '/organizationalUnits/users/edit/' + headerText;
         return (
           <Panel header={headerText} key={i} eventKey={i}>
             <Table responsive striped bordered condensed hover>
@@ -61,8 +59,10 @@ const OrganizationalUnitsUsers = ({data}) => {
           </Panel>
         );
         })}
-      </Accordion>
     </div>
   );
+};
+OrganizationalUnitsUsers.propTypes = {
+    data: React.PropTypes.array.isRequired
 };
 module.exports = OrganizationalUnitsUsers;

@@ -3,10 +3,14 @@ var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 var GroupEditForm = require('./GroupEditForm.jsx');
 var GroupViewForm = require('./GroupViewForm.jsx');
+var Underscore = require('underscore');
 
 import {History} from 'react-router';
 
 var GroupFormContainer = React.createClass({
+	propTypes:{
+		route: React.PropTypes.array
+	},
 	mixins: [ History ],
 	getInitialState: function() {
 		return {
@@ -38,7 +42,12 @@ var GroupFormContainer = React.createClass({
 			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(users) {
-			this.setState({users: users});
+			var sortedUsers = Underscore
+				.chain(users)
+				.toArray()
+				.sortBy(function(userObjects){ return userObjects.cn; })
+				.value();
+			this.setState({users: sortedUsers});
 		}.bind(this))
 		.fail(function(jqXhr) {
 			console.log('Failed to retrieve Users',jqXhr);
@@ -132,21 +141,19 @@ var GroupFormContainer = React.createClass({
 			this.setState({error: responseText, showModal: true});
 		}.bind(this));
   },
-
    //This is to browse history back when group is not found after showing modal error
   render: function() {
+	console.log('this.state.schema is: ',this.state.schema);
+	console.log('this.state.data is: ',this.state.data);
+	console.log('this.state.users is: ',this.state.users);
     if (this.state.schema && this.state.data && this.state.users) {
-		if (this.state.task === 'edit'){
+		if ((this.state.task === 'edit') && (this.state.data) && (this.state.users)){
 			return (
-				<div>
 					<GroupEditForm schema={this.state.schema}  data={this.state.data}  users={this.state.users} />
-				</div>
 			);
-		} else if (this.state.task === 'view'){
+		} else if ((this.state.task === 'view') && (this.state.data)){
 			return (
-				<div>
 					<GroupViewForm schema={this.state.schema}  data={this.state.data}  />
-				</div>
 			);
 		}
     }

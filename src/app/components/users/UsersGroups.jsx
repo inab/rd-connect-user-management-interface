@@ -1,5 +1,5 @@
 var React = require('react');
-import { Row, Col, Panel, Table } from 'react-bootstrap';
+import { Row, Col, Checkbox, Panel, Table } from 'react-bootstrap';
 var Underscore = require('underscore');
 import { Link } from 'react-router';
 
@@ -27,19 +27,32 @@ const UsersGroups = ({data}) => {
                         <thead>
                           <tr>
                             <th>#</th>
-                            <th>User Name</th>
                             <th>Common Name</th>
+                            <th>Email</th>
+                            <th>Category</th>
+                            <th>Enabled</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
                         <tbody>
                         {ou.map(function(user,j){
+                          var isChecked = user.enabled;
                           return (
                             <tr key={j}>
                               <td>{j}</td>
-                              <td>{user.username}</td>
                               <td>{user.cn}</td>
-                              <td><Link to={'/users/groups/view/' + user.username}>List Groups</Link>/<Link to={'/users/groups/edit/' + user.username}> Edit Groups</Link></td>
+                              <td>{user.email}</td>
+                              <td>{user.userCategory}</td>
+                              <td><Checkbox checked={isChecked} readOnly /></td>
+                              <td>{user.cn}</td>
+                              <td>
+                                <Link className="btn btn-info editViewButton" role="button" to={'/users/groups/view/' + encodeURIComponent(`${user.username}`)}>
+                                  View
+                                </Link>
+                                <Link className="btn btn-info editViewButton" role="button" to={'/users/groups/edit/' + encodeURIComponent(`${user.username}`)}>
+                                  Edit
+                                </Link>
+                              </td>
                             </tr>
                           );
                         })}
@@ -53,4 +66,8 @@ const UsersGroups = ({data}) => {
     </div>
     );
 };
+UsersGroups.propTypes = {
+    data: React.PropTypes.array.isRequired
+};
+
 module.exports = UsersGroups;

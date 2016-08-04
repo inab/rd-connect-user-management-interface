@@ -10,7 +10,7 @@ var UsersContainer = React.createClass({
 		};
 
 	},
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.loadUsersFromServer();
 		//setInterval(this.loadUsersFromServer, 20000);
 	},
@@ -43,7 +43,7 @@ var UsersContainer = React.createClass({
 		if (this.state.data) {
 			return (
 				<div>
-					<Users data={this.state.data} task="viewEdit"/>
+					<Users data={this.state.data}/>
 				</div>
 			);
 		}

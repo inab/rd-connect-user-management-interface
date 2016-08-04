@@ -141,9 +141,7 @@ var UserEditForm = React.createClass({
 							/>
 						</code>
 					</Col>
-					<Col xs={6} md={4}>
-						<code></code>
-					</Col>
+					<Col xs={6} md={4} />
 				</Row>
 			</div>
 		);

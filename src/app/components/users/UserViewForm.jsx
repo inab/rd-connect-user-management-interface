@@ -40,7 +40,6 @@ var UserViewForm = React.createClass({
 		//We concatenate order with userSchemaKeys, retrieving the ordered schema as desired
 		var schemaOrdered = order.concat(userSchemaKeys);
 		var data = this.props.data;
-		var username = data.username;
 		delete data.userPassword;
 		console.log(schema);
 		console.log(data);
@@ -99,6 +98,9 @@ var UserViewForm = React.createClass({
 			},
 			'userCategory': {
 				'ui:disabled': true
+			},
+			'enabled': {
+				'ui:disabled': true
 			}
 		};
 		const log = (type) => console.log.bind(console, type);
@@ -121,7 +123,6 @@ var UserViewForm = React.createClass({
 				</Bootstrap.Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
-						<code>
 							<Form
 								schema={schema}
 								uiSchema={uiSchema}
@@ -133,10 +134,9 @@ var UserViewForm = React.createClass({
 								liveValidate
 							>
 								<div>
-									<LinkContainer to={{ pathname: '/Users/edit/' + username, query: { task: 'edit' } }}><Button>Edit</Button></LinkContainer>
+									<LinkContainer to={{ pathname: '/users/list/', query: { } }}><Button>Back</Button></LinkContainer>
 								</div>
 							</Form>
-						</code>
 					</Col>
 					<Col xs={6} md={4}>
 						<code></code>

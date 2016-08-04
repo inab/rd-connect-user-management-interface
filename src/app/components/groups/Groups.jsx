@@ -1,6 +1,6 @@
 var React = require('react');
 
-import { Row, Col, Panel, Table, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Row, Col, Panel, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 var Underscore = require('underscore');
 
@@ -22,40 +22,44 @@ const Groups = ({data}) => {
                 var groupMembers = group.members.sort();
                 //var listMembers=group.members.join(", ");
                 return (
-                  <Panel collapsible defaultExpanded center>
-                    <Table responsive>
+                  <Panel collapsible defaultExpanded center header={group.cn} key={i}>
+                    <Table responsive className="table-list">
                       <thead>
                         <tr>
-                          <th>Group Name</th>
                           <th>Description</th>
+                          <th>Purpose</th>
                           <th>Owner</th>
                           <th>Members</th>
-                          <th>Action</th>
+                          <th>Edit</th>
                         </tr>
                       </thead>
                       <tbody>
                     <tr key={i}>
-                      <td><strong>{group.cn}</strong></td>
                       <td>{group.description}</td>
+                      <td>{group.groupPurpose}</td>
                       <td>
-                        <ListGroup>
+                        <ul className="user-ul">
                         {listOwners.map(function(owner, j){
                             return (
-                                <ListGroupItem><Link to={'/users/view/' + owner}>{owner}</Link></ListGroupItem>
+                                <li key={j}><Link to={'/users/view/' + owner}>{owner}</Link></li>
                             );
                           })}
-                        </ListGroup>
+                        </ul>
                       </td>
                       <td>
-                        <ListGroup>
-                        {groupMembers.map(function(member, j){
+                        <ul className="user-ul">
+                        {groupMembers.map(function(member, k){
                             return (
-                                <ListGroupItem><Link to={'/users/view/' + member}>{member}</Link></ListGroupItem>
+                                <li key={k}><Link to={'/users/view/' + member}>{member}</Link></li>
                             );
                           })}
-                        </ListGroup>
+                        </ul>
                       </td>
-                      <td><Link to={'/groups/view/' + group.cn}>View</Link>/<Link to={'/groups/edit/' + group.cn}>Edit</Link></td>
+                      <td>
+                        <Link className="btn btn-info editViewButton" role="button" to={'/groups/edit/' + encodeURIComponent(`${group.cn}`)}>
+                          Edit
+                        </Link>
+                      </td>
                     </tr>
                     </tbody>
             </Table>
@@ -66,6 +70,10 @@ const Groups = ({data}) => {
       </Row>
     </div>
   );
+};
+
+Groups.propTypes = {
+    data: React.PropTypes.array.isRequired
 };
 
 module.exports = Groups;

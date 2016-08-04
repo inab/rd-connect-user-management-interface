@@ -2,7 +2,7 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from 'react-jsonschema-form';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button, LinkContainer} from 'react-bootstrap';
 //var ModalError = require('./ModalError.jsx');
 
 function organizationalUnitValidation(formData,errors) {
@@ -67,6 +67,20 @@ var OrganizationalUnitViewForm = React.createClass({
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
+		const uiSchema = {
+			'organizationalUnit': {
+				'ui:readonly': true
+			},
+			'description': {
+				'ui:readonly': true
+			},
+			'picture': {
+				'ui:readonly': true
+			},
+			'links': {
+				'ui:readonly': true
+			},
+		};
 		return (
 			<div>
 				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
@@ -82,21 +96,21 @@ var OrganizationalUnitViewForm = React.createClass({
 				</Bootstrap.Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
-						<code>
 							<Form schema={schema}
-							//uiSchema={uiSchema}
+							uiSchema={uiSchema}
 							formData={data}
 							onChange={log('changed')}
 							onSubmit={onSubmit}
 							onError={onError}
 							validate={organizationalUnitValidation}
 							liveValidate
-							/>
-						</code>
+							>
+							<div>
+									<Button>Back</Button>
+								</div>
+							</Form>
 					</Col>
-					<Col xs={6} md={4}>
-						<code></code>
-					</Col>
+					<Col xs={6} md={4} />
 				</Row>
 			</div>
 		);

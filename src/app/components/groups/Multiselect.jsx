@@ -20,7 +20,7 @@ var MultiSelectField = React.createClass({
 		label: React.PropTypes.string,
         options: React.PropTypes.array.isRequired,
         initialSelected: React.PropTypes.array,
-        onChangeSelected: React.PropTypes.function
+        onChangeSelected: React.PropTypes.func
 	},
 	getInitialState () {
 		return {

@@ -1,5 +1,5 @@
-import { Router, Route, IndexRoute } from 'react-router';
-var browserHistory = Router.browserHistory;
+import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+//var browserHistory = Router.browserHistory;
 
 (function () {
     var React = require('react');
@@ -35,7 +35,7 @@ var browserHistory = Router.browserHistory;
     // Render the main app react component into the document body.
     // For more details see: https://facebook.github.io/react/docs/top-level-api.html#react.render
     ReactDOM.render((
-        <Router history={browserHistory} >
+        <Router history={hashHistory} >
             <Route path="/" component={Main} name="Home">
                 {/* add it here, as a child of `/` */}
                 <IndexRoute component={Home}/>

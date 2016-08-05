@@ -5,22 +5,24 @@ var UserEditForm = require('./UserEditForm.jsx');
 var UserViewForm = require('./UserViewForm.jsx');
 var UserEnableDisableForm = require('./UserEnableDisableForm.jsx');
 
-
-import { History} from 'react-router';
+import createHistory from 'history/lib/createBrowserHistory';
 
 var UserFormContainer = React.createClass({
-	mixins: [ History ], //This is to browse history back when user is not found after showing modal error
+	//mixins: [ History ], //This is to browse history back when user is not found after showing modal error
+	contextTypes: {
+		router: React.PropTypes.object
+	},
 	getInitialState: function() {
-		console.log('TASK: ', this.props.route.task);
 		return {
 			schema: null,
 			data: null,
 			error: null,
 			showModal: false,
-			task: this.props.route.task
+			task: null
 		};
 	},
 	componentWillMount: function() {
+		this.setState({task: this.props.route.task});
 		this.loadUserData();
 	},
 	close(){
@@ -28,6 +30,9 @@ var UserFormContainer = React.createClass({
 	},
 	open(){
 		this.setState({showModal: true});
+	},
+	goback: function (path) {
+		this.context.router.push(path);
 	},
 	loadUserSchema: function() {
 		jQuery.ajax({
@@ -100,8 +105,11 @@ var UserFormContainer = React.createClass({
 	},
 
   render: function() {
-	//console.log("schema: ", this.state.schema);
-	//console.log("data: ", this.state.data);
+	const history = createHistory();
+	//console.log('task: ', this.state.task);
+	//console.log('schema: ', this.state.schema);
+	//console.log('data: ', this.state.data);
+	//console.log('error: ', this.state.error);
 	if (this.state.schema && this.state.data) {
 		if (this.state.task === 'edit'){
 			return (
@@ -126,7 +134,7 @@ var UserFormContainer = React.createClass({
 	if (this.state.error) {
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={this.history.goBack} error={this.state.error}>
+				<Bootstrap.Modal show={this.state.showModal} onHide={history.goBack} error={this.state.error}>
 					<Bootstrap.Modal.Header closeButton>
 						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
 					</Bootstrap.Modal.Header>
@@ -134,7 +142,7 @@ var UserFormContainer = React.createClass({
 						<h4>{this.state.error}</h4>
 					</Bootstrap.Modal.Body>
 					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={this.history.goBack}>Close</Bootstrap.Button>
+						<Bootstrap.Button onClick={history.goBack}>Close</Bootstrap.Button>
 					</Bootstrap.Modal.Footer>
 				</Bootstrap.Modal>
 			</div>

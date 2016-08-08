@@ -61,6 +61,8 @@ var OrganizationalUnitsContainer = React.createClass({
 		});
 	},
 	render: function() {
+		//console.log('Data contains so far: ', this.state.data);
+		//console.log('OrganizationalUnitalUnits contain ', this.state.organizationalUnits );
 		if (this.state.error) {
 			return (
 				<div>Error {this.state.error}</div>

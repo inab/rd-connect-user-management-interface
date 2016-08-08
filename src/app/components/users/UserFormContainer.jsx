@@ -31,9 +31,6 @@ var UserFormContainer = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
-	goback: function (path) {
-		this.context.router.push(path);
-	},
 	loadUserSchema: function() {
 		jQuery.ajax({
 			url: 'json/userValidation.json',

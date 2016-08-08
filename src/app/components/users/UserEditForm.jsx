@@ -129,8 +129,7 @@ var UserEditForm = React.createClass({
 				</Bootstrap.Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
-						<code>
-							<Form schema={schema}
+						<Form schema={schema}
 							uiSchema={uiSchema}
 							formData={data}
 							onChange={log('changed')}
@@ -138,8 +137,7 @@ var UserEditForm = React.createClass({
 							onError={onError}
 							validate={userValidation}
 							liveValidate
-							/>
-						</code>
+						/>
 					</Col>
 					<Col xs={6} md={4} />
 				</Row>

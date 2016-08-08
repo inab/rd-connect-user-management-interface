@@ -138,9 +138,7 @@ var UserViewForm = React.createClass({
 								</div>
 							</Form>
 					</Col>
-					<Col xs={6} md={4}>
-						<code></code>
-					</Col>
+					<Col xs={6} md={4} />
 				</Row>
 			</div>
 		);

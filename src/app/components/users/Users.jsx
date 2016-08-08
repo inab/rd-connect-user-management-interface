@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 
 
 const Users = ({data}) => {
-  //console.log("Data so far is: ", data);
+  console.log("Data so far is: ", data);
   var groupedData = Underscore
     .chain(data)
     .groupBy('organizationalUnit')
@@ -22,7 +22,7 @@ const Users = ({data}) => {
               {groupedData.map(function(ou,i){
                 var organizationalUnit = ou[0].organizationalUnit;
                 return (
-                  <Panel collapsible defaultExpanded center header={organizationalUnit}>
+                  <Panel collapsible defaultExpanded center header={organizationalUnit} key={i}>
                     <Table responsive className="table-list">
                       <thead>
                         <tr>
@@ -37,9 +37,10 @@ const Users = ({data}) => {
                       </thead>
                       <tbody>
                     {ou.map(function(user,j){
+                      console.log(user);
                       var isChecked = user.enabled;
                       return (
-                          <tr>
+                          <tr key={j}>
                             <td>{user.username}</td>
                             <td>{user.cn}</td>
                             <td>{user.email}</td>

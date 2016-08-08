@@ -4,20 +4,24 @@ var jQuery = require('jquery');
 var OrganizationalUnitEditForm = require('./OrganizationalUnitEditForm.jsx');
 var OrganizationalUnitViewForm = require('./OrganizationalUnitViewForm.jsx');
 
-import { History} from 'react-router';
+import createHistory from 'history/lib/createBrowserHistory';
 
 var OrganizationalUnitFormContainer = React.createClass({
-	mixins: [ History ], //This is to browse history back when organizational unit is not found after showing modal error
+	//mixins: [ History ], //This is to browse history back when organizational unit is not found after showing modal error
+	contextTypes: {
+		router: React.PropTypes.object
+	},
 	getInitialState: function() {
 		return {
 			schema: null,
 			data: null,
 			error: null,
 			showModal: false,
-			task: this.props.route.task
+			task: null
 		};
 	},
 	componentWillMount: function() {
+		this.setState({task: this.props.route.task});
 		this.loadOrganizationalUnitData();
 	},
 	close (){
@@ -96,6 +100,7 @@ var OrganizationalUnitFormContainer = React.createClass({
 		}.bind(this));
 	},
 	render: function() {
+		const history = createHistory();
 		if (this.state.schema && this.state.data) {
 		if (this.state.task === 'edit'){
 			return (
@@ -114,7 +119,7 @@ var OrganizationalUnitFormContainer = React.createClass({
     if (this.state.error) {
       return (
 		<div>
-			<Bootstrap.Modal show={this.state.showModal} onHide={this.history.goBack} error={this.state.error}>
+			<Bootstrap.Modal show={this.state.showModal} onHide={history.goBack} error={this.state.error}>
 				<Bootstrap.Modal.Header closeButton>
 					<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
 				</Bootstrap.Modal.Header>
@@ -122,7 +127,7 @@ var OrganizationalUnitFormContainer = React.createClass({
 					<h4>{this.state.error}</h4>
 				</Bootstrap.Modal.Body>
 				<Bootstrap.Modal.Footer>
-					<Bootstrap.Button onClick={this.history.goBack}>Close</Bootstrap.Button>
+					<Bootstrap.Button onClick={history.goBack}>Close</Bootstrap.Button>
 				</Bootstrap.Modal.Footer>
 			</Bootstrap.Modal>
 		</div>

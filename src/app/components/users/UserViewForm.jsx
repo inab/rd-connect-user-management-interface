@@ -1,16 +1,9 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
-import Form from 'react-jsonschema-form';
-import { Row, Col, Button } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
+import { Row, Col, Button, Jumbotron, Panel } from 'react-bootstrap';
+import { Link } from 'react-router';
 //var ModalError = require('./ModalError.jsx');
-
-function userValidation(formData,errors) {
-	if (formData.userPassword !== formData.userPassword2) {
-		errors.userPassword2.addError('Passwords don\'t match');
-	}
-		return errors;
-}
+import createHistory from 'history/lib/createBrowserHistory';
 
 var UserViewForm = React.createClass({
 	propTypes:{
@@ -27,87 +20,13 @@ var UserViewForm = React.createClass({
 		this.setState({showModal: true});
 	},
 	render: function() {
-		var schema = this.props.schema;
-		// Replicating userPassword for schema validation and Ordering Schema for ui:order
-		//Adding a userPassword2 field to validate userPassword change
-		schema.properties.userPassword2 = schema.properties.userPassword;
-		//First we create an array with the fields with the desired order.
-		var order = ['username','cn','givenName','surname','userPassword','userPassword2'];
-		//We filter all the properties retrieving only the elements that are not in 'order' array
-		var userSchemaKeys = Object.keys(schema.properties).filter(function(elem) {
-			return order.indexOf(elem) === -1;
-		});
-		//We concatenate order with userSchemaKeys, retrieving the ordered schema as desired
-		var schemaOrdered = order.concat(userSchemaKeys);
+		const history = createHistory();
 		var data = this.props.data;
 		delete data.userPassword;
-		console.log(schema);
 		console.log(data);
-		const uiSchema = {
-			'ui:order': schemaOrdered,
-
-			'username': {
-				'ui:readonly': true
-			},
-			'givenName': {
-				'ui:readonly': true
-			},
-			'surname': {
-				'ui:readonly': true
-			},
-			'userPassword': {
-				'ui:widget': 'password',
-				'ui:placeholder': '************',
-				'ui:readonly': true
-			},
-			'userPassword2': {
-				'ui:widget': 'password',
-				'ui:placeholder': '************',
-				'ui:readonly': true
-			},
-			'cn': {
-				'ui:readonly': true,
-			},
-			'organizationalUnit': {
-				'ui:readonly': true,
-			},
-			'groups': {
-				'ui:readonly': true,
-			},
-			'registeredAddress': {
-				'ui:widget': 'textarea',
-				'type': 'string',
-				'ui:readonly': true
-			},
-			'postalAddress': {
-				'ui:widget': 'textarea',
-				'type': 'string',
-				'ui:readonly': true
-			},
-			'telephoneNumber': {
-				'ui:readonly': true
-			},
-			'facsimileTelephoneNumber': {
-				'ui:readonly': true
-			},
-			'email': {
-				'ui:readonly': true
-			},
-			'links': {
-				'ui:readonly': true
-			},
-			'userCategory': {
-				'ui:disabled': true
-			},
-			'enabled': {
-				'ui:disabled': true
-			}
-		};
-		const log = (type) => console.log.bind(console, type);
-		//const onSubmit = ({formData}) => this.updateUserData({formData});
-		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		console.log('Error: ', this.state.error);
 		console.log('Show: ', this.state.showModal);
+		var isChecked = this.props.data.enabled;
 		return (
 			<div>
 				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
@@ -121,25 +40,106 @@ var UserViewForm = React.createClass({
 						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
 					</Bootstrap.Modal.Footer>
 				</Bootstrap.Modal>
-				<Row className="show-grid">
-					<Col xs={12} md={8}>
-							<Form
-								schema={schema}
-								uiSchema={uiSchema}
-								formData={data}
-								onChange={log('changed')}
-								//onSubmit={onSubmit}
-								onError={onError}
-								validate={userValidation}
-								liveValidate
-							>
-								<div>
-									<LinkContainer to={{ pathname: '/users/list/', query: { } }}><Button>Back</Button></LinkContainer>
-								</div>
-							</Form>
-					</Col>
-					<Col xs={6} md={4} />
-				</Row>
+				<Jumbotron>
+					<Row className="show-grid">
+						<Col xs={16} md={10}>
+							<Panel header="Common Name">
+								<p>{this.props.data.cn}</p>
+							</Panel>
+							<Panel header="Username">
+								<p>{this.props.data.username}</p>
+							</Panel>
+							<Panel header="First/Given Name">
+								{this.props.data.givenName.map(function(name, i){
+									return (
+										<p key={i}>{name}</p>
+									);
+								})}
+							</Panel>
+							<Panel header="Surname">
+								{this.props.data.surname.map(function(name, j){
+									return (
+										<p key={j}>{name}</p>
+									);
+								})}
+							</Panel>
+							<Panel header="Organizational Unit">
+								<p>{this.props.data.organizationalUnit}</p>
+							</Panel>
+							<Panel header="Email Addresses">
+								{this.props.data.email.map(function(mail, k){
+									return (
+										<p key={k}>{mail}</p>
+									);
+								})}
+							</Panel>
+							<Panel header="Is the user enabled?">
+								<p>{isChecked.toString()}</p>
+							</Panel>
+							<Panel header="User Category">
+								<p>{this.props.data.userCategory}</p>
+							</Panel>
+							<Panel header="Preferred way to address the user">
+								<p>{this.props.data.title}</p>
+							</Panel>
+							{typeof this.props.data.telephoneNumber !== 'undefined' 
+								? <Panel header="Contact Phone Number">
+										{this.props.data.telephoneNumber.map(function(telephone, l){
+											return (
+												<p key={l}>{telephone}</p>
+											);
+										})}
+									</Panel>
+								: <Panel header="Contact Phone Number"/>
+							}
+							{typeof this.props.data.facsimileTelephoneNumber !== 'undefined' 
+								? <Panel header="Fax Number">
+										{this.props.data.facsimileTelephoneNumber.map(function(fax, m){
+											return (
+												<p key={m}>{fax}</p>
+											);
+										})}
+									</Panel>
+								: <Panel header="Fax Number"/>
+							}
+							<Panel header="Address to physically reach the user:">
+								<p>{this.props.data.registeredAddress}</p>
+							</Panel>
+							<Panel header="Address to send traditional mail to the user">
+								<p>{this.props.data.postalAddress}</p>
+							</Panel>
+							{typeof this.props.data.links !== 'undefined' 
+								? <Panel header="Links related to the user">
+										{this.props.data.links.map(function(link, n){
+											return (
+												<p key={n}>{link}</p>
+											);
+										})}
+									</Panel>
+								: <Panel header="Links related to the user"/>
+							}
+							{typeof this.props.data.groups !== 'undefined' 
+								? <Panel header="List of groups where the user is registered in">
+										{this.props.data.groups.map(function(group, o){
+											return (
+												<p key={o}>{group}</p>
+											);
+										})}
+										<Bootstrap.Button>Edit</Bootstrap.Button>
+									</Panel>
+								: <Panel header="List of groups where the user is registered in"/>
+							}
+						</Col>
+					</Row>
+				</Jumbotron>
+				<div className="right">
+					<Link className="btn btn-info editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
+						Edit User Info
+					</Link>
+					<Link className="btn btn-info editViewButton" role="button" to="/users/list">
+						Back
+					</Link>
+				</div>
 			</div>
 		);
 	}

@@ -3,6 +3,9 @@ var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from 'react-jsonschema-form';
 import { Row, Col, Button } from 'react-bootstrap';
+var MultiselectField = require('./Multiselect.jsx');
+import createHistory from 'history/lib/createBrowserHistory';
+
 //var ModalError = require('./ModalError.jsx');
 
 function userValidation(formData,errors) {
@@ -16,7 +19,18 @@ var UsersGroupsEditForm = React.createClass({
 		groups: React.PropTypes.array.isRequired
 	},
 	getInitialState: function() {
-		return { error: null, showModal:false};
+		return { error: null,
+			showModal: false,
+			schema: null,
+			data: null,
+			groups: null};
+	},
+	componentWillMount: function(){
+		this.setState({
+			schema: this.props.schema,
+			data: this.props.data,
+			groups: this.props.groups
+		});
 	},
 	close(){
 		this.setState({showModal: false});
@@ -58,39 +72,52 @@ var UsersGroupsEditForm = React.createClass({
 			this.setState({error: responseText, showModal: true});
 		}.bind(this));
 	},
+	handleChangeSelected:function(value){
+		//console.log(value);
+		var data = this.state.data;
+		if (value === null){
+			data.groups = [];
+		}
+		else {
+			data.groups = value.split(',');
+		}
+		this.setState({data:data});
+		console.log('this.state inside handleChangeSelected contains: ', this.state);
+	},
 	render: function() {
+		const history = createHistory();
 		var schema = this.props.schema;
 		console.log('ORIGINAL SCHEMA: ', schema);
 		var newSchema =  {};
 		newSchema.type = schema.type;
 		newSchema.properties = {};
-		newSchema.properties.username = schema.properties.username;
 		newSchema.properties.cn = schema.properties.cn;
-		console.log('All Available Groups are: ', this.props.groups);
-		//We generate an array with all the available groups
-		var arrayGroups = [];
-		for (var i = 0; i < this.props.groups.length; i++){
-			arrayGroups.push(this.props.groups[i].cn);
-		}
-		arrayGroups.sort();
+		newSchema.properties.username = schema.properties.username;
 
-		newSchema.properties.groups = {
-			'title': 'The list of groups where this user is registered in',
-			'type': 'array',
-			'uniqueItems': true,
-			'items': {
-				'type': 'string',
-				'minLength': 1
-			}
-		};
-		newSchema.properties.groups.items.enum = arrayGroups;
-		console.log('NEW SCHEMA: ', newSchema);
-		var data = this.props.data;
-		console.log('DATA contains: ', data);
-		//As we will only show username, cn and groups: We generate a new data object copying this
-		//fields from data
-		var newData = {};
-		newData.username = data.username; newData.cn = data.cn; newData.groups = data.groups;
+		//We don't add groups to newSchema since this field validation will be done by the Multiselect component
+		//We generate an array with all the available groups that will be used as "options" input for Multiselect component
+		//allowCreate=false (default) so only groups inside options array will be allowed inside component
+		console.log('groups contains: ', this.state.groups);
+		var arrayGroups = Object.create(this.state.groups);
+		console.log('arrayGroups contains: ', arrayGroups);
+		var options = [];
+		this.state.groups.map(function(group, i){
+			arrayGroups[group.cn] = group.cn;
+			options.push({'value':group.cn, 'label': group.cn});
+		});
+		//Now we generate the initialSelected array. Which contains the groups that the user already belongs to. This
+		//array will be passed as a prop to the MutiselectField component
+		console.log('arrayGroups contiene: ', arrayGroups);
+		var initialGroupsSelected = [];
+		this.state.data.groups.map(function(groupName, k){
+			initialGroupsSelected.push({'value':groupName, 'label': arrayGroups[groupName]});
+		});
+		console.log('New schema contains: ', newSchema);
+		var newData = Object.create(this.state.data);
+
+		newData.cn = this.state.data.cn;
+		newData.username = this.state.data.username;
+
 		console.log('NEW DATA contains: ', newData);
 		const uiSchema = {
 			'username': {
@@ -98,9 +125,6 @@ var UsersGroupsEditForm = React.createClass({
 			},
 			'cn': {
 				'ui:readonly': true
-			},
-			'groups': {
-				'ui:widget': 'checkboxes'
 			}
 		};
 		const log = (type) => console.log.bind(console, type);
@@ -123,7 +147,6 @@ var UsersGroupsEditForm = React.createClass({
 				</Bootstrap.Modal>
 				<Row className = "show-grid">
 					<Col xs={12} md={8}>
-						<code>
 							<Form
 								schema={newSchema}
 								uiSchema={uiSchema}
@@ -133,8 +156,13 @@ var UsersGroupsEditForm = React.createClass({
 								onError={onError}
 								validate={userValidation}
 								liveValidate
-							/>
-						</code>
+							>
+							<MultiselectField label="Members of this group" options={options} initialSelected={initialGroupsSelected} onChangeSelected={this.handleChangeSelected}/>
+						<div className="button-submit">
+							<Button bsStyle="primary" onClick={history.goBack} >Cancel</Button>
+							<Button bsStyle="primary" type="submit">Submit</Button>
+						</div>
+						</Form>
 					</Col>
 				</Row>
 			</div>

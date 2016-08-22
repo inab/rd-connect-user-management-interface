@@ -85,7 +85,6 @@ var UsersGroupsViewForm = React.createClass({
 				</Bootstrap.Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
-						<code>
 							<Form
 								schema={newSchema}
 								uiSchema={uiSchema}
@@ -95,11 +94,8 @@ var UsersGroupsViewForm = React.createClass({
 								validate={userValidation}
 								liveValidate
 							/>
-						</code>
 					</Col>
-					<Col xs={6} md={4}>
-						<code></code>
-					</Col>
+					<Col xs={6} md={4}/>
 				</Row>
 			</div>
 		);

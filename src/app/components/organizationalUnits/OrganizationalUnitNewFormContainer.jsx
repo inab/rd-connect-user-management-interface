@@ -6,7 +6,7 @@ var OrganizationalUnitNewFormContainer = React.createClass({
 	getInitialState: function() {
 		return { schema: null };
 	},
-	componentVillMount: function() {
+	componentWillMount: function() {
 		this.loadOrganizationalUnitSchema();
 	},
 	loadOrganizationalUnitSchema: function() {

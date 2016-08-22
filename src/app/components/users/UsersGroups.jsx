@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 
 
 const UsersGroups = ({data}) => {
-    //console.log("Data so far is: ", data);
+    console.log("Data so far is: ", data);
     var groupData = Underscore
       .chain(data)
       .groupBy('organizationalUnit')
@@ -31,6 +31,7 @@ const UsersGroups = ({data}) => {
                             <th>Email</th>
                             <th>Category</th>
                             <th>Enabled</th>
+                            <th>Groups</th>
                             <th>Actions</th>
                           </tr>
                         </thead>
@@ -44,11 +45,16 @@ const UsersGroups = ({data}) => {
                               <td>{user.email}</td>
                               <td>{user.userCategory}</td>
                               <td><Checkbox checked={isChecked} readOnly /></td>
-                              <td>{user.cn}</td>
                               <td>
-                                <Link className="btn btn-info editViewButton" role="button" to={'/users/groups/view/' + encodeURIComponent(`${user.username}`)}>
-                                  View
-                                </Link>
+                                <ul className="user-ul">
+                                {user.groups.map(function(group, k){
+                                  return (
+                                    <li>{group}</li>
+                                  );
+                                })}
+                                </ul>
+                              </td>
+                              <td>
                                 <Link className="btn btn-info editViewButton" role="button" to={'/users/groups/edit/' + encodeURIComponent(`${user.username}`)}>
                                   Edit
                                 </Link>

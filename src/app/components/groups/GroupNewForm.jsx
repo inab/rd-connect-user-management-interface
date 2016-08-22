@@ -2,7 +2,8 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from 'react-jsonschema-form';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
+import createHistory from 'history/lib/createBrowserHistory';
 
 function groupValidation(formData,errors) {
 		return errors;
@@ -55,6 +56,7 @@ var GroupNewForm = React.createClass({
 		}.bind(this));
 	},
 	render: function() {
+		const history = createHistory();
 		var schema = this.props.schema;
 		console.log(schema);
 		const formData = undefined;
@@ -82,7 +84,6 @@ var GroupNewForm = React.createClass({
 				</Bootstrap.Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
-						<code>
 							<Form schema={schema}
 								uiSchema={uiSchema}
 								formData={formData}
@@ -91,12 +92,12 @@ var GroupNewForm = React.createClass({
 								onError={onError}
 								validate={groupValidation}
 								liveValidate= {false}
-							/>
-						</code>
+							>
+								<Button bsStyle="primary" onClick={history.goBack} >Cancel</Button>
+								<Button bsStyle="primary" type="submit">Submit</Button>
+							</Form>
 					</Col>
-					<Col xs={6} md={4}>
-						<code></code>
-					</Col>
+					<Col xs={6} md={4}/>
 				</Row>
 			</div>
 		);

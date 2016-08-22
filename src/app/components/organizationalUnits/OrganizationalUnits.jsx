@@ -48,7 +48,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                         <td>Picture</td>
                         <td>Links</td>
                         <td>
-                          <Link className="btn btn-info editViewButton" role="button" to={'/organizationalUnits/view/' + encodeURIComponent(`${organizationalUnitObject.organizationalUnit}`)}>
+                          <Link className="btn btn-info editViewButton" role="button" to={'/organizationalUnits/edit/' + encodeURIComponent(`${organizationalUnitObject.organizationalUnit}`)}>
                             Edit
                           </Link>
                       </td>

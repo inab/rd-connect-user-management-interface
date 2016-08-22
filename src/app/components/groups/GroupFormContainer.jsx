@@ -5,13 +5,12 @@ var GroupEditForm = require('./GroupEditForm.jsx');
 var GroupViewForm = require('./GroupViewForm.jsx');
 var Underscore = require('underscore');
 
-import {History} from 'react-router';
+import createHistory from 'history/lib/createBrowserHistory';
 
 var GroupFormContainer = React.createClass({
 	propTypes:{
 		route: React.PropTypes.array
 	},
-	mixins: [ History ],
 	getInitialState: function() {
 		return {
 			schema: null,
@@ -19,10 +18,11 @@ var GroupFormContainer = React.createClass({
 			users: null,
 			error: null,
 			showModal: false,
-			task: this.props.route.task
+			task: null
 		};
 	},
 	componentWillMount: function() {
+		this.setState({task: this.props.route.task});
 		this.loadGroupData();
 	},
 	close(){
@@ -143,6 +143,7 @@ var GroupFormContainer = React.createClass({
   },
    //This is to browse history back when group is not found after showing modal error
   render: function() {
+	const history = createHistory();
 	console.log('this.state.schema is: ',this.state.schema);
 	console.log('this.state.data is: ',this.state.data);
 	console.log('this.state.users is: ',this.state.users);
@@ -160,7 +161,7 @@ var GroupFormContainer = React.createClass({
     if (this.state.error) {
       return (
 		<div>
-			<Bootstrap.Modal show={this.state.showModal} onHide={this.history.goBack} error={this.state.error}>
+			<Bootstrap.Modal show={this.state.showModal} onHide={history.goBack} error={this.state.error}>
 				<Bootstrap.Modal.Header closeButton>
 					<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
 					</Bootstrap.Modal.Header>
@@ -168,7 +169,7 @@ var GroupFormContainer = React.createClass({
 					<h4>{this.state.error}</h4>
 				</Bootstrap.Modal.Body>
 				<Bootstrap.Modal.Footer>
-					<Bootstrap.Button onClick={this.history.goBack}>Close</Bootstrap.Button>
+					<Bootstrap.Button onClick={history.goBack}>Close</Bootstrap.Button>
 				</Bootstrap.Modal.Footer>
 			</Bootstrap.Modal>
 		</div>

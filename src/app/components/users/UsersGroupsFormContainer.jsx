@@ -12,10 +12,11 @@ var UsersGroupsFormContainer = React.createClass({
 			groups: null,
 			error: null,
 			showModal: false,
-			task: this.props.route.task
+			task: null
 		};
 	},
 	componentWillMount: function() {
+		this.setState({task: this.props.route.task});
 		this.loadUserSchema();
 	},
 	loadUserFromServer: function() {
@@ -99,7 +100,6 @@ var UsersGroupsFormContainer = React.createClass({
 		console.log('Data: ', this.state.data);
 		console.log('Groups: ', this.state.groups);
 		console.log('TASK: ', this.state.task);
-
 		if ((this.state.schema) && (this.state.data) && (this.state.groups)) {
 			if (this.state.task === 'users_groups_view'){
 				return (

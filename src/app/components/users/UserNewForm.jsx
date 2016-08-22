@@ -2,7 +2,9 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from 'react-jsonschema-form';
-import { Row, Col } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
+import createHistory from 'history/lib/createBrowserHistory';
+
 //var ModalError = require('./ModalError.jsx');
 
 function userValidation(formData,errors) {
@@ -12,7 +14,7 @@ function userValidation(formData,errors) {
 var UserNewForm = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.object.isRequired
+		data: React.PropTypes.array.isRequired
 	},
 	getInitialState: function() {
 		return { error: null, showModal:false};
@@ -25,7 +27,7 @@ var UserNewForm = React.createClass({
 	},
 	addUserData: function({formData}){
 		console.log('yay I\'m valid!');
-		//console.log(formData);
+		console.log(formData);
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
 		jQuery.ajax({
@@ -58,7 +60,8 @@ var UserNewForm = React.createClass({
 		}.bind(this));
 	},
 	render: function() {
-		const formData = undefined;
+		const history = createHistory();
+		const formData = {};
 		var schema = this.props.schema;
 		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
 		delete schema.properties.groups;
@@ -140,7 +143,10 @@ var UserNewForm = React.createClass({
 							onError={onError}
 							validate={userValidation}
 							liveValidate= {false}
-							/>
+							>
+								<Button bsStyle="primary" onClick={history.goBack} >Cancel</Button>
+								<Button bsStyle="primary" type="submit">Submit</Button>
+							</Form>
 					</Col>
 					<Col xs={6} md={4} />
 				</Row>

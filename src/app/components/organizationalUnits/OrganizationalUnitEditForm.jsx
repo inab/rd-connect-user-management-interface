@@ -149,7 +149,6 @@ var OrganizationalUnitEditForm = React.createClass({
 				</Bootstrap.Modal>
 				<Row className = "show-grid">
 					<Col xs={12} md={8}>
-						<code>
 							<Form schema={schema}
 							//uiSchema={uiSchema}
 							formData={data}
@@ -159,11 +158,8 @@ var OrganizationalUnitEditForm = React.createClass({
 							validate={organizationalUnitValidation}
 							liveValidate
 							/>
-						</code>
 					</Col>
-					<Col xs={6} md={4}>
-						<code></code>
-					</Col>
+					<Col xs={6} md={4}/>
 				</Row>
 			</div>
 		);

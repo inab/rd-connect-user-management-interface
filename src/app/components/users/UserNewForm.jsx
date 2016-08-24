@@ -1,14 +1,27 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
+var request = require('superagent');
 import Form from 'react-jsonschema-form';
 import { Row, Col, Button } from 'react-bootstrap';
 import createHistory from 'history/lib/createBrowserHistory';
+var Dropzone = require('react-dropzone');
+var imageNotFoundSrc = require('./defaultNoImageFound.js');
 
 //var ModalError = require('./ModalError.jsx');
 
 function userValidation(formData,errors) {
+	if (formData.userPassword !== formData.userPassword2) {
+		errors.userPassword2.addError('Passwords don\'t match');
+	}
 		return errors;
+}
+function validateImageInput(image,that) {
+	var responseText = null;
+	if (image.type !== 'image/jpeg') {
+		responseText = 'Image should be in jpeg format';
+	}
+	return responseText;
 }
 
 var UserNewForm = React.createClass({
@@ -17,7 +30,10 @@ var UserNewForm = React.createClass({
 		data: React.PropTypes.array.isRequired
 	},
 	getInitialState: function() {
-		return { error: null, showModal:false};
+		return { error: null, showModal: false, files: [], picture : null};
+	},
+	componentWillMount: function() {
+		this.setState({picture: this.props.data.picture});
 	},
 	close(){
 		this.setState({showModal: false});
@@ -25,11 +41,56 @@ var UserNewForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
+	dropHandler: function (files) {
+		console.log('Received files: ', files);
+		var req = request.post('/users/:user_id/picture');
+        files.forEach((file)=> {
+			var error = validateImageInput(file);
+			if (!error){
+				req.attach(file.name, file);
+				req.end(function(err, res){
+					if (!err && res){
+						this.setState({files: files});
+						this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
+						//console.log("Picture in the state after validation: ", file.preview);
+					}
+					else {
+						var responseText = '';
+						if (err && err.status === 404) {
+							responseText = 'Failed to Update User\'s image. Not found [404]';
+						}
+						else if (err && err.status === 500) {
+							responseText = 'Failed to Update User\'s image. Internal Server Error [500]';
+						}
+						else if (err && err.status === 'parsererror') {
+							responseText = 'Failed to Update User\'s image. Sent JSON parse failed';
+						}
+						else if (err && err.status === 'timeout') {
+							responseText = 'Failed to Update User\'s image. Time out error';
+						}
+						else if (err && err.status === 'abort') {
+							responseText = ('Ajax request aborted');
+						}
+						else if (err) {
+							responseText = 'Ajax generic error';
+						}
+						this.setState({error: responseText, showModal: true});
+					}
+				}.bind(this));
+			} else {
+				this.setState({error: error, showModal: true});
+			}
+        });
+    },
+	onOpenClick: function () {
+      this.refs.dropzone.open();
+    },
 	addUserData: function({formData}){
 		console.log('yay I\'m valid!');
 		console.log(formData);
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
+		console.log('El userData contiene: ',userData);
 		jQuery.ajax({
 			type: 'PUT',
 			url: '/some/url',
@@ -65,6 +126,10 @@ var UserNewForm = React.createClass({
 		var schema = this.props.schema;
 		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
 		delete schema.properties.groups;
+
+		//We remove picture from the schema since this will be managed by react-dropzone component
+		delete schema.properties.picture;
+
 		//We generate the enums property for the Organizational Units extracting the info from data
 		var arrayOUobjects = this.props.data; var arrayOUstrings = [];
 		for (var i = 0; i < arrayOUobjects.length; i++) {
@@ -119,7 +184,10 @@ var UserNewForm = React.createClass({
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		console.log('Error: ', this.state.error);
 		console.log('Show: ', this.state.showModal);
-
+		var userImage = this.state.picture;
+		if (typeof userImage === 'undefined'){
+			userImage = imageNotFoundSrc;
+		}
 		return (
 			<div>
 				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
@@ -148,7 +216,19 @@ var UserNewForm = React.createClass({
 								<Button bsStyle="primary" type="submit">Submit</Button>
 							</Form>
 					</Col>
-					<Col xs={6} md={4} />
+					<Col xs={6} md={4} >
+						<div>
+							<button type="button" onClick={this.onOpenClick} className="changeImageButton">
+								Add image
+							</button>
+							<Dropzone className="dropzone" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
+								Click here or drop image
+							</Dropzone>
+							{this.state.files.length > 0 ? <div>
+							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} width="100" alt="image_user" className="imagePreview" /> )}</div>
+							</div> : <div><img src={userImage} width="100" alt="image_user" className="imagePreview" /></div>}
+						</div>
+					</Col>
 				</Row>
 			</div>
 		);

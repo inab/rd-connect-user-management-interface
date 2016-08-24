@@ -2,31 +2,24 @@ var React = require('react');
 
 import {Panel, Table, Accordion, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router';
+var imageNotFoundSrc = require('../users/defaultNoImageFound.js');
 
 const OrganizationalUnits = ({data, organizationalUnits}) => {
     console.log('Users grouped by OU and sorted so far is: ', data);//Users grouped by OU and sorted
     console.log('organizationalUnits so far is: ', organizationalUnits);//Array of OU(objects)
-    /*<td><img src={'data:image/jpeg;base64,' + ou.picture} alt="image Organizational Unit" /></td>*/
-    /*
-    {data.map(function(ou,i){
-      console.log(ou[0].organizationalUnit); //18 ou
-      var organizationalUnitObject = organizationalUnits[i];
-      console.log(organizationalUnitObject);
-      console.log(organizationalUnitObject.organizationalUnit);
-      console.log(organizationalUnitObject.description);
-      organizationalUnitObject.organizationalUnit
-
-      });
-    }
-    return false;
-    */
+    //var ouImage = this.props.data.picture;
+		//if (typeof userImage === 'undefined'){
+		//	userImage = imageNotFoundSrc.src;
+		//}
     return (
       <div>
         <h3> List of Organizational Units </h3>
         <Accordion>
           {data.map(function(ou,i){
+              console.log('ou contains', ou);
               var organizationalUnit = ou[0].organizationalUnit;
               var organizationalUnitObject = organizationalUnits[i];
+              var ouImage = organizationalUnitObject.picture;
               console.log('organizationalUnit contains', organizationalUnit);
               console.log('organizationalUnitObject contains', organizationalUnitObject);
             return (
@@ -45,7 +38,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                       <tr>
                         <td>{organizationalUnitObject.organizationalUnit}</td>
                         <td>{organizationalUnitObject.description}</td>
-                        <td>Picture</td>
+                        <td><img src={ouImage} width="100" alt="image_organizationalUnit" /></td>
                         <td>Links</td>
                         <td>
                           <Link className="btn btn-info editViewButton" role="button" to={'/organizationalUnits/edit/' + encodeURIComponent(`${organizationalUnitObject.organizationalUnit}`)}>

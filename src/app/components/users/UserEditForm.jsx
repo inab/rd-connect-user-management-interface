@@ -84,7 +84,6 @@ var UserEditForm = React.createClass({
       this.refs.dropzone.open();
     },
 	updateUserData: function({formData}){
-		//formData needs to include picture information if it is not null so the picture is not deleted
 		console.log('yay I\'m valid!');
 		console.log('El formData contiene: ',formData);
 		var userData = Object.assign({},formData);
@@ -188,7 +187,7 @@ var UserEditForm = React.createClass({
 		console.log('Show: ', this.state.showModal);
 		var userImage = this.state.picture;
 		if (typeof userImage === 'undefined'){
-			userImage = imageNotFoundSrc.src;
+			userImage = imageNotFoundSrc;
 		}
 		return (
 			<div>
@@ -213,20 +212,19 @@ var UserEditForm = React.createClass({
 							onError={onError}
 							validate={userValidation}
 							liveValidate
-						>
-						</Form>
+						/>
 					</Col>
 					<Col xs={6} md={4} >
 						<div>
-							<button type="button" onClick={this.onOpenClick}>
+							<button type="button" onClick={this.onOpenClick} className="changeImageButton">
 								Change image
 							</button>
 							<Dropzone className="dropzone" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
 								Click here or drop image for {data.username}
 							</Dropzone>
 							{this.state.files.length > 0 ? <div>
-							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} width="100" alt="image_user" /> )}</div>
-							</div> : <div><img src={userImage} width="100" alt="image_user" /></div>}
+							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} width="100" alt="image_user" className="imagePreview" /> )}</div>
+							</div> : <div><img src={userImage} width="100" alt="image_user" className="imagePreview" /></div>}
 						</div>
 					</Col>
 				</Row>

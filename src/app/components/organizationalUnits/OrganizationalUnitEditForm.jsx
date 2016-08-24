@@ -1,8 +1,11 @@
 var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
+var request = require('superagent');
 import Form from 'react-jsonschema-form';
 import { Row, Col } from 'react-bootstrap';
+var Dropzone = require('react-dropzone');
+var imageNotFoundSrc = require('../users/defaultNoImageFound.js');
 
 function organizationalUnitValidation(formData,errors) {
 	var imageString = formData.picture;
@@ -12,7 +15,14 @@ function organizationalUnitValidation(formData,errors) {
 	if ((imageString.startsWith(prefix)) === false && (imageString.startsWith(prefix2)) === false){
 		errors.picture.addError('Invalid image format');
 	}
-		return errors;
+	return errors;
+}
+function validateImageInput(image) {
+	var responseText = null;
+	if ((image.type !== 'image/jpeg') && (image.type !== 'image/png')) {
+		responseText = 'Image should be in jpeg format';
+	}
+	return responseText;
 }
 
 var OrganizationalUnitEditForm = React.createClass({
@@ -21,7 +31,10 @@ var OrganizationalUnitEditForm = React.createClass({
 		data: React.PropTypes.object.isRequired
 	},
 	getInitialState: function() {
-		return { error: null, showModal:false};
+		return { error: null, showModal:false, files: [], picture : null};
+	},
+	componentWillMount: function() {
+		this.setState({picture: this.props.data.picture});
 	},
 	close(){
 		this.setState({showModal: false});
@@ -29,11 +42,54 @@ var OrganizationalUnitEditForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
+	dropHandler: function (files) {
+		console.log('Received files: ', files);
+		var req = request.post('/organizationalUnits/:ou_id/picture');
+        files.forEach((file)=> {
+			var error = validateImageInput(file);
+			if (!error){
+				req.attach(file.name, file);
+				req.end(function(err, res){
+					if (!err && res){
+						this.setState({files: files});
+						this.setState({picture: file.preview}); //So the ou's image is only updated in UI if the PUT process succeeds'
+						//console.log("Picture in the state after validation: ", file.preview);
+					}
+					else {
+						var responseText = '';
+						if (err && err.status === 404) {
+							responseText = 'Failed to Update OrganizationalUnit\'s image. Not found [404]';
+						}
+						else if (err && err.status === 500) {
+							responseText = 'Failed to Update OrganizationalUnit\'s image. Internal Server Error [500]';
+						}
+						else if (err && err.status === 'parsererror') {
+							responseText = 'Failed to Update OrganizationalUnit\'s image. Sent JSON parse failed';
+						}
+						else if (err && err.status === 'timeout') {
+							responseText = 'Failed to Update OrganizationalUnit\'s image. Time out error';
+						}
+						else if (err && err.status === 'abort') {
+							responseText = ('Ajax request aborted');
+						}
+						else if (err) {
+							responseText = 'Ajax generic error';
+						}
+						this.setState({error: responseText, showModal: true});
+					}
+				}.bind(this));
+			} else {
+				this.setState({error: error, showModal: true});
+			}
+        });
+    },
+	onOpenClick: function () {
+      this.refs.dropzone.open();
+    },
 	updateOrganizationalUnitData: function({formData}){
 		console.log('yay I\'m valid!');
-		//console.log(formData);
+		console.log('El formData contiene: ',formData);
 		var organizationalUnitData = Object.assign({},formData);
-		//delete userData.userPassword2;
 		jQuery.ajax({
 			type: 'PUT',
 			url: '/some/url',
@@ -66,7 +122,7 @@ var OrganizationalUnitEditForm = React.createClass({
 	render: function() {
 		var schema = this.props.schema;
 		var data = this.props.data;
-
+		/*
 		schema = {
 			'id': 'http://rd-connect.eu/cas/json-schemas/userValidation#CASOrganizationalUnit',
 			'$schema': 'http://json-schema.org/draft-04/hyper-schema#',
@@ -125,8 +181,20 @@ var OrganizationalUnitEditForm = React.createClass({
 			'dependencies': {
 			}
 		};
-		console.log(schema);
-		console.log(data);
+		*/
+		console.log('Retrieved schema from API and passed by Props: ', schema);
+		console.log('data passed by props', data);
+
+		//We remove picture from the schema since this will be managed by react-dropzone component
+		delete schema.properties.picture;
+		console.log('Picture en el state contiene: ', this.state.picture);
+		console.log('File en el state contiene: ', this.state.files);
+
+		//Once we already have picture value, we remove from data since we have removed it from schema.
+		//All picture related stuff will be managed by react-dropzone component.
+		delete data.picture;
+
+		console.log('Retrieved schema from API: ', schema);
 
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateOrganizationalUnitData({formData});
@@ -134,6 +202,10 @@ var OrganizationalUnitEditForm = React.createClass({
 		console.log('Error: ', this.state.error);
 		console.log('Show: ', this.state.showModal);
 
+		var ouImage = this.state.picture;
+		if (typeof ouImage === 'undefined'){
+			ouImage = imageNotFoundSrc;
+		}
 		return (
 			<div>
 				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
@@ -155,11 +227,23 @@ var OrganizationalUnitEditForm = React.createClass({
 							onChange={log('changed')}
 							onSubmit={onSubmit}
 							onError={onError}
-							validate={organizationalUnitValidation}
+							//validate={organizationalUnitValidation}
 							liveValidate
 							/>
 					</Col>
-					<Col xs={6} md={4}/>
+					<Col xs={6} md={4} >
+						<div>
+							<button type="button" onClick={this.onOpenClick} className="changeImageButton">
+								Change image
+							</button>
+							<Dropzone className="dropzone" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
+								Click here or drop image for {data.username}
+							</Dropzone>
+							{this.state.files.length > 0 ? <div>
+							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} width="100" alt="ou_image" className="imagePreview" /> )}</div>
+							</div> : <div><img src={ouImage} width="100" alt="ou_image" className="imagePreview" /></div>}
+						</div>
+					</Col>
 				</Row>
 			</div>
 		);

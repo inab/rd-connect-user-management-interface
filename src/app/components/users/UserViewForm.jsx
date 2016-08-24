@@ -4,6 +4,7 @@ import { Row, Col, Button, Jumbotron, Panel } from 'react-bootstrap';
 import { Link } from 'react-router';
 //var ModalError = require('./ModalError.jsx');
 import createHistory from 'history/lib/createBrowserHistory';
+var imageNotFoundSrc = require('./defaultNoImageFound.js');
 
 var UserViewForm = React.createClass({
 	propTypes:{
@@ -27,6 +28,11 @@ var UserViewForm = React.createClass({
 		console.log('Error: ', this.state.error);
 		console.log('Show: ', this.state.showModal);
 		var isChecked = this.props.data.enabled;
+		var userImage = this.props.data.picture;
+		if (typeof userImage === 'undefined'){
+			userImage = imageNotFoundSrc.src;
+		}
+		console.log(userImage);
 		return (
 			<div>
 				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
@@ -125,10 +131,15 @@ var UserViewForm = React.createClass({
 												<p key={o}>{group}</p>
 											);
 										})}
-										<Bootstrap.Button>Edit</Bootstrap.Button>
+										<Link className="btn btn-info editViewButton" role="button" to={'/users/groups/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
+											Edit
+										</Link>
 									</Panel>
 								: <Panel header="List of groups where the user is registered in"/>
 							}
+						</Col>
+						<Col>
+							<img src={userImage} width="100" alt="image_user" />
 						</Col>
 					</Row>
 				</Jumbotron>

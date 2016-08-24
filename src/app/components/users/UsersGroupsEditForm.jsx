@@ -157,7 +157,7 @@ var UsersGroupsEditForm = React.createClass({
 								validate={userValidation}
 								liveValidate
 							>
-							<MultiselectField label="Members of this group" options={options} initialSelected={initialGroupsSelected} onChangeSelected={this.handleChangeSelected}/>
+							<MultiselectField label="Member of these groups" options={options} initialSelected={initialGroupsSelected} onChangeSelected={this.handleChangeSelected}/>
 						<div className="button-submit">
 							<Button bsStyle="primary" onClick={history.goBack} >Cancel</Button>
 							<Button bsStyle="primary" type="submit">Submit</Button>

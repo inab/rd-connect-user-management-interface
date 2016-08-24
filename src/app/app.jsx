@@ -47,7 +47,8 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
                     <Route path="enable-disable/:username" name="Enable-Disable" staticName component={UserFormContainer} task={'enable_disable'}/>
                     <Route path="new" name="New" component={UserNewFormContainer} />
                     <Route path="groups" name="Users in groups" component={Box} >
-                        <Route path="list" name="View Users in group" component={UsersGroupsContainer} task={'list'}/>
+                        <IndexRoute component={UsersGroupsContainer}/>
+                        <Route path="list" name="View Users in group" staticName component={UsersGroupsContainer} task={'list'}/>
                         <Route path="view/:username" name="View Users in group" staticName component={UsersGroupsFormContainer} task={'users_groups_view'}/>
                         <Route path="edit/:username" name="Edit Users in group" staticName component={UsersGroupsFormContainer} task={'users_groups_edit'}/>
                     </Route>

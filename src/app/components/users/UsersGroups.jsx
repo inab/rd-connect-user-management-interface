@@ -49,7 +49,7 @@ const UsersGroups = ({data}) => {
                                 <ul className="user-ul">
                                 {user.groups.map(function(group, k){
                                   return (
-                                    <li>{group}</li>
+                                    <li><strong>{group}</strong></li>
                                   );
                                 })}
                                 </ul>

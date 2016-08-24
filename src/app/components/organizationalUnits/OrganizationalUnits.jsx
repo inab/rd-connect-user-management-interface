@@ -65,6 +65,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                         <th>User Category</th>
                         <th>Enabled</th>
                         <th>Email</th>
+                        <th>Edit user's info</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -78,6 +79,9 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                           <td>{user.userCategory}</td>
                           <td><Checkbox checked={isChecked} readOnly /></td>
                           <td>{user.email}</td>
+                          <td>
+                            <Link className="btn btn-info editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>Edit</Link>
+                          </td>
                         </tr>
                       );
                     })}

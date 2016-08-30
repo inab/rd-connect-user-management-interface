@@ -3,6 +3,9 @@ var jQuery = require('jquery');
 var OrganizationalUnitsUsersEditForm = require('./OrganizationalUnitsUsersEditForm.jsx');
 
 var OrganizationalUnitsUsersFormContainer = React.createClass({
+	propTypes:{
+		params: React.PropTypes.object
+	},
 	getInitialState: function() {
 		return {
 			users: null,

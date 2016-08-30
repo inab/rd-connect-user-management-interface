@@ -7,6 +7,10 @@ var OrganizationalUnitViewForm = require('./OrganizationalUnitViewForm.jsx');
 import createHistory from 'history/lib/createBrowserHistory';
 
 var OrganizationalUnitFormContainer = React.createClass({
+	propTypes:{
+		route: React.PropTypes.array,
+		params: React.PropTypes.object
+	},
 	//mixins: [ History ], //This is to browse history back when organizational unit is not found after showing modal error
 	contextTypes: {
 		router: React.PropTypes.object

@@ -9,7 +9,8 @@ import createHistory from 'history/lib/createBrowserHistory';
 
 var GroupFormContainer = React.createClass({
 	propTypes:{
-		route: React.PropTypes.array
+		route: React.PropTypes.array,
+		params: React.PropTypes.object
 	},
 	getInitialState: function() {
 		return {

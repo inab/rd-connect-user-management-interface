@@ -45,7 +45,7 @@ var OrganizationalUnitNewForm = React.createClass({
 		this.setState({showModal: true});
 	},
 	dropHandler: function (files) {
-		console.log('Received files: ', files);
+		//console.log('Received files: ', files);
 		var req = request.post('/organizationalUnits/:ou_id/picture');
         files.forEach((file)=> {
 			var error = validateImageInput(file);
@@ -59,6 +59,7 @@ var OrganizationalUnitNewForm = React.createClass({
 					}
 					else {
 						var responseText = '';
+						//console.log("err in ajax request contains: ",err);
 						if (err && err.status === 404) {
 							responseText = 'Failed to Update User\'s image. Not found [404]';
 						}
@@ -128,24 +129,23 @@ var OrganizationalUnitNewForm = React.createClass({
 		//We remove picture from the schema since this will be managed by react-dropzone component
 		delete schema.properties.picture;
 		const formData = undefined;
-		console.log(schema);
+		//console.log(schema);
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.addOrganizationalUnitData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
-		console.log('Error: ', this.state.error);
-		console.log('Show: ', this.state.showModal);
+		//console.log('Error: ', this.state.error);
+		//console.log('Show: ', this.state.showModal);
 
 		var ouImage = this.state.picture;
-		console.log("ouImage: ",ouImage);
 		if (typeof ouImage === 'undefined'){
 			ouImage = imageNotFoundSrc;
 		}
-		console.log("ouImage: ",ouImage);
-		console.log("this.state.files.length: ",this.state.files.length);
+		//console.log("ouImage: ",ouImage);
+		//console.log("this.state.files.length: ",this.state.files.length);
 		return (
 			<div>
 				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-					<Bootstrap.Modal.Header closeButton>
+					<Bootstrap.Modal.Header>
 						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
 						</Bootstrap.Modal.Header>
 					<Bootstrap.Modal.Body>
@@ -179,7 +179,7 @@ var OrganizationalUnitNewForm = React.createClass({
 							</Dropzone>
 							{this.state.files.length > 0 ? <div>
 							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} width="100" alt="image_OU" className="imagePreview" /> )}</div>
-							</div> : <div><img src={ouImage.src} width="100" alt="organizationalUnit_image" className="imagePreview" /></div>}
+							</div> : <div><img src={ouImage.src} width="100" alt="organizationalUnit_image"  /></div>}
 						</div>
 					</Col>
 				</Row>

@@ -8,6 +8,10 @@ var UserEnableDisableForm = require('./UserEnableDisableForm.jsx');
 import createHistory from 'history/lib/createBrowserHistory';
 
 var UserFormContainer = React.createClass({
+	propTypes:{
+		route: React.PropTypes.array,
+		params: React.PropTypes.object
+	},
 	//mixins: [ History ], //This is to browse history back when user is not found after showing modal error
 	contextTypes: {
 		router: React.PropTypes.object

@@ -4,6 +4,10 @@ var UsersGroupsEditForm = require('./UsersGroupsEditForm.jsx');
 var UsersGroupsViewForm = require('./UsersGroupsViewForm.jsx');
 
 var UsersGroupsFormContainer = React.createClass({
+	propTypes:{
+		route: React.PropTypes.array,
+		params: React.PropTypes.array
+	},
 	getInitialState: function() {
 		console.log('TASK: ', this.props.route.task);
 		return {

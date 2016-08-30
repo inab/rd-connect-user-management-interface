@@ -21,6 +21,8 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
     var GroupsContainer = require('./components/groups/GroupsContainer.jsx');
     var GroupFormContainer = require('./components/groups/GroupFormContainer.jsx');
     var GroupNewFormContainer = require('./components/groups/GroupNewFormContainer.jsx');
+    var DocumentsUsersContainer = require('./components/documents/DocumentsUsersContainer.jsx');
+    var DocumentsUserContainer = require('./components/documents/DocumentsUserContainer.jsx');
     var Home = require('./components/Home.jsx');
 
     //Needed for React Developer Tools
@@ -67,6 +69,11 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
                     <Route path="edit/:groupName" name="Edit" staticName component={GroupFormContainer} task={'edit'} />
                     <Route path="view/:groupName" name="View" staticName component={GroupFormContainer} task={'view'} />
                     <Route path="new" name="New" component={GroupNewFormContainer} />
+                </Route>
+                <Route path="/documents" name="Documents" component={Box}>
+                    <IndexRoute component={DocumentsUsersContainer}/>
+                    <Route path="users" name="Users" component={DocumentsUsersContainer} />
+                    <Route path="users/:username" name="List Documents" component={DocumentsUserContainer} />
                 </Route>
             </Route>
         </Router>

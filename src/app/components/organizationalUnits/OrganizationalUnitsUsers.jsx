@@ -49,7 +49,7 @@ const OrganizationalUnitsUsers = ({data}) => {
               })}
               <tr>
                 {/*<td colSpan="6">
-                   <Link className="btn btn-info" role="button" to={route} params={{organizationalUnit: "cnio"}}>
+                   <Link className="btn btn-primary" role="button" to={route} params={{organizationalUnit: "cnio"}}>
                     Manage {organizationalUnit}'s users
                    </Link>
                 </td>*/}

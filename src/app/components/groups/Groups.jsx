@@ -56,7 +56,7 @@ const Groups = ({data}) => {
                         </ul>
                       </td>
                       <td>
-                        <Link className="btn btn-info editViewButton" role="button" to={'/groups/edit/' + encodeURIComponent(`${group.cn}`)}>
+                        <Link className="btn btn-primary editViewButton" role="button" to={'/groups/edit/' + encodeURIComponent(`${group.cn}`)}>
                           Edit
                         </Link>
                       </td>

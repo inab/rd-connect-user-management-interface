@@ -55,7 +55,7 @@ const UsersGroups = ({data}) => {
                                 </ul>
                               </td>
                               <td>
-                                <Link className="btn btn-info editViewButton" role="button" to={'/users/groups/edit/' + encodeURIComponent(`${user.username}`)}>
+                                <Link className="btn btn-primar editViewButton" role="button" to={'/users/groups/edit/' + encodeURIComponent(`${user.username}`)}>
                                   Edit
                                 </Link>
                               </td>

@@ -41,7 +41,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                         <td><img src={ouImage} width="100" alt="image_organizationalUnit" /></td>
                         <td>Links</td>
                         <td>
-                          <Link className="btn btn-info editViewButton" role="button" to={'/organizationalUnits/edit/' + encodeURIComponent(`${organizationalUnitObject.organizationalUnit}`)}>
+                          <Link className="btn btn-primary editViewButton" role="button" to={'/organizationalUnits/edit/' + encodeURIComponent(`${organizationalUnitObject.organizationalUnit}`)}>
                             Edit
                           </Link>
                       </td>
@@ -73,7 +73,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                           <td><Checkbox checked={isChecked} readOnly /></td>
                           <td>{user.email}</td>
                           <td>
-                            <Link className="btn btn-info editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>Edit</Link>
+                            <Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>Edit</Link>
                           </td>
                         </tr>
                       );

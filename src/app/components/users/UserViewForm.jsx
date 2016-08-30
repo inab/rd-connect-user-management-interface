@@ -131,7 +131,7 @@ var UserViewForm = React.createClass({
 												<p key={o}>{group}</p>
 											);
 										})}
-										<Link className="btn btn-info editViewButton" role="button" to={'/users/groups/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
+										<Link className="btn btn-primary editViewButton" role="button" to={'/users/groups/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
 											Edit
 										</Link>
 									</Panel>
@@ -144,10 +144,10 @@ var UserViewForm = React.createClass({
 					</Row>
 				</Jumbotron>
 				<div className="right">
-					<Link className="btn btn-info editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
+					<Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
 						Edit User Info
 					</Link>
-					<Link className="btn btn-info editViewButton" role="button" to="/users/list">
+					<Link className="btn btn-primary editViewButton" role="button" to="/users/list">
 						Back
 					</Link>
 				</div>

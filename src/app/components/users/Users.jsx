@@ -58,10 +58,10 @@ const Users = ({data}) => {
                               </ul>
                             </td>
                             <td>
-                              <Link className="btn btn-info editViewButton" role="button" to={'/users/view/' + encodeURIComponent(`${user.username}`)}>
+                              <Link className="btn btn-primary editViewButton" role="button" to={'/users/view/' + encodeURIComponent(`${user.username}`)}>
                                 View
                               </Link>
-                              <Link className="btn btn-info editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>
+                              <Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>
                                 Edit
                               </Link>
                             </td>

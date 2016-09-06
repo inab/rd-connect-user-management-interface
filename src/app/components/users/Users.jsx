@@ -32,7 +32,7 @@ const Users = ({data}) => {
                           <th>Category</th>
                           <th>Enabled</th>
                           <th>Groups</th>
-                          <th>View/Edit User</th>
+                          <th colSpan="2" >User Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -57,10 +57,12 @@ const Users = ({data}) => {
                               }
                               </ul>
                             </td>
-                            <td>
+                            <td className="border4colspan">
                               <Link className="btn btn-primary editViewButton" role="button" to={'/users/view/' + encodeURIComponent(`${user.username}`)}>
                                 View
                               </Link>
+                            </td>
+                            <td className="border4colspan">
                               <Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>
                                 Edit
                               </Link>

@@ -31,7 +31,7 @@ const DocumentsUsers = ({data}) => {
                           <th>Category</th>
                           <th>Enabled</th>
                           <th>Groups</th>
-                          <th>Document Actions</th>
+                          <th colSpan="2">Document Actions</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -57,15 +57,16 @@ const DocumentsUsers = ({data}) => {
                               }
                               </ul>
                             </td>
-                            <td>
-                              <ul className="documentActions">
-                                <li className="documentActions"><Link className="btn btn-primary editViewButton" role="button" to={'/documents/users/' + encodeURIComponent(`${user.username}`)}>
-                                  List All
-                                </Link></li>
-                                <li className="documentActions"><Link className="btn btn-primary editViewButton" role="button" to={'/documents/users/' + encodeURIComponent(`${user.username}`) + '/create'}>
-                                  Create
-                                </Link></li>
-                              </ul>
+                            <td className="border4colspan">
+                              
+                              <Link className="btn btn-primary editViewButton" role="button" to={'/documents/users/' + encodeURIComponent(`${user.username}`)}>
+                                List All
+                              </Link>
+                            </td>
+                            <td className="border4colspan">
+                              <Link className="btn btn-primary editViewButton" role="button" to={'/documents/users/' + encodeURIComponent(`${user.username}`) + '/new'}>
+                                Create
+                              </Link>
                             </td>
                           </tr>
                       );

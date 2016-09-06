@@ -221,7 +221,7 @@ var UserNewForm = React.createClass({
 							<button type="button" onClick={this.onOpenClick} className="changeImageButton">
 								Add image
 							</button>
-							<Dropzone className="dropzone" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
+							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
 								Click here or drop image
 							</Dropzone>
 							{this.state.files.length > 0 ? <div>

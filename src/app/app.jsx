@@ -23,6 +23,7 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
     var GroupNewFormContainer = require('./components/groups/GroupNewFormContainer.jsx');
     var DocumentsUsersContainer = require('./components/documents/DocumentsUsersContainer.jsx');
     var DocumentsUserContainer = require('./components/documents/DocumentsUserContainer.jsx');
+    var DocumentsUserNew = require('./components/documents/DocumentsUserNew.jsx');
     var Home = require('./components/Home.jsx');
 
     //Needed for React Developer Tools
@@ -74,6 +75,7 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
                     <IndexRoute component={DocumentsUsersContainer}/>
                     <Route path="users" name="Users" component={DocumentsUsersContainer} />
                     <Route path="users/:username" name="List Documents" component={DocumentsUserContainer} />
+                    <Route path="users/:username/new" name="New Document" component={DocumentsUserNew} />
                 </Route>
             </Route>
         </Router>

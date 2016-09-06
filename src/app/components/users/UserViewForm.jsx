@@ -144,11 +144,11 @@ var UserViewForm = React.createClass({
 					</Row>
 				</Jumbotron>
 				<div className="right">
-					<Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
-						Edit User Info
-					</Link>
 					<Link className="btn btn-primary editViewButton" role="button" to="/users/list">
 						Back
+					</Link>
+					<Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
+						Edit User Info
 					</Link>
 				</div>
 			</div>

@@ -65,7 +65,7 @@ const DocumentsUsers = ({data}) => {
                             </td>
                             <td className="border4colspan">
                               <Link className="btn btn-primary editViewButton" role="button" to={'/documents/users/' + encodeURIComponent(`${user.username}`) + '/new'}>
-                                Create
+                                New
                               </Link>
                             </td>
                           </tr>

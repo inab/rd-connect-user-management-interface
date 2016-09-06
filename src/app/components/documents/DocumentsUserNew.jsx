@@ -1,10 +1,8 @@
 import React from 'react';
 var Bootstrap = require('react-bootstrap');
-import ReactDOM from 'react-dom';
 import { Fade, ListGroup, ListGroupItem } from 'react-bootstrap';
 import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
-var request = require('superagent');
 var jQuery = require('jquery');
 
 const { Select, File, Textarea } = FRC;
@@ -13,40 +11,17 @@ const { Select, File, Textarea } = FRC;
 function htmlspecialchars(str) {
   return str.replace('&', '&amp;').replace('"', '&quot;').replace("'", '&#039;').replace('<', '&lt;').replace('>', '&gt;');
 }
-function validateSubmission(model){
-  alert("Validating submission model: ", model);
+function validateSubmission(that, model){
+	alert('ValidateSubmission unfinished', model);
+	//First we validate documentFile
+	return true;
 }
-
-const MyInput = React.createClass({
-  mixins: [Formsy.Mixin],
-  changeValue(event) {
-    this.setValue(event.currentTarget[this.props.type === 'checkbox' ? 'checked' : 'value']);
-  },
-  render() {
-    const className = 'form-group' + (this.props.className || ' ') + (this.showRequired() ? 'required' : this.showError() ? 'error' : null);
-    const errorMessage = this.getErrorMessage();
-    return (
-      <div className={className}>
-        <label htmlFor={this.props.name}>{this.props.title}</label>
-        <input
-          type={this.props.type || 'text'}
-          name={this.props.name}
-          onChange={this.changeValue}
-          value={this.getValue()}
-          checked={this.props.type === 'checkbox' && this.getValue() ? 'checked' : null}
-        />
-        <span className='validation-error'>{errorMessage}</span>
-      </div>
-    );
-  }
-});
 
 
 const DocumentsUserNew = React.createClass({
   propTypes:{
 		params: React.PropTypes.object
 	},
-  mixins: [FRC.ParentContextMixin],
 	getInitialState() {
       return {
         canSubmit: false,
@@ -57,6 +32,7 @@ const DocumentsUserNew = React.createClass({
         documentFile: '',
         documentDescription: '',
         documentClass: '',
+        validationErrors: {}
       };
     },
     componentWillMount: function() {
@@ -87,88 +63,97 @@ const DocumentsUserNew = React.createClass({
         mythis.toggle();
       }, 3000);
     },
-    changeValue(event) {
-      console.log("Handling change on document description");
-      console.log(event);
-      var test= jQuery(".documentDescription textarea");
-      console.log(test);
-    },
-    handleChangeDocumentFile(e) {
-      this.setState({ documentFile: e.target.value });
-    },
-    handleChangeDocumentDescription(e) {
-      console.log("Handling change on document description");
-      var test= jQuery(".documentDescription textarea");
-      console.log(test);
+    validateForm: function (values) {
+      console.log('Values inside validateForm contains: ', values);
+      var selectOptions= ['userAgreement', 'genericAgreement', 'otherAgreement','miscelaneous']; 
+      //First we validate documentFile
+      if (!values.documentFile){
+        this.setState({
+          validationErrors: {
+            documentFile: 'Please select a document to upload'
+          }
+        });
+      } else if (values.documentFile[0].size === 0){
+        this.setState({
+          validationErrors: {
+            documentFile: 'Document to upload cannot be empty (0 bytes)'
+          }
+        });
+      } else if (values.documentFile[0].size > 83886080){
+        this.setState({
+          validationErrors: {
+            documentFile: 'Document to upload cannot be bigger than 10MB'
+          }
+        });
+      } else {
+        this.setState({
+          validationErrors: {
+          }
+        });
+      }
+      //Then we validate documentDescription
+      if (!values.documentDescription){
+        this.setState({
+          validationErrors: {
+            documentDescription: 'Document Description has no value, please add it'
+          }
+        });
+      } else if (values.documentDescription.length < 20){
+        this.setState({
+          validationErrors: {
+            documentDescription: 'Document Description min length is 20 characters'
+          }
+        });
+      } else if (values.documentDescription.length > 200){
+        this.setState({
+          validationErrors: {
+            documentDescription: 'Document Description max length is 200 characters'
+          }
+        });
+      } else {
+        this.setState({
+          validationErrors: {
+          }
+        });
+      }
+      //Then we validate documentClass
+       if (!values.documentClass){
+        this.setState({
+          validationErrors: {
+            documentClass: 'Document Class has no value, please select one'
+          }
+        });
+      } else if (selectOptions.indexOf(values.documentClass) === -1){
+        this.setState({
+          validationErrors: {
+            documentClass: 'Document Class has to be one of this options: User Agreement, Generic Agreement, Other Agreement or Miscelaneous'
+          }
+        });
+      } else {
+        this.setState({
+          validationErrors: {
+          }
+        });
+      }
       
-      //this.setState({ documentDescription: e.target.value });
-      //this.setValue(event.currentTarget[this.props.type === 'checkbox' ? 'checked' : 'value']);
+    },
+    resetForm: function () {
+      this.refs.documentForm.reset();
     },
     handleSubmit(model) {
-      //var valid = validateSubmission(this);
-      console.log('model contains', model);
-      console.log('documentDescription contains', model.documentDescription);
-      console.log('documentClass contains', model.documentClass);
+      //console.log('model contains', model);
+      //console.log('documentDescription contains', model.documentDescription);
+      //console.log('documentClass contains', model.documentClass);
       //var documentFile = jQuery('#formDocumentFile').get(0).files[0];
-      var myBlob = jQuery('input[name=fileDocument]').get(0).files[0];
+      var myBlob = jQuery('input[name=documentFile]').get(0).files[0];
       var description = htmlspecialchars(model.documentDescription);
       var documentClass = htmlspecialchars(model.documentClass);
-
-      /*
-      var documentFile = new File([myBlob], myBlob.name);
-      console.log('documentFile contains', documentFile);
-			var fd = new FormData();
-			fd.append('file', documentFile);
-
-      var req = request.post('/users/' + this.state.username + '/picture');
-			req
-				.set('Content-Type', false)
-        .set('processData', false)
-				.attach('content', fd)
-				.field('description', description)
-				.send('documentClass', documentClass)
-				.end(function(err, res){
-					if (!err && res){
-						self.clearForm();
-            this.setState({in: true});
-            //this.setState({ in: !this.state.in });
-					}
-					else {
-						alert('Si ha habido error en la inserción!!');
-						var responseText = '';
-						if (err && err.status === 404) {
-							responseText = 'Failed to Update User\'s image. Not found [404]';
-						}
-						else if (err && err.status === 500) {
-							responseText = 'Failed to Update User\'s image. Internal Server Error [500]';
-						}
-						else if (err && err.status === 'parsererror') {
-							responseText = 'Failed to Update User\'s image. Sent JSON parse failed';
-						}
-						else if (err && err.status === 'timeout') {
-							responseText = 'Failed to Update User\'s image. Time out error';
-						}
-						else if (err && err.status === 'abort') {
-							responseText = ('Ajax request aborted');
-						}
-						else if (err) {
-							responseText = 'Ajax generic error';
-						}
-						this.setState({error: responseText, showModal: true});
-					}
-				}.bind(this));
-			setTimeout(() => {
-				// Completed of async action, set loading state back
-        this.setState({documentFile: '', documentDescription: '', documentClass: ''});
-        this.setState({in: true});
-			}, 2000);
-      */
-      var documentFile = model.fileDocument[0];
-      console.log('documentFile contains: ', documentFile);
-			var formData = new FormData();
+      //var documentFile = model.documentFile[0];
+      //console.log('documentFile contains: ', documentFile);
+      var formData = new FormData();
         formData.append('file', myBlob);
-        formData.append('description', this.state.description);
-        formData.append('description', this.state.description);
+        formData.append('description', description);
+        formData.append('documentClass', documentClass);
 
       var documentUserFormData = Object.assign({},formData);
       jQuery.ajax({
@@ -179,7 +164,8 @@ const DocumentsUserNew = React.createClass({
         data: documentUserFormData
       })
       .done(function(data) {
-        self.clearForm();
+        //self.clearForm();
+        this.resetForm();
         this.setState({in: true});
         //this.setState({ in: !this.state.in });
       })
@@ -232,12 +218,21 @@ const DocumentsUserNew = React.createClass({
 								<ListGroupItem bsStyle="success">Document inserted successfully!!</ListGroupItem>
 							</ListGroup>
 						</Fade>
-          <Formsy.Form onValidSubmit={this.handleSubmit} onValid={this.enableButton} onInvalid={this.disableButton} name="documentsUserNewForm">
+          <Formsy.Form
+            onChange={this.validateForm}
+            validationErrors={this.state.validationErrors}
+            onValidSubmit={this.handleSubmit}
+            onValid={this.enableButton}
+            onInvalid={this.disableButton}
+            name="documentsUserNewForm"
+            className="documentsForm"
+            ref="documentForm"
+          >
             <fieldset>
             <legend>Document Picker</legend>
               <File
                 layout="vertical"
-                name="fileDocument"
+                name="documentFile"
                 help="Select the document to upload"
                 required
               />

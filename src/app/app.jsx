@@ -2,6 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { hashHistory, Router, Route, Link, withRouter, IndexRoute } from 'react-router';
 //import withExampleBasename from './components/withExampleBasename.js';
+var Bootstrap = require('react-bootstrap');
 import { Button, Col } from 'react-bootstrap';
 
 import auth from './components/auth.jsx';
@@ -111,7 +112,7 @@ const Login = withRouter(React.createClass({
       return {
         error: false,
         canSubmit: false,
-        showModal:false,
+        showModal:true,
         validationErrors: {}
       };
     },
@@ -124,6 +125,9 @@ const Login = withRouter(React.createClass({
         this.setState({
             canSubmit: false
         });
+    },
+    close(){
+      this.setState({showModal: false});
     },
     validateForm: function (values) {
       console.log('Values inside validateForm contains: ', values); 
@@ -166,11 +170,10 @@ const Login = withRouter(React.createClass({
       //const pass = this.refs.pass.value;
       const password = model.password;
       auth.login(username, password, (loggedIn) => {
-        if (!loggedIn)
+        if (!loggedIn){
           return this.setState({ error: true });
-
+        }
         const { location } = this.props;
-
         if (location.state && location.state.nextPathname) {
           this.props.router.replace(location.state.nextPathname);
         } else {
@@ -182,49 +185,57 @@ const Login = withRouter(React.createClass({
     render() {
       return (
         <div>
-        <Formsy.Form
-            onValidSubmit={this.handleSubmit}
-            onChange={this.validateForm}
-            validationErrors={this.state.validationErrors}
-            onValid={this.enableButton}
-            onInvalid={this.disableButton}
-            name="loginForm"
-            className="documentsForm"
-        >
-          <Col xs={12} md={8}>
-          <fieldset>
-            <legend>Username</legend>
-            <Input
-                id="username"
-                name="username"
-                value=""
-                label=""
-                type="text"
-                placeholder="Type your username (For example: a.canada)."
-                help=""
-                layout="vertical"
-                required
-            />
-          </fieldset>
-          <fieldset>
-              <legend>Password</legend>
-              <Input
-                  id="password"
-                  name="password"
-                  value=""
-                  label=""
-                  type="password"
-                  placeholder="Type your password"
-                  layout="vertical"
-                  required
-              />
-            </fieldset>
-                  <Button type="submit" bsStyle="primary" className="right" disabled={!this.state.canSubmit} >Login</Button>
-                  {this.state.error && (
-                    <p className="badLoginInformation" >Bad login information</p>
-                  )}
-            </Col>
-          </Formsy.Form>
+          <Bootstrap.Modal show={this.state.showModal} error={this.state.error} className="login">
+            <Bootstrap.Modal.Header className="login">
+              <Bootstrap.Modal.Title>Login</Bootstrap.Modal.Title>
+              </Bootstrap.Modal.Header>
+            <Bootstrap.Modal.Body className="login">
+              <Formsy.Form
+                onValidSubmit={this.handleSubmit}
+                onChange={this.validateForm}
+                validationErrors={this.state.validationErrors}
+                onValid={this.enableButton}
+                onInvalid={this.disableButton}
+                name="loginForm"
+                className="documentsForm login"
+              >
+              <fieldset>
+                <legend>Username</legend>
+                <Input
+                    id="username"
+                    name="username"
+                    value=""
+                    label=""
+                    type="text"
+                    placeholder="Type your username (For example: a.canada)."
+                    help=""
+                    layout="vertical"
+                    required
+                />
+              </fieldset>
+              <fieldset>
+                  <legend>Password</legend>
+                  <Input
+                      id="password"
+                      name="password"
+                      value=""
+                      label=""
+                      type="password"
+                      placeholder="Type your password"
+                      layout="vertical"
+                      required
+                  />
+                </fieldset>
+                      <Button type="submit" bsStyle="primary" className="right" disabled={!this.state.canSubmit} >Login</Button>
+                      {this.state.error && (
+                        <p className="badLoginInformation" >Bad login information</p>
+                      )}
+              </Formsy.Form>
+            </Bootstrap.Modal.Body>
+            <Bootstrap.Modal.Footer className="login">
+              
+            </Bootstrap.Modal.Footer>
+          </Bootstrap.Modal>
           </div>
       );
     }

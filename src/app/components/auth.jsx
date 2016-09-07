@@ -37,6 +37,7 @@ module.exports = {
 
 function pretendRequest(username, password, cb) {
   setTimeout(() => {
+    //Ajax call to API REST login
     if (username === 'acanada' && password === '123.qwe') {
       cb({
         authenticated: true,

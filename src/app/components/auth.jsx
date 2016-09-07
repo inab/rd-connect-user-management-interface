@@ -1,12 +1,12 @@
 module.exports = {
-  login(email, pass, cb) {
+  login(username, password, cb) {
     cb = arguments[arguments.length - 1];
     if (localStorage.token) {
       if (cb) cb(true);
       this.onChange(true);
       return;
     }
-    pretendRequest(email, pass, (res) => {
+    pretendRequest(username, password, (res) => {
       if (res.authenticated) {
         localStorage.token = res.token;
         if (cb) cb(true);
@@ -35,9 +35,9 @@ module.exports = {
   onChange() {}
 };
 
-function pretendRequest(email, pass, cb) {
+function pretendRequest(username, password, cb) {
   setTimeout(() => {
-    if (email === 'joe@example.com' && pass === 'password1') {
+    if (username === 'acanada' && password === '123.qwe') {
       cb({
         authenticated: true,
         token: Math.random().toString(36).substring(7)

@@ -1,10 +1,12 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { hashHistory, Router, Route, Link, withRouter, IndexRoute } from 'react-router';
-import withExampleBasename from './components/withExampleBasename.js';
+//import withExampleBasename from './components/withExampleBasename.js';
+import { Button, Col } from 'react-bootstrap';
+
 import auth from './components/auth.jsx';
-//import { browserHistory, IndexRoute, Router, Route, Link, withRouter, hashHistory } from 'react-router'
-//var browserHistory = Router.browserHistory;
+var Navigation = require('./components/Navigation.jsx');
+var Breadcrumbs = require('react-breadcrumbs');
 var injectTapEventPlugin = require('react-tap-event-plugin');
 var Main = require('./components/main.jsx');
 var Box = require('./components/Box.jsx');
@@ -23,26 +25,30 @@ var GroupNewFormContainer = require('./components/groups/GroupNewFormContainer.j
 var DocumentsUsersContainer = require('./components/documents/DocumentsUsersContainer.jsx');
 var DocumentsUserContainer = require('./components/documents/DocumentsUserContainer.jsx');
 var DocumentsUserNew = require('./components/documents/DocumentsUserNew.jsx');
-var Home = require('./components/Home.jsx');
 
-var Navigation = require('./components/Navigation.jsx');
-var Breadcrumbs = require('react-breadcrumbs');
+import Formsy from 'formsy-react';
+import FRC from 'formsy-react-components';
+
+const {Form, Input } = FRC;
+
 
 
 const App = React.createClass({
   getInitialState() {
     return {
-      loggedIn: auth.loggedIn()
+      loggedIn: auth.loggedIn(),
+      canSubmit: false,
+      validationErrors: {}
     };
   },
   componentWillMount() {
     auth.onChange = this.updateAuth;
     auth.login();
   },
- updateAuth(loggedIn) {
-    this.setState({
-      loggedIn
-    });
+  updateAuth(loggedIn) {
+      this.setState({
+          loggedIn
+      });
   },
   render() {
     return (
@@ -55,7 +61,7 @@ const App = React.createClass({
                                 {this.state.loggedIn ? (
                                 <Link to="/logout">Log out</Link>
                                 ) : (
-                                <Link to="/login">Sign in</Link>
+                                <Link to="/login">Login</Link>
                                 )}
                             </li>
                             <li><Link to="/userProfile">User's Profile</Link> (authenticated)</li>
@@ -69,7 +75,16 @@ const App = React.createClass({
                         routes={this.props.routes}
                         params={this.props.params}
                     />
-                    {this.props.children || <p>You are {!this.state.loggedIn && 'not'} logged in.</p>}
+                    {this.props.children ||
+                        <div>
+                            <p>You are {!this.state.loggedIn && 'not'} logged in.</p>
+                            {this.state.loggedIn ? (
+                                <Link to="/logout">Log out</Link>
+                                ) : (
+                                <Link to="/login">Login</Link>
+                            )}
+                        </div>
+                    }
                 </main>
             </div>
       </div>
@@ -91,22 +106,66 @@ const UserProfile = React.createClass({
   }
 });
 
-const Login = withRouter(
-  React.createClass({
-
+const Login = withRouter(React.createClass({
     getInitialState() {
       return {
-        error: false
+        error: false,
+        canSubmit: false,
+        showModal:false,
+        validationErrors: {}
       };
     },
-
-    handleSubmit(event) {
-      event.preventDefault();
-
-      const email = this.refs.email.value;
-      const pass = this.refs.pass.value;
-
-      auth.login(email, pass, (loggedIn) => {
+    enableButton() {
+        this.setState({
+            canSubmit: true
+        });
+    },
+    disableButton() {
+        this.setState({
+            canSubmit: false
+        });
+    },
+    validateForm: function (values) {
+      console.log('Values inside validateForm contains: ', values); 
+      //First we validate username
+      if (!values.username){
+        this.setState({
+          validationErrors: {
+            username: 'Please type your username'
+          }
+        });
+      } else if (values.username.length < 4){
+        this.setState({
+          validationErrors: {
+            username: 'Username min length is 4 characters'
+          }
+        });
+      } else if (!values.password){ //Then we validate password
+        this.setState({
+          validationErrors: {
+            password: 'Please type your password'
+          }
+        });
+      } else if (values.password.length < 7){
+        this.setState({
+          validationErrors: {
+            password: 'Password min length is 7 characters'
+          }
+        });
+      } else {
+        this.setState({
+          validationErrors: {
+          }
+        });
+      }
+    },
+    handleSubmit(model) {
+      //event.preventDefault();
+      //const email = this.refs.email.value;
+      const username = model.username;
+      //const pass = this.refs.pass.value;
+      const password = model.password;
+      auth.login(username, password, (loggedIn) => {
         if (!loggedIn)
           return this.setState({ error: true });
 
@@ -122,14 +181,51 @@ const Login = withRouter(
 
     render() {
       return (
-        <form onSubmit={this.handleSubmit}>
-          <label><input ref="email" placeholder="email" defaultValue="joe@example.com" /></label>
-          <label><input ref="pass" placeholder="password" /></label> (hint: password1)<br />
-          <button type="submit">login</button>
-          {this.state.error && (
-            <p>Bad login information</p>
-          )}
-        </form>
+        <div>
+        <Formsy.Form
+            onValidSubmit={this.handleSubmit}
+            onChange={this.validateForm}
+            validationErrors={this.state.validationErrors}
+            onValid={this.enableButton}
+            onInvalid={this.disableButton}
+            name="loginForm"
+            className="documentsForm"
+        >
+          <Col xs={12} md={8}>
+          <fieldset>
+            <legend>Username</legend>
+            <Input
+                id="username"
+                name="username"
+                value=""
+                label=""
+                type="text"
+                placeholder="Type your username (For example: a.canada)."
+                help=""
+                layout="vertical"
+                required
+            />
+          </fieldset>
+          <fieldset>
+              <legend>Password</legend>
+              <Input
+                  id="password"
+                  name="password"
+                  value=""
+                  label=""
+                  type="password"
+                  placeholder="Type your password"
+                  layout="vertical"
+                  required
+              />
+            </fieldset>
+                  <Button type="submit" bsStyle="primary" className="right" disabled={!this.state.canSubmit} >Login</Button>
+                  {this.state.error && (
+                    <p className="badLoginInformation" >Bad login information</p>
+                  )}
+            </Col>
+          </Formsy.Form>
+          </div>
       );
     }
   })

@@ -1,7 +1,7 @@
 var React = require('react');
 var Navigation = require('./Navigation.jsx');
-var Home = require('./Home.jsx');
 var Breadcrumbs = require('react-breadcrumbs');
+
 
 var Main = React.createClass({
     propTypes:{
@@ -21,7 +21,7 @@ var Main = React.createClass({
             routes={this.props.routes}
             params={this.props.params}
           />
-          {this.props.children || <Home />}
+          {this.props.children}
         </main>
       </div>
     );

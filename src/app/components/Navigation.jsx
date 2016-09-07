@@ -9,7 +9,7 @@ var Navigation = React.createClass({
     },
     render: function() {
         return (
-            <Navbar fixedTop >
+            <Navbar fixedTop className="navigation" >
                 <Navbar.Header>
                     <Navbar.Brand>
                         <LinkContainer to="/" ><img src="images/rdconnect-logo.jpg" alt={this.props.projectName} /></LinkContainer>

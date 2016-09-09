@@ -279,7 +279,8 @@ render((
                     <Route path="edit/:username" name="Edit" staticName component={UserFormContainer} task={'edit'}/>
                     <Route path="view/:username" name="View" staticName component={UserFormContainer} task={'view'}/>
                     <Route path="enable-disable/:username" name="Enable-Disable" staticName component={UserFormContainer} task={'enable_disable'}/>
-                    <Route path="new" name="New" component={UserNewFormContainer} />
+                    <Route path="new" name="New" component={UserNewFormContainer} task={'new_privileged'}/>
+                    <Route path="new-unprivileged" name="New (unprivileged)" component={UserNewFormContainer} task={'new_unprivileged'} />
                     <Route path="groups" name="Users in groups" component={Box} >
                         <IndexRoute component={UsersGroupsContainer}/>
                         <Route path="list" name="View Users in group" staticName component={UsersGroupsContainer} task={'list'}/>

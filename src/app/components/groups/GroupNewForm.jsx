@@ -2,7 +2,7 @@ var React = require('react');
 var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from 'react-jsonschema-form';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
 import createHistory from 'history/lib/createBrowserHistory';
 
 function groupValidation(formData,errors) {
@@ -14,7 +14,7 @@ var GroupNewForm = React.createClass({
 		schema: React.PropTypes.object.isRequired
 	},
 	getInitialState: function() {
-		return { error: null, showModal:false};
+		return { error: null, showModal: false, in: false};
 	},
 	close(){
 		this.setState({showModal: false});
@@ -22,6 +22,15 @@ var GroupNewForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
+	toggle(){
+      this.setState({ in: !this.state.in });
+    },
+    wait(){
+      var mythis = this;
+      setTimeout(function(){
+        mythis.toggle();
+      }, 3000);
+    },
 	addGroupData: function({formData}){
 		console.log('yay I\'m valid!');
 		console.log('Formdata sent to server:', formData);
@@ -33,6 +42,7 @@ var GroupNewForm = React.createClass({
 		})
 		.done(function(data) {
 			self.clearForm();
+			this.setState({in: true});
 		})
 		.fail(function(jqXhr) {
 			console.log('Failed to add new group',jqXhr);
@@ -58,6 +68,7 @@ var GroupNewForm = React.createClass({
 	render: function() {
 		const history = createHistory();
 		var schema = this.props.schema;
+		delete schema.title;
 		console.log(schema);
 		const formData = undefined;
 		console.log(schema);
@@ -82,6 +93,12 @@ var GroupNewForm = React.createClass({
 						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
 					</Bootstrap.Modal.Footer>
 				</Bootstrap.Modal>
+				<h3> Create New Group</h3>
+				<Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
+					<ListGroup>
+					<ListGroupItem bsStyle="success">Group created successfully!!</ListGroupItem>
+					</ListGroup>
+				</Collapse>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
 							<Form schema={schema}
@@ -93,8 +110,10 @@ var GroupNewForm = React.createClass({
 								validate={groupValidation}
 								liveValidate= {false}
 							>
-								<Button bsStyle="primary" onClick={history.goBack} >Cancel</Button>
-								<Button bsStyle="primary" type="submit">Submit</Button>
+								<div className="button-submit">
+									<Button bsStyle="primary" onClick={history.goBack} className="submitCancelButtons">Cancel</Button>
+									<Button bsStyle="primary" type="submit" className="submitCancelButtons">Submit</Button>
+								</div>
 							</Form>
 					</Col>
 					<Col xs={6} md={4}/>

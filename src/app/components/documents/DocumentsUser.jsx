@@ -23,9 +23,7 @@ const DocumentsUser = ({data}) => {
                     <tr>
                       <th>Document Class</th>
                       <th>Created</th>
-                      <th>Created by</th>
                       <th>Modified</th>
-                      <th>Modified by</th>
                       <th colSpan="2">Document Actions</th>
                     </tr>
                   </thead>
@@ -33,9 +31,7 @@ const DocumentsUser = ({data}) => {
                     <tr key={index}>
                       <td>{file.documentClass}</td>
                       <td>{file.creationTimestamp}</td>
-                      <td>{file.creator}</td>
                       <td>{file.modificationTimestamp}</td>
-                      <td>{file.modifier}</td>
                       <td className="border4colspan">
                         <Link className="btn btn-danger editViewButton" to={'/documents/users/' + encodeURIComponent(`${username}`)}>
                           Delete

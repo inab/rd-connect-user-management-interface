@@ -3,10 +3,12 @@ var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 var request = require('superagent');
 import Form from 'react-jsonschema-form';
-import { Row, Col, Button, Collapse, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Row, Col, Button } from 'react-bootstrap';
 import createHistory from 'history/lib/createBrowserHistory';
 var Dropzone = require('react-dropzone');
 var imageNotFoundSrc = require('./defaultNoImageFound.js');
+var MultiselectField = require('./Multiselect.jsx');
+
 
 //var ModalError = require('./ModalError.jsx');
 
@@ -24,16 +26,32 @@ function validateImageInput(image,that) {
 	return responseText;
 }
 
-var UserNewForm = React.createClass({
+var UserNewFormUnprivileged = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.array.isRequired
+		data: React.PropTypes.array.isRequired,
+		groups: React.PropTypes.array.isRequired,
+		groupsSelected: React.PropTypes.array
 	},
 	getInitialState: function() {
-		return { error: null, showModal: false, files: [], picture : null, in: false};
+		return {
+			error: null,
+			showModal: false,
+			files: [],
+			picture : null,
+			schema: null,
+			data: null,
+			groups: [],
+			groupsSelected: []
+		};
 	},
 	componentWillMount: function() {
-		this.setState({picture: this.props.data.picture});
+		this.setState({
+			picture: this.props.data.picture,
+			schema: this.props.schema,
+			data: this.props.data,
+			groups: this.props.groups
+		});
 	},
 	close(){
 		this.setState({showModal: false});
@@ -41,15 +59,18 @@ var UserNewForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
-	toggle(){
-      this.setState({ in: !this.state.in });
-    },
-    wait(){
-      var mythis = this;
-      setTimeout(function(){
-        mythis.toggle();
-      }, 3000);
-    },
+	handleChangeSelected:function(value){
+		//console.log(value);
+		var groupsSelected = this.state.groupsSelected;
+		if (value === null){
+			groupsSelected = [];
+		}
+		else {
+			groupsSelected = value.split(',');
+		}
+		this.setState({groupsSelected:groupsSelected});
+		console.log('this.state.groupsSelected inside handleChangeSelected contains: ', groupsSelected);
+	},
 	dropHandler: function (files) {
 		console.log('Received files: ', files);
 		var req = request.post('/users/:user_id/picture');
@@ -99,6 +120,8 @@ var UserNewForm = React.createClass({
 		console.log(formData);
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
+		//now we have to insert groups inside userData.
+		userData.groups = this.state.groupsSelected;
 		console.log('El userData contiene: ',userData);
 		jQuery.ajax({
 			type: 'PUT',
@@ -107,7 +130,6 @@ var UserNewForm = React.createClass({
 		})
 		.done(function(data) {
 			self.clearForm();
-			this.setState({in: true});
 		})
 		.fail(function(jqXhr) {
 			console.log('Failed to Create New User',jqXhr);
@@ -134,11 +156,26 @@ var UserNewForm = React.createClass({
 		const history = createHistory();
 		const formData = {};
 		var schema = this.props.schema;
-		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
+		//we delete groups from new user since it will be managed by MultiselectField component
 		delete schema.properties.groups;
-		delete schema.title;
+		//We delete the "enabled" option since it allways be disabled following this unprivileged process
+		delete schema.properties.enabled;
 		//We remove picture from the schema since this will be managed by react-dropzone component
 		delete schema.properties.picture;
+		//We generate an array with all the available groups that will be used as "options" input for Multiselect component
+		//allowCreate=false (default) so only groups inside options array will be allowed inside component
+		console.log('groups contains: ', this.state.groups);
+		var arrayGroups = Object.create(this.state.groups);
+		var options = [];
+		this.state.groups.map(function(group, i){
+			arrayGroups[group.cn] = group.cn;
+			options.push({'value':group.cn, 'label': group.cn});
+		});
+		//Now we generate the initialSelected array. Which contains the groups that the user already belongs to. This
+		//array will be passed as a prop to the MutiselectField component
+		console.log('arrayGroups contiene: ', arrayGroups);
+		var initialGroupsSelected = this.state.groupsSelected;
+		console.log('initialGroupsSelected contains: ', initialGroupsSelected);
 
 		//We generate the enums property for the Organizational Units extracting the info from data
 		var arrayOUobjects = this.props.data; var arrayOUstrings = [];
@@ -211,28 +248,23 @@ var UserNewForm = React.createClass({
 						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
 					</Bootstrap.Modal.Footer>
 				</Bootstrap.Modal>
-				<h3> Create New User </h3>
-				<Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
-					<ListGroup>
-					<ListGroupItem bsStyle="success">User created successfully!!</ListGroupItem>
-					</ListGroup>
-				</Collapse>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
-						<Form schema={schema}
-						uiSchema={uiSchema}
-						formData={formData}
-						onChange={log('changed')}
-						onSubmit={onSubmit}
-						onError={onError}
-						validate={userValidation}
-						liveValidate= {false}
-						>
-							<div className="button-submit">
-								<Button bsStyle="primary" onClick={history.goBack} className="submitCancelButtons" >Cancel</Button>
-								<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit</Button>
-							</div>
-						</Form>
+							<Form schema={schema}
+								uiSchema={uiSchema}
+								formData={formData}
+								onChange={log('changed')}
+								onSubmit={onSubmit}
+								onError={onError}
+								validate={userValidation}
+								liveValidate={false}
+							>
+								<MultiselectField label="Applicate to these groups" options={options} initialSelected={initialGroupsSelected} onChangeSelected={this.handleChangeSelected} />
+								<div className="button-submit">
+									<Button bsStyle="primary" onClick={history.goBack} className="submitCancelButtons" >Cancel</Button>
+									<Button bsStyle="primary" type="submit" className="submitCancelButtons">Create User</Button>
+								</div>
+							</Form>
 					</Col>
 					<Col xs={6} md={4} >
 						<div>
@@ -252,4 +284,4 @@ var UserNewForm = React.createClass({
 		);
 	}
 });
-module.exports = UserNewForm;
+module.exports = UserNewFormUnprivileged;

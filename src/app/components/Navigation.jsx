@@ -16,29 +16,30 @@ var Navigation = React.createClass({
                     </Navbar.Brand>
                 </Navbar.Header>
                 <Nav>
-                    <LinkContainer to="/" onlyActiveOnIndex><MenuItem eventKey="1">Home</MenuItem></LinkContainer>
-                    <NavDropdown id="NavDropdown-Users" eventKey="2" title="Users">
-                        <LinkContainer to="/users/list" ><MenuItem eventKey="1">List Users</MenuItem></LinkContainer>
-                        <LinkContainer to="/users/new"><MenuItem eventKey="2">New User</MenuItem></LinkContainer>
+                    <LinkContainer to="/" onlyActiveOnIndex><MenuItem eventKey={1}>Home</MenuItem></LinkContainer>
+                    <NavDropdown id="NavDropdown-Users" eventKey={2} title="Users">
+                        <LinkContainer to="/users/list" ><MenuItem eventKey={2.1}>List Users</MenuItem></LinkContainer>
+                        <LinkContainer to="/users/new"><MenuItem eventKey={2.2}>New User</MenuItem></LinkContainer>
+                        <LinkContainer to="/users/new-unprivileged"><MenuItem eventKey={2.3}>New User (unprivileged)</MenuItem></LinkContainer>
                         <MenuItem divider />
-                        <LinkContainer to="/users/groups/list"><MenuItem eventKey="3">User's list of groups</MenuItem></LinkContainer>
-                        <LinkContainer to="/userAction2"><MenuItem eventKey="4">User's Documents </MenuItem></LinkContainer>
+                        <LinkContainer to="/users/groups/list"><MenuItem eventKey={2.4}>User's list of groups</MenuItem></LinkContainer>
+                        <LinkContainer to="/documents/users"><MenuItem eventKey={2.5}>User's Documents </MenuItem></LinkContainer>
                     </NavDropdown>
-                    <NavDropdown id="NavDropdown-Organizations" eventKey="3" title="Organizations">
-                        <LinkContainer to="/organizationalUnits/list"><MenuItem eventKey="1">List Organizations</MenuItem></LinkContainer>
-                        <LinkContainer to="/organizationalUnits/new"><MenuItem eventKey="2">New Organization</MenuItem></LinkContainer>
+                    <NavDropdown id="NavDropdown-Organizations" eventKey={3} title="Organizations">
+                        <LinkContainer to="/organizationalUnits/list"><MenuItem eventKey={3.1}>List Organizations</MenuItem></LinkContainer>
+                        <LinkContainer to="/organizationalUnits/new"><MenuItem eventKey={3.2}>New Organization</MenuItem></LinkContainer>
                         <MenuItem divider />
-                        <LinkContainer to="/organizationalUnits/users"><MenuItem eventKey="3">Users in Organizations</MenuItem></LinkContainer>
+                        <LinkContainer to="/organizationalUnits/users"><MenuItem eventKey={3.3}>Users in Organizations</MenuItem></LinkContainer>
                     </NavDropdown>
-                    <NavDropdown id="NavDropdown-Groups" eventKey="4" title="Groups">
-                        <LinkContainer to="/groups/list"><MenuItem eventKey="1">List Groups</MenuItem></LinkContainer>
-                        <LinkContainer to="/groups/new"><MenuItem eventKey="2">New Group</MenuItem></LinkContainer>
+                    <NavDropdown id="NavDropdown-Groups" eventKey={4} title="Groups">
+                        <LinkContainer to="/groups/list"><MenuItem eventKey={4.1}>List Groups</MenuItem></LinkContainer>
+                        <LinkContainer to="/groups/new"><MenuItem eventKey={4.2}>New Group</MenuItem></LinkContainer>
                         <MenuItem divider />
-                        <LinkContainer to="/groupAction5"><MenuItem eventKey="3">Separated Groups link</MenuItem></LinkContainer>
+                        <LinkContainer to="/groupAction5"><MenuItem eventKey={4.3}>Separated Groups link</MenuItem></LinkContainer>
                     </NavDropdown>
-                    <NavDropdown id="NavDropdown-Documents" eventKey="5" title="Documents">
-                            <LinkContainer to="/documents/users"><MenuItem eventKey="6">Users</MenuItem></LinkContainer>
-                            <LinkContainer to="/documents/groups"><MenuItem eventKey="1">Groups</MenuItem></LinkContainer>
+                    <NavDropdown id="NavDropdown-Documents" eventKey={5} title="Documents">
+                            <LinkContainer to="/documents/users"><MenuItem eventKey={5.1}>Users</MenuItem></LinkContainer>
+                            <LinkContainer to="/documents/groups"><MenuItem eventKey={5.2}>Groups</MenuItem></LinkContainer>
                     </NavDropdown>
                 </Nav>
             </Navbar>

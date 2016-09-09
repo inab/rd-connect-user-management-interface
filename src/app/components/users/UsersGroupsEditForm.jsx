@@ -159,8 +159,8 @@ var UsersGroupsEditForm = React.createClass({
 							>
 							<MultiselectField label="Member of these groups" options={options} initialSelected={initialGroupsSelected} onChangeSelected={this.handleChangeSelected}/>
 						<div className="button-submit">
-							<Button bsStyle="primary" onClick={history.goBack} >Cancel</Button>
-							<Button bsStyle="primary" type="submit">Submit</Button>
+							<Button bsStyle="primary" onClick={history.goBack} className="submitCancelButtons">Cancel</Button>
+							<Button bsStyle="primary" type="submit" className="submitCancelButtons">Submit</Button>
 						</div>
 						</Form>
 					</Col>

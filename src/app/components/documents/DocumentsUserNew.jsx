@@ -1,6 +1,6 @@
 import React from 'react';
 var Bootstrap = require('react-bootstrap');
-import { Fade, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Fade, Collapse, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
 var jQuery = require('jquery');
@@ -213,11 +213,12 @@ const DocumentsUserNew = React.createClass({
               <Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
             </Bootstrap.Modal.Footer>
           </Bootstrap.Modal>
-          <Fade in={this.state.in} onEntering={this.wait} onEntered={this.test} bsStyle="success" ref="fade">
-							<ListGroup>
-								<ListGroupItem bsStyle="success">Document inserted successfully!!</ListGroupItem>
-							</ListGroup>
-						</Fade>
+          <h3> Create New Document for user {this.state.username} </h3>
+          <Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
+            <ListGroup>
+              <ListGroupItem bsStyle="success">Document inserted successfully!!</ListGroupItem>
+            </ListGroup>
+          </Collapse>
           <Formsy.Form
             onChange={this.validateForm}
             validationErrors={this.state.validationErrors}
@@ -264,7 +265,9 @@ const DocumentsUserNew = React.createClass({
                   required
                 />
             </fieldset>
-                  <button type="submit" disabled={!this.state.canSubmit} >Submit</button>
+            <div className="button-submit">
+              <Button type="submit" disabled={!this.state.canSubmit} bsStyle="primary" >Submit</Button>
+            </div>
           </Formsy.Form>
         </div>
       );

@@ -3,7 +3,7 @@ var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 var request = require('superagent');
 import Form from 'react-jsonschema-form';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
 import createHistory from 'history/lib/createBrowserHistory';
 var Dropzone = require('react-dropzone');
 var imageNotFoundSrc = require('../users/defaultNoImageFound.js');
@@ -33,7 +33,7 @@ var OrganizationalUnitNewForm = React.createClass({
 		schema: React.PropTypes.object.isRequired
 	},
 	getInitialState: function() {
-		return { error: null, showModal:false, files: [], picture : null};
+		return { error: null, showModal:false, files: [], picture : null, in: false};
 	},
 	componentWillMount: function() {
 		this.setState({picture: imageNotFoundSrc});
@@ -44,6 +44,15 @@ var OrganizationalUnitNewForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
+	toggle(){
+      this.setState({ in: !this.state.in });
+    },
+    wait(){
+      var mythis = this;
+      setTimeout(function(){
+        mythis.toggle();
+      }, 3000);
+    },
 	dropHandler: function (files) {
 		//console.log('Received files: ', files);
 		var req = request.post('/organizationalUnits/:ou_id/picture');
@@ -101,6 +110,7 @@ var OrganizationalUnitNewForm = React.createClass({
 		})
 		.done(function(data) {
 			self.clearForm();
+			this.setState({in: true});
 		})
 		.fail(function(jqXhr) {
 			console.log('Failed to Update Organizational Unit Information',jqXhr);
@@ -128,6 +138,7 @@ var OrganizationalUnitNewForm = React.createClass({
 		var schema = this.props.schema;
 		//We remove picture from the schema since this will be managed by react-dropzone component
 		delete schema.properties.picture;
+		delete schema.title;
 		const formData = undefined;
 		//console.log(schema);
 		const log = (type) => console.log.bind(console, type);
@@ -155,6 +166,12 @@ var OrganizationalUnitNewForm = React.createClass({
 						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
 					</Bootstrap.Modal.Footer>
 				</Bootstrap.Modal>
+				<h3> Create New Organizational Unit</h3>
+				<Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
+					<ListGroup>
+					<ListGroupItem bsStyle="success">Organizational Unit created successfully!!</ListGroupItem>
+					</ListGroup>
+				</Collapse>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
 							<Form schema={schema}

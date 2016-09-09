@@ -26,6 +26,9 @@ var GroupNewFormContainer = require('./components/groups/GroupNewFormContainer.j
 var DocumentsUsersContainer = require('./components/documents/DocumentsUsersContainer.jsx');
 var DocumentsUserContainer = require('./components/documents/DocumentsUserContainer.jsx');
 var DocumentsUserNew = require('./components/documents/DocumentsUserNew.jsx');
+var DocumentsGroupsContainer = require('./components/documents/DocumentsGroupsContainer.jsx');
+var DocumentsGroupContainer = require('./components/documents/DocumentsGroupContainer.jsx');
+var DocumentsGroupNew = require('./components/documents/DocumentsGroupNew.jsx');
 
 import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
@@ -306,8 +309,11 @@ render((
                 <Route path="/documents" name="Documents" component={Box} onEnter={requireAuth}>
                     <IndexRoute component={DocumentsUsersContainer}/>
                     <Route path="users" name="Users" component={DocumentsUsersContainer} />
-                    <Route path="users/:username" name="List Documents" component={DocumentsUserContainer} />
-                    <Route path="users/:username/new" name="New Document" component={DocumentsUserNew} />
+                    <Route path="users/:username" name="List User Documents" component={DocumentsUserContainer} />
+                    <Route path="users/:username/new" name="New User Document" component={DocumentsUserNew} />
+                    <Route path="groups" name="Groups" component={DocumentsGroupsContainer} />
+                    <Route path="groups/:groupName" name="List Group Documents" component={DocumentsGroupContainer} />
+                    <Route path="groups/:groupName/new" name="New Group Document" component={DocumentsGroupNew} />
                 </Route>
             </Route>
         </Router>

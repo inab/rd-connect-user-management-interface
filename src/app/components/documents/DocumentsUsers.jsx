@@ -15,7 +15,7 @@ const DocumentsUsers = ({data}) => {
 
   return (
      <div>
-      <h3> List of Users </h3>
+      <h3> Documents related to Users </h3>
       <Row className="show-grid">
         <Col xs={12} md={10} >
               {groupedData.map(function(ou,i){
@@ -60,7 +60,7 @@ const DocumentsUsers = ({data}) => {
                             <td className="border4colspan">
                               
                               <Link className="btn btn-primary editViewButton" role="button" to={'/documents/users/' + encodeURIComponent(`${user.username}`)}>
-                                List All
+                                Manage
                               </Link>
                             </td>
                             <td className="border4colspan">

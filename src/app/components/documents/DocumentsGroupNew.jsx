@@ -11,16 +11,21 @@ const { Select, File, Textarea } = FRC;
 function htmlspecialchars(str) {
   return str.replace('&', '&amp;').replace('"', '&quot;').replace("'", '&#039;').replace('<', '&lt;').replace('>', '&gt;');
 }
+function validateSubmission(that, model){
+	alert('ValidateSubmission unfinished', model);
+	//First we validate documentFile
+	return true;
+}
 
 
-const DocumentsUserNew = React.createClass({
+const DocumentsGroupNew = React.createClass({
   propTypes:{
 		params: React.PropTypes.object
 	},
 	getInitialState() {
       return {
         canSubmit: false,
-        username: this.props.params.username,
+        groupName: this.props.params.groupName,
         error: null,
         showModal:false,
         in: false,
@@ -31,7 +36,7 @@ const DocumentsUserNew = React.createClass({
       };
     },
     componentWillMount: function() {
-      this.setState({username: this.state.username});
+      this.setState({groupName: this.state.groupName});
     },
     enableButton() {
       this.setState({
@@ -165,7 +170,7 @@ const DocumentsUserNew = React.createClass({
         //this.setState({ in: !this.state.in });
       })
       .fail(function(jqXhr) {
-        console.log('Failed to Create new group\'s document',jqXhr);
+        console.log('Failed to Create new groups\'s document',jqXhr);
         var responseText = '';
         if (jqXhr.status === 0) {
           responseText = 'Failed to Create new group\'s document. Not connect: Verify Network.';
@@ -176,7 +181,7 @@ const DocumentsUserNew = React.createClass({
         } else if (jqXhr.status === 'parsererror') {
           responseText = 'Failed to Create new group\'s document. Sent JSON parse failed.';
         } else if (jqXhr.status === 'timeout') {
-          responseText = 'Failed to Create new groupº\'s document. Time out error.';
+          responseText = 'Failed to Create new group\'s document. Time out error.';
         } else if (jqXhr.status === 'abort') {
           responseText = 'Ajax request aborted.';
         } else {
@@ -271,4 +276,4 @@ const DocumentsUserNew = React.createClass({
     }
   });
 
-module.exports = DocumentsUserNew;
+module.exports = DocumentsGroupNew;

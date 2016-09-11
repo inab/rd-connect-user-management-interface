@@ -68,7 +68,7 @@ const App = React.createClass({
                                 <Link to="/login">Login</Link>
                                 )}
                             </li>
-                            <li><Link to="/userProfile">User's Profile</Link> (authenticated)</li>
+                            <li><Link to="/userProfile">User's Profile</Link></li>
                         </ul>
                     </div>
                     <Navigation projectName="react-bootstrap-starter" />

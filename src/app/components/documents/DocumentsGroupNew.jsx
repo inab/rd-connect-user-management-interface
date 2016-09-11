@@ -135,7 +135,6 @@ const DocumentsGroupNew = React.createClass({
           }
         });
       }
-      
     },
     resetForm: function () {
       this.refs.documentForm.reset();

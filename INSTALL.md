@@ -23,3 +23,8 @@
 	gulp build
 	```
 
+3. Install the web user interface, for instance as /user_management:
+
+	```bash
+	cp -dpTr build "${HOME}/DOCUMENT_ROOT/user-management"
+	```

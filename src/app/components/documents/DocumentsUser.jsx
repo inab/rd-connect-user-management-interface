@@ -3,7 +3,7 @@ var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import { Button, Row, Col, Panel, Table, ListGroup, ListGroupItem, Collapse } from 'react-bootstrap';
 import { Link } from 'react-router';
-import createHistory from 'history/lib/createBrowserHistory';
+import { hashHistory } from 'react-router';
 import confirm from 'react-confirm2';
 
 const DocumentsUser = React.createClass({
@@ -85,7 +85,6 @@ const DocumentsUser = React.createClass({
     });
   },
   render() {
-    const history = createHistory();
     console.log('Data so far is: ', this.state.data);
     var username = this.state.username;
     //We receive an array of objects. Each element of the array contains one document, from which we get the metadata and show them
@@ -152,7 +151,7 @@ const DocumentsUser = React.createClass({
               );
             },this)}
             <div className="button-submit">
-              <Button bsStyle="primary" onClick={history.goBack} className="submitCancelButtons">Cancel</Button>
+              <Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons">Cancel</Button>
             </div>
 
           </Col>

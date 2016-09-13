@@ -3,7 +3,7 @@ var Bootstrap = require('react-bootstrap');
 import { Row, Col, Button, Jumbotron, Panel } from 'react-bootstrap';
 import { Link } from 'react-router';
 //var ModalError = require('./ModalError.jsx');
-import createHistory from 'history/lib/createBrowserHistory';
+//import { hashHistory } from 'react-router';
 var imageNotFoundSrc = require('./defaultNoImageFound.js');
 
 var UserViewForm = React.createClass({
@@ -21,7 +21,6 @@ var UserViewForm = React.createClass({
 		this.setState({showModal: true});
 	},
 	render: function() {
-		const history = createHistory();
 		var data = this.props.data;
 		delete data.userPassword;
 		console.log(data);

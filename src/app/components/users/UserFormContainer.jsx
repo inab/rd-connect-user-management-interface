@@ -5,7 +5,7 @@ var UserEditForm = require('./UserEditForm.jsx');
 var UserViewForm = require('./UserViewForm.jsx');
 var UserEnableDisableForm = require('./UserEnableDisableForm.jsx');
 
-import createHistory from 'history/lib/createBrowserHistory';
+import { hashHistory } from 'react-router';
 
 var UserFormContainer = React.createClass({
 	propTypes:{
@@ -106,7 +106,6 @@ var UserFormContainer = React.createClass({
 	},
 
   render: function() {
-	const history = createHistory();
 	//console.log('task: ', this.state.task);
 	//console.log('schema: ', this.state.schema);
 	//console.log('data: ', this.state.data);
@@ -135,7 +134,7 @@ var UserFormContainer = React.createClass({
 	if (this.state.error) {
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={history.goBack} error={this.state.error}>
+				<Bootstrap.Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
 					<Bootstrap.Modal.Header closeButton>
 						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
 					</Bootstrap.Modal.Header>
@@ -143,7 +142,7 @@ var UserFormContainer = React.createClass({
 						<h4>{this.state.error}</h4>
 					</Bootstrap.Modal.Body>
 					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={history.goBack}>Close</Bootstrap.Button>
+						<Bootstrap.Button onClick={()=>hashHistory.goBack()}>Close</Bootstrap.Button>
 					</Bootstrap.Modal.Footer>
 				</Bootstrap.Modal>
 			</div>

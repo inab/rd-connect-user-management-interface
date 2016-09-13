@@ -3,7 +3,7 @@ var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 import Form from 'react-jsonschema-form';
 import { Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
-import createHistory from 'history/lib/createBrowserHistory';
+import { hashHistory } from 'react-router';
 
 function groupValidation(formData,errors) {
 		return errors;
@@ -66,7 +66,6 @@ var GroupNewForm = React.createClass({
 		}.bind(this));
 	},
 	render: function() {
-		const history = createHistory();
 		var schema = this.props.schema;
 		delete schema.title;
 		console.log(schema);
@@ -111,7 +110,7 @@ var GroupNewForm = React.createClass({
 								liveValidate= {false}
 							>
 								<div className="button-submit">
-									<Button bsStyle="primary" onClick={history.goBack} className="submitCancelButtons">Cancel</Button>
+									<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons">Cancel</Button>
 									<Button bsStyle="primary" type="submit" className="submitCancelButtons">Submit</Button>
 								</div>
 							</Form>

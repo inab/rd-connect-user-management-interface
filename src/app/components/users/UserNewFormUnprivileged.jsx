@@ -4,7 +4,7 @@ var jQuery = require('jquery');
 var request = require('superagent');
 import Form from 'react-jsonschema-form';
 import { Row, Col, Button } from 'react-bootstrap';
-import createHistory from 'history/lib/createBrowserHistory';
+import { hashHistory } from 'react-router';
 var Dropzone = require('react-dropzone');
 var imageNotFoundSrc = require('./defaultNoImageFound.js');
 var MultiselectField = require('./Multiselect.jsx');
@@ -153,7 +153,6 @@ var UserNewFormUnprivileged = React.createClass({
 		}.bind(this));
 	},
 	render: function() {
-		const history = createHistory();
 		const formData = {};
 		var schema = this.props.schema;
 		//we delete groups from new user since it will be managed by MultiselectField component
@@ -261,7 +260,7 @@ var UserNewFormUnprivileged = React.createClass({
 							>
 								<MultiselectField label="Applicate to these groups" options={options} initialSelected={initialGroupsSelected} onChangeSelected={this.handleChangeSelected} />
 								<div className="button-submit">
-									<Button bsStyle="primary" onClick={history.goBack} className="submitCancelButtons" >Cancel</Button>
+									<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
 									<Button bsStyle="primary" type="submit" className="submitCancelButtons">Create User</Button>
 								</div>
 							</Form>

@@ -1,11 +1,10 @@
 var React = require('react');
 import { Button, Row, Col, Panel, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
-import createHistory from 'history/lib/createBrowserHistory';
+import { hashHistory } from 'react-router';
 
 
 const DocumentsUser = ({data, groupName}) => {
-  const history = createHistory();
   console.log('Data so far is: ', data);
   console.log('GroupName so far is: ', groupName);
   var groupName = groupName;
@@ -50,7 +49,7 @@ const DocumentsUser = ({data, groupName}) => {
             );
           })}
             <div className="button-submit">
-              <Button bsStyle="primary" onClick={history.goBack} className="submitCancelButtons">Cancel</Button>
+              <Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons">Cancel</Button>
             </div>
         </Col>
       </Row>

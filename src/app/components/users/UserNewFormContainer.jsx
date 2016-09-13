@@ -3,7 +3,7 @@ var Bootstrap = require('react-bootstrap');
 var jQuery = require('jquery');
 var UserNewForm = require('./UserNewForm.jsx');
 var UserNewFormUnprivileged = require('./UserNewFormUnprivileged.jsx');
-import createHistory from 'history/lib/createBrowserHistory';
+import { hashHistory } from 'react-router';
 
 var UserNewFormContainer = React.createClass({
 	propTypes: {
@@ -127,7 +127,6 @@ var UserNewFormContainer = React.createClass({
 	},
 
 	render: function() {
-		const history = createHistory();
 		if ((this.state.schema) && (this.state.data)) {
 			if (this.state.task === 'new_privileged'){
 				return (
@@ -148,7 +147,7 @@ var UserNewFormContainer = React.createClass({
 		if (this.state.error) {
 			return (
 				<div>
-					<Bootstrap.Modal show={this.state.showModal} onHide={history.goBack} error={this.state.error}>
+					<Bootstrap.Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
 						<Bootstrap.Modal.Header closeButton>
 							<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
 						</Bootstrap.Modal.Header>
@@ -156,7 +155,7 @@ var UserNewFormContainer = React.createClass({
 							<h4>{this.state.error}</h4>
 						</Bootstrap.Modal.Body>
 						<Bootstrap.Modal.Footer>
-							<Bootstrap.Button onClick={history.goBack}>Close</Bootstrap.Button>
+							<Bootstrap.Button onClick={()=>hashHistory.goBack()}>Close</Bootstrap.Button>
 						</Bootstrap.Modal.Footer>
 					</Bootstrap.Modal>
 				</div>

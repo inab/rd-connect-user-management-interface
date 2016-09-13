@@ -4,7 +4,7 @@ var jQuery = require('jquery');
 var request = require('superagent');
 import Form from 'react-jsonschema-form';
 import { Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
-import createHistory from 'history/lib/createBrowserHistory';
+import { hashHistory } from 'react-router';
 var Dropzone = require('react-dropzone');
 var imageNotFoundSrc = require('../users/defaultNoImageFound.js');
 
@@ -134,7 +134,6 @@ var OrganizationalUnitNewForm = React.createClass({
 		}.bind(this));
 	},
 	render: function() {
-		const history = createHistory();
 		var schema = this.props.schema;
 		//We remove picture from the schema since this will be managed by react-dropzone component
 		delete schema.properties.picture;
@@ -182,7 +181,7 @@ var OrganizationalUnitNewForm = React.createClass({
 							//validate={organizationalUnitValidation}
 							liveValidate= {false}
 							>
-								<Button bsStyle="primary" onClick={history.goBack} >Cancel</Button>
+								<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} >Cancel</Button>
 								<Button bsStyle="primary" type="submit">Submit</Button>
 							</Form>
 					</Col>

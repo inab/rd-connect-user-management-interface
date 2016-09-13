@@ -4,7 +4,7 @@ var jQuery = require('jquery');
 var request = require('superagent');
 import Form from 'react-jsonschema-form';
 import { Row, Col, Button, Collapse, ListGroup, ListGroupItem } from 'react-bootstrap';
-import createHistory from 'history/lib/createBrowserHistory';
+import { hashHistory } from 'react-router';
 var Dropzone = require('react-dropzone');
 var imageNotFoundSrc = require('./defaultNoImageFound.js');
 
@@ -131,7 +131,6 @@ var UserNewForm = React.createClass({
 		}.bind(this));
 	},
 	render: function() {
-		const history = createHistory();
 		const formData = {};
 		var schema = this.props.schema;
 		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
@@ -229,7 +228,7 @@ var UserNewForm = React.createClass({
 						liveValidate= {false}
 						>
 							<div className="button-submit">
-								<Button bsStyle="primary" onClick={history.goBack} className="submitCancelButtons" >Cancel</Button>
+								<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
 								<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit</Button>
 							</div>
 						</Form>

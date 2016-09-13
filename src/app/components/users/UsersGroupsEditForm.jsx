@@ -4,7 +4,7 @@ var jQuery = require('jquery');
 import Form from 'react-jsonschema-form';
 import { Row, Col, Button } from 'react-bootstrap';
 var MultiselectField = require('./Multiselect.jsx');
-import createHistory from 'history/lib/createBrowserHistory';
+import { hashHistory } from 'react-router';
 
 //var ModalError = require('./ModalError.jsx');
 
@@ -85,7 +85,6 @@ var UsersGroupsEditForm = React.createClass({
 		console.log('this.state inside handleChangeSelected contains: ', this.state);
 	},
 	render: function() {
-		const history = createHistory();
 		var schema = this.props.schema;
 		console.log('ORIGINAL SCHEMA: ', schema);
 		var newSchema =  {};
@@ -159,7 +158,7 @@ var UsersGroupsEditForm = React.createClass({
 							>
 							<MultiselectField label="Member of these groups" options={options} initialSelected={initialGroupsSelected} onChangeSelected={this.handleChangeSelected}/>
 						<div className="button-submit">
-							<Button bsStyle="primary" onClick={history.goBack} className="submitCancelButtons">Cancel</Button>
+							<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons">Cancel</Button>
 							<Button bsStyle="primary" type="submit" className="submitCancelButtons">Submit</Button>
 						</div>
 						</Form>

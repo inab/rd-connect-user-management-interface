@@ -6,7 +6,12 @@ function getService() {
 	return service;
 }
 
+const apiBaseUri = '/RDConnect-UserManagement-API';
+
 export default {
-	apiBaseUri: '/RDConnect-UserManagement-API',
+	apiBaseUri: apiBaseUri,
+	usersBaseUri: apiBaseUri + '/users',
+	groupsBaseUri: apiBaseUri + '/groups',
+	ouBaseUri: apiBaseUri + '/organizationalUnits',
 	getService: getService,
 };

@@ -1,6 +1,8 @@
-var React = require('react');
-var jQuery = require('jquery');
-var UsersGroups = require('./UsersGroups.jsx');
+import React from 'react';
+import jQuery from 'jquery';
+import UsersGroups from './UsersGroups.jsx';
+
+import config from 'config.jsx';
 
 var UsersGroupsContainer = React.createClass({
 	getInitialState: function() {
@@ -13,10 +15,7 @@ var UsersGroupsContainer = React.createClass({
 	},
 	loadUsersFromServer: function() {
 		jQuery.ajax({
-			url: 'json/users.json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
+			url: config.usersBaseUri,
 			dataType: 'json',
 			cache: false,
 			success: function(data) {

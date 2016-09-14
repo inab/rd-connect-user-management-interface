@@ -186,7 +186,8 @@ var UserNewFormUnprivileged = React.createClass({
 		schema.properties.organizationalUnit.enum = arrayOUstrings;
 		//Replicating userPassword for schema validation and Ordering Schema for ui:order
 		//Adding a userPassword2 field to validate userPassword change
-		schema.properties.userPassword2 = schema.properties.userPassword;
+		schema.properties.userPassword2 = Object.create(schema.properties.userPassword);
+		schema.properties.userPassword2.title += ' (again)';
 		//First we create an array with the fields with the desired order.
 		var order = ['username','cn','givenName','surname','userPassword','userPassword2','email'];
 		//We filter all the properties retrieving only the elements that are not in 'order' array

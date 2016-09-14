@@ -1,9 +1,11 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
-var UserNewForm = require('./UserNewForm.jsx');
-var UserNewFormUnprivileged = require('./UserNewFormUnprivileged.jsx');
+import React from 'react';
+import Bootstrap from 'react-bootstrap';
+import jQuery from 'jquery';
+import UserNewForm from './UserNewForm.jsx';
+import UserNewFormUnprivileged from './UserNewFormUnprivileged.jsx';
 import { hashHistory } from 'react-router';
+
+import config from 'config.jsx';
 
 var UserNewFormContainer = React.createClass({
 	propTypes: {
@@ -35,10 +37,7 @@ var UserNewFormContainer = React.createClass({
 	},
 	loadGroupsFromServer: function() {
 		jQuery.ajax({
-			url: 'json/groups.json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
+			url: config.groupsBaseUri,
 			dataType: 'json',
 			cache: false,
 		})
@@ -54,10 +53,7 @@ var UserNewFormContainer = React.createClass({
 	},
 	loadOrganizationalUnitsFromServer: function() {
 		jQuery.ajax({
-			url: 'json/organizationalUnits.json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
+			url: config.ouBaseUri,
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
@@ -92,13 +88,8 @@ var UserNewFormContainer = React.createClass({
 	},
 	loadUserSchema: function() {
 		jQuery.ajax({
-			url: 'json/userValidation.json',
-			type: 'GET',
+			url: config.usersBaseUri + '?schema',
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(schema) {
 			this.setState({schema: schema});

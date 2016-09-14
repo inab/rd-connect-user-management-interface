@@ -1,6 +1,8 @@
-var React = require('react');
-var jQuery = require('jquery');
-var OrganizationalUnitNewForm = require('./OrganizationalUnitNewForm.jsx');
+import React from 'react';
+import jQuery from 'jquery';
+import OrganizationalUnitNewForm from './OrganizationalUnitNewForm.jsx';
+
+import config from 'config.jsx';
 
 var OrganizationalUnitNewFormContainer = React.createClass({
 	getInitialState: function() {
@@ -11,13 +13,9 @@ var OrganizationalUnitNewFormContainer = React.createClass({
 	},
 	loadOrganizationalUnitSchema: function() {
 		jQuery.ajax({
-			url: 'json/organizationalUnitValidation.json',
+			url: config.ouBaseUri+'?schema',
 			type: 'GET',
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(schema) {
 			this.setState({schema: schema});

@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 
 
 const Users = ({data}) => {
-  console.log("Data so far is: ", data);
+  //console.log("Data so far is: ", data);
   var groupedData = Underscore
     .chain(data)
     .groupBy('organizationalUnit')
@@ -39,6 +39,8 @@ const Users = ({data}) => {
                     {ou.map(function(user,j){
                       console.log(user);
                       var isChecked = user.enabled;
+                      var userGroups = [];
+                      if(user.groups !== undefined)  userGroups = user.groups;
                       return (
                           <tr key={j}>
                             <td>{user.username}</td>
@@ -49,11 +51,11 @@ const Users = ({data}) => {
                             <td>
                               <ul className="user-ul">
                               {
-                                user.groups.map(function(groupName, k){
-                                  return (
-                                    <li key={k}>{groupName}</li>
-                                  );
-                                })
+								userGroups.map(function(groupName, k){
+									return (
+										<li key={k}>{groupName}</li>
+									);
+								})
                               }
                               </ul>
                             </td>

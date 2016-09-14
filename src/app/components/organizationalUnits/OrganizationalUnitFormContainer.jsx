@@ -1,10 +1,12 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
-var OrganizationalUnitEditForm = require('./OrganizationalUnitEditForm.jsx');
-var OrganizationalUnitViewForm = require('./OrganizationalUnitViewForm.jsx');
+import React from 'react';
+import Bootstrap from 'react-bootstrap';
+import jQuery from 'jquery';
+import OrganizationalUnitEditForm from './OrganizationalUnitEditForm.jsx';
+import OrganizationalUnitViewForm from './OrganizationalUnitViewForm.jsx';
 
 import { hashHistory } from 'react-router';
+
+import config from 'config.jsx';
 
 var OrganizationalUnitFormContainer = React.createClass({
 	propTypes:{
@@ -36,13 +38,9 @@ var OrganizationalUnitFormContainer = React.createClass({
 	},
 	loadOrganizationalUnitSchema: function() {
 		jQuery.ajax({
-			url: 'json/organizationalUnitValidation.json',
+			url: config.ouBaseUri + '?schema',
 			type: 'GET',
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(schema) {
 			this.setState({schema: schema});
@@ -70,13 +68,9 @@ var OrganizationalUnitFormContainer = React.createClass({
 	},
 	loadOrganizationalUnitData: function() {
 		jQuery.ajax({
-			url: 'json/organizationalUnit-' + this.props.params.organizationalUnit + '.json',
-			type: 'GET',
+			url: config.ouBaseUri + '/' + encodeURIComponent(this.props.params.organizationalUnit),
+			cache:false,
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(data) {
 			this.setState({data: data});

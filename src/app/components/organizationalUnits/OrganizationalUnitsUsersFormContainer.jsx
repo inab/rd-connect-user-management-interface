@@ -1,6 +1,8 @@
-var React = require('react');
-var jQuery = require('jquery');
-var OrganizationalUnitsUsersEditForm = require('./OrganizationalUnitsUsersEditForm.jsx');
+import React from 'react';
+import jQuery from 'jquery';
+import OrganizationalUnitsUsersEditForm from './OrganizationalUnitsUsersEditForm.jsx';
+
+import config from 'config.jsx';
 
 var OrganizationalUnitsUsersFormContainer = React.createClass({
 	propTypes:{
@@ -18,13 +20,9 @@ var OrganizationalUnitsUsersFormContainer = React.createClass({
 	},
 	loadUsersFromOrganizationalUnit: function() {
 		jQuery.ajax({
-			url: 'json/users-from-' + this.props.params.organizationalUnit + '.json',
-			type: 'GET',
+			url: config.ouBaseUri + '/' + encodeURIComponent(this.props.params.organizationalUnit) + '/members',
+			cache: false,
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(users) {
 			this.setState({users: users});

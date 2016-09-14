@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 
 
 const UsersGroups = ({data}) => {
-    console.log("Data so far is: ", data);
+    //console.log("Data so far is: ", data);
     var groupData = Underscore
       .chain(data)
       .groupBy('organizationalUnit')
@@ -47,11 +47,17 @@ const UsersGroups = ({data}) => {
                               <td><Checkbox checked={isChecked} readOnly /></td>
                               <td>
                                 <ul className="user-ul">
-                                {user.groups.map(function(group, k){
-                                  return (
-                                    <li><strong>{group}</strong></li>
-                                  );
-                                })}
+                                {
+									() => {
+										if(user.groups !== undefined) {
+											user.groups.map(function(group, k){
+												return (
+													<li><strong>{group}</strong></li>
+												);
+											});
+										}
+									}
+                                }
                                 </ul>
                               </td>
                               <td>

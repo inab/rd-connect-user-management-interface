@@ -1,8 +1,9 @@
-var React = require('react');
-var jQuery = require('jquery');
-var OrganizationalUnits = require('./OrganizationalUnits.jsx');
-var Underscore = require('underscore');
+import React from 'react';
+import jQuery from 'jquery';
+import OrganizationalUnits from './OrganizationalUnits.jsx';
+import Underscore from 'underscore';
 
+import config from 'config.jsx';
 
 var OrganizationalUnitsContainer = React.createClass({
 	getInitialState: function() {
@@ -14,10 +15,7 @@ var OrganizationalUnitsContainer = React.createClass({
 	},
 	loadOrganizationalUnitsFromServer: function() {
 		jQuery.ajax({
-			url: 'json/organizationalUnits.json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
+			url: config.ouBaseUri,
 			dataType: 'json',
 			cache: false,
 			success: function(organizationalUnits) {
@@ -35,10 +33,7 @@ var OrganizationalUnitsContainer = React.createClass({
 	},
 	loadUsersFromServer: function() {
 		jQuery.ajax({
-			url: 'json/users.json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
+			url: config.usersBaseUri,
 			dataType: 'json',
 			cache: false,
 			success: function(data) {

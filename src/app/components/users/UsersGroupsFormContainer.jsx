@@ -25,10 +25,7 @@ var UsersGroupsFormContainer = React.createClass({
 	},
 	loadUserFromServer: function() {
 		jQuery.ajax({
-			url: 'json/user-' + this.props.params.username + '.json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
+			url: config.usersBaseUri + '/' + encodeURIComponent(this.props.params.username),
 			dataType: 'json',
 			cache: false,
 		})
@@ -45,7 +42,7 @@ var UsersGroupsFormContainer = React.createClass({
 	},
 	loadGroupsFromServer: function() {
 		jQuery.ajax({
-			url: 'json/groups.json',
+			url: config.groupsBaseUri,
 			headers: {
 				'X-CAS-Referer': window.location.href
 			},
@@ -65,13 +62,9 @@ var UsersGroupsFormContainer = React.createClass({
 	},
 	loadUserSchema: function() {
 		jQuery.ajax({
-			url: 'json/userValidation.json',
+			url: config.usersBaseUri+'?schema',
 			type: 'GET',
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(schema) {
 			this.setState({schema: schema});

@@ -1,11 +1,13 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
-var UserEditForm = require('./UserEditForm.jsx');
-var UserViewForm = require('./UserViewForm.jsx');
-var UserEnableDisableForm = require('./UserEnableDisableForm.jsx');
+import React from 'react';
+import Bootstrap from 'react-bootstrap';
+import jQuery from 'jquery';
+import UserEditForm from './UserEditForm.jsx';
+import UserViewForm from './UserViewForm.jsx';
+import UserEnableDisableForm from './UserEnableDisableForm.jsx';
 
 import { hashHistory } from 'react-router';
+
+import config from 'config.jsx';
 
 var UserFormContainer = React.createClass({
 	propTypes:{
@@ -37,13 +39,9 @@ var UserFormContainer = React.createClass({
 	},
 	loadUserSchema: function() {
 		jQuery.ajax({
-			url: 'json/userValidation.json',
+			url: config.usersBaseUri+'?schema',
 			type: 'GET',
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(schema) {
 			this.setState({schema: schema});
@@ -71,13 +69,10 @@ var UserFormContainer = React.createClass({
 	},
 	loadUserData: function() {
 		jQuery.ajax({
-			url: 'json/user-' + this.props.params.username + '.json',
+			url: config.usersBaseUri + '/' + encodeURIComponent(this.props.params.username),
 			type: 'GET',
+			cache: false,
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(data) {
 			this.setState({data: data});

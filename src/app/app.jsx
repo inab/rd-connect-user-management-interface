@@ -98,13 +98,15 @@ const App = React.createClass({
 
 const UserProfile = React.createClass({
   render() {
-    const token = auth.getLoginToken();
+    const loginData = auth.getLoginData();
 
     return (
       <div>
         <h1>User's Profile</h1>
-        <p>You made it!</p>
-        <p>{token}</p>
+        <p>Username: {loginData.username}</p>
+        <p>Fullname: {loginData.fullname}</p>
+        <p>e-mail: {loginData.email}</p>
+        <p>Category: {loginData.userCategory}</p>
       </div>
     );
   }

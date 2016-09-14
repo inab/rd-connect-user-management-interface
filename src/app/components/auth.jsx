@@ -1,4 +1,7 @@
-module.exports = {
+import jQuery from 'jquery';
+import config from 'config.jsx';
+
+export default {
   login(username, password, cb) {
     cb = arguments[arguments.length - 1];
     if (localStorage.token) {
@@ -36,8 +39,14 @@ module.exports = {
 };
 
 function pretendRequest(username, password, cb) {
+	/*
+	jQuery.ajax({
+		type: 'POST'
+	})
+	*/
   setTimeout(() => {
     //Ajax call to API REST login
+    console.log(config.apiBaseUri);
     if (username === 'acanada' && password === '123.qwe') {
       cb({
         authenticated: true,

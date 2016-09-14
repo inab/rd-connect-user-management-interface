@@ -1,6 +1,8 @@
 var dest = './build',
     src = './src';
+var srcApp = src + '/app';
 var destCSS = dest + '/css';
+var destJS = dest + '/js';
 
 module.exports = {
     browserSync: {
@@ -33,16 +35,17 @@ module.exports = {
     browserify: {
         // Enable source maps
         debug: true,
+        paths: [ './node_modules' , srcApp ],
         // A separate bundle will be generated for each
         // bundle config in the list below
         bundleConfigs: [{
-            entries: src + '/app/app.jsx',
-            dest: dest,
+            entries: srcApp + '/app.jsx',
+            dest: destJS,
             outputName: 'app.js'
         },
         {
-            entries: src + '/app/beforeBody.js',
-            dest: dest,
+            entries: srcApp + '/beforeBody.js',
+            dest: destJS,
             outputName: 'beforeBody.js'
         }
         ]

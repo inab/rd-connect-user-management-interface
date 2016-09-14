@@ -1,5 +1,6 @@
 var dest = './build',
     src = './src';
+var destCSS = dest + '/css';
 
 module.exports = {
     browserSync: {
@@ -15,8 +16,16 @@ module.exports = {
         watch: [
             src + '/less/**'
         ],
-        dest: dest
+        dest: destCSS
     },
+    importCSS: {
+		src: ['assets/*.css','node_modules/bootstrap/dist/css/bootstrap.min.css'],
+		dest: destCSS
+	},
+	fonts: {
+		src: 'node_modules/bootstrap/dist/fonts/*',
+		dest: dest + '/fonts'
+	},
     markup: {
         src: src + '/www/**',
         dest: dest

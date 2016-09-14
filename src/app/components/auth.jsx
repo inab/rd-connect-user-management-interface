@@ -1,52 +1,167 @@
 import jQuery from 'jquery';
 import config from 'config.jsx';
+import cookie from 'react-cookie';
 
-export default {
-  login(username, password, cb) {
-    cb = arguments[arguments.length - 1];
-    if (localStorage.token) {
-      if (cb) cb(true);
-      this.onChange(true);
-      return;
-    }
-    pretendRequest(username, password, (res) => {
-      if (res.authenticated) {
-        localStorage.token = res.token;
-        if (cb) cb(true);
-        this.onChange(true);
-      } else {
-        if (cb) cb(false);
-        this.onChange(false);
-      }
-    });
-  },
+const COOKIE_NAME = 'rdUserMgmtToken';
 
-  getToken() {
-    return localStorage.token;
-  },
+class Auth {
+	constructor() {
+		// Get the token from the cookie (if exists)
+		this.token = cookie.load(COOKIE_NAME);
+		if(this.token === undefined)  this.token = null;
+		this.userProps = null;
+		
+		// Forcing to get the login information
+		this.getLoginData();
+		
+		this.initialized = true;
+	}
+	
+	getAuthHeaders() {
+		return {
+			'X-RDConnect-UserManagement-Session': this.token
+		};
+	}
+	
+	invalidateSession() {
+		cookie.remove(COOKIE_NAME);
+		this.token = null;
+		this.userProps = null;
+	}
+	
+	renewSessionCookie() {
+		var expireDate = new Date();
+		// One hour expiration
+		expireDate.setTime(expireDate.getTime() + (60*60*1000));
+		cookie.save(COOKIE_NAME,this.token,{ path: location.pathname , expires: expireDate });
+		return this.token;
+	}
+	
+	setLoginData(newUserProps) {
+		this.userProps = newUserProps;
+		// Populating token (and preserving it)
+		if(newUserProps.session_id !== undefined) {
+			this.token = newUserProps.session_id;
+			this.renewSessionCookie();
+		}
+	}
+	
+	// This is an informational method
+	getLoginData() {
+		if(this.userProps === null) {
+			if(this.token !== null) {
+				var parthis = this;
+				// Let's validate the session status, in a synchronous way
+				jQuery.ajax({
+					async: false,
+					type: 'GET',
+					url: config.apiBaseUri + '/login',
+					dataType: 'json',
+					//processData: false,
+					contentType: 'application/json',
+					headers: this.getAuthHeaders()
+				})
+				.done((newUserProps) => {
+					// Setting new data
+					this.setLoginData(newUserProps);
+				})
+				.fail((xhr, status, err) => {
+					// As we cannot fetch the user information, remove
+					// all the session traces
+					this.invalidateSession();
+				});
+			}
+		}
+		
+		// Let's return whatever we have
+		return this.userProps;
+	}
+	
+	getLoginToken() {
+		// We validate the session here
+		var userProps = this.getLoginData();
+		return userProps !== null ? this.token : null;
+	}
+	
+	login(username, password, cb) {
+		//cb = arguments[arguments.length - 1];
+		if (localStorage.token) {
+			if (cb) cb(true);
+			this.onChange(true);
+			return;
+		}
+		pretendRequest(username, password, (res) => {
+			if (res.authenticated) {
+				this.setLoginData(res.userProps);
+				if (cb) cb(true);
+				this.onChange(true);
+			} else {
+				if (cb) cb(false);
+				this.onChange(false);
+			}
+		});
+	}
+	
+	logout(cb) {
+		if(this.loggedIn()) {
+			var parthis = this;
+			
+			function doInvalidate() {
+				parthis.invalidateSession();
+				if (cb) cb();
+				parthis.onChange(false);
+			}
+			
+			// Let's invalidate the session status
+			jQuery.ajax({
+				type: 'GET',
+				url: config.apiBaseUri + '/logout',
+				dataType: 'json',
+				//processData: false,
+				contentType: 'application/json',
+				headers: this.getAuthHeaders()
+			})
+			.done(doInvalidate)
+			.fail(doInvalidate);
+		} else {
+			if(cb)  cb();
+			this.onChange(false);
+		}
+	}
+	
+	loggedIn() {
+		return !!this.getLoginToken();
+	}
 
-  logout(cb) {
-    delete localStorage.token;
-    if (cb) cb();
-    this.onChange(false);
-  },
-
-  loggedIn() {
-    return !!localStorage.token;
-  },
-
-  onChange() {}
-};
+	onChange() {}
+}
 
 function pretendRequest(username, password, cb) {
-	/*
 	jQuery.ajax({
-		type: 'POST'
+		type: 'POST',
+		url: config.apiBaseUri + '/login',
+		dataType: 'json',
+		//processData: false,
+		contentType: 'application/json',
+		data: JSON.stringify({
+			username: username,
+			password: password,
+			service: config.getService()
+		})
 	})
-	*/
+	.done((newUserProps) => {
+		cb({
+			authenticated: true,
+			userProps: newUserProps
+		});
+	})
+	.fail((xhr, status, err) => {
+		cb({ authenticated: false });
+	});
+	
+	/*
   setTimeout(() => {
     //Ajax call to API REST login
-    console.log(config.apiBaseUri);
     if (username === 'acanada' && password === '123.qwe') {
       cb({
         authenticated: true,
@@ -56,4 +171,8 @@ function pretendRequest(username, password, cb) {
       cb({ authenticated: false });
     }
   }, 0);
+	*/
 }
+
+// We are returning here a singleton
+export default new Auth();

@@ -47,7 +47,7 @@ const App = React.createClass({
   },
   componentWillMount() {
     auth.onChange = this.updateAuth;
-    auth.login();
+    //auth.login();
   },
   updateAuth(loggedIn) {
       this.setState({
@@ -98,7 +98,7 @@ const App = React.createClass({
 
 const UserProfile = React.createClass({
   render() {
-    const token = auth.getToken();
+    const token = auth.getLoginToken();
 
     return (
       <div>
@@ -133,7 +133,6 @@ const Login = withRouter(React.createClass({
       this.setState({showModal: false});
     },
     validateForm: function (values) {
-      console.log('Values inside validateForm contains: ', values); 
       //First we validate username
       if (!values.username){
         this.setState({

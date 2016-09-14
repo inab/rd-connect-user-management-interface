@@ -67,6 +67,7 @@
     "react-bootstrap-typeahead": "^0.6.0",
     "react-breadcrumbs": "^1.3.16",
     "react-confirm2": "^0.1.5",
+    "react-cookie": "^0.4.8",
     "react-dom": "^15.3.0",
     "react-dropzone": "^3.5.3",
     "react-jsonschema-form": "^0.37.0",

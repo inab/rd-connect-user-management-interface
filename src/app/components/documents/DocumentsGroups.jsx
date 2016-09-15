@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 
 
 const DocumentsGroups = ({data}) => {
-  console.log('Data so far is: ', data);
+  //console.log('Data so far is: ', data);
    var sortedData = Underscore
     .chain(data)
     .sortBy(function(groupObjects){ return groupObjects.cn; })

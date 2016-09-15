@@ -5,9 +5,9 @@ import { hashHistory } from 'react-router';
 
 
 const DocumentsUser = ({data, groupName}) => {
-  console.log('Data so far is: ', data);
-  console.log('GroupName so far is: ', groupName);
-  var groupName = groupName;
+  //console.log('Data so far is: ', data);
+  //console.log('GroupName so far is: ', groupName);
+  //var groupName = groupName;
   //We receive an array of objects. Each element of the array contains one document, from which we get the metadata and show them
   return (
      <div>

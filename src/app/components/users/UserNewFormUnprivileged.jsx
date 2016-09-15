@@ -1,9 +1,8 @@
 import React from 'react';
-import Bootstrap from 'react-bootstrap';
 import jQuery from 'jquery';
 import request from 'superagent';
 import Form from 'react-jsonschema-form';
-import { Row, Col, Button } from 'react-bootstrap';
+import { Modal, Row, Col, Button } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.js';
@@ -77,7 +76,7 @@ var UserNewFormUnprivileged = React.createClass({
 		console.log('Received files: ', files);
 		// TODO: Where the user is?
 		var username = '';
-		var req = request.put(config.usersBaseUri + '/' + encodeURIComponent(username) + '/picture');
+		var req = request.put(config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username) + '/picture');
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			if (!error){
@@ -245,17 +244,17 @@ var UserNewFormUnprivileged = React.createClass({
 		}
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-					<Bootstrap.Modal.Header closeButton>
-						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-					</Bootstrap.Modal.Header>
-					<Bootstrap.Modal.Body>
+				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+					<Modal.Header closeButton>
+						<Modal.Title>Error!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
 						<h4>{this.state.error}</h4>
-					</Bootstrap.Modal.Body>
-					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-					</Bootstrap.Modal.Footer>
-				</Bootstrap.Modal>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.close}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
 							<Form schema={schema}

@@ -1,18 +1,20 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
-var request = require('superagent');
+import React from 'react';
+import jQuery from 'jquery';
+import request from 'superagent';
 import Form from 'react-jsonschema-form';
-import { Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
+import { Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
-var Dropzone = require('react-dropzone');
-var imageNotFoundSrc = require('../users/defaultNoImageFound.js');
+import Dropzone from 'react-dropzone';
+import imageNotFoundSrc from '../users/defaultNoImageFound.js';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 function organizationalUnitValidation(formData,errors) {
 	if (this.formdata.picture){
 		var imageString = formData.picture;
 		var prefix = 'data:image/jpeg';
-		var prefix2 = 'data:image/jpeg';
+		var prefix2 = 'data:image/png';
 
 		if ((imageString.startsWith(prefix)) === false && (imageString.startsWith(prefix2)) === false){
 			errors.picture.addError('Invalid image format');
@@ -23,7 +25,7 @@ function organizationalUnitValidation(formData,errors) {
 function validateImageInput(image) {
 	var responseText = null;
 	if ((image.type !== 'image/jpeg') && (image.type !== 'image/png')) {
-		responseText = 'Image should be in jpeg format';
+		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
 }
@@ -55,7 +57,7 @@ var OrganizationalUnitNewForm = React.createClass({
     },
 	dropHandler: function (files) {
 		//console.log('Received files: ', files);
-		var req = request.post('/organizationalUnits/:ou_id/picture');
+		var req = request.put(config.ouBaseUri + '/' + encodeURIComponent(ou_id) + '/picture').set(auth.getAuthHeaders());
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			if (!error){
@@ -105,8 +107,11 @@ var OrganizationalUnitNewForm = React.createClass({
 		//delete userData.userPassword2;
 		jQuery.ajax({
 			type: 'PUT',
-			url: '/some/url',
-			data: organizationalUnitData
+			url: config.ouBaseUri,
+			headers: auth.getAuthHeaders(),
+			dataType: 'json',
+			contentType: 'application/json',
+			data: JSON.stringify(organizationalUnitData)
 		})
 		.done(function(data) {
 			self.clearForm();
@@ -154,17 +159,17 @@ var OrganizationalUnitNewForm = React.createClass({
 		//console.log("this.state.files.length: ",this.state.files.length);
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-					<Bootstrap.Modal.Header>
-						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-						</Bootstrap.Modal.Header>
-					<Bootstrap.Modal.Body>
+				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+					<Modal.Header>
+						<Modal.Title>Error!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
 						<h4>{this.state.error}</h4>
-					</Bootstrap.Modal.Body>
-					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-					</Bootstrap.Modal.Footer>
-				</Bootstrap.Modal>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.close}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 				<h3> Create New Organizational Unit</h3>
 				<Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
 					<ListGroup>

@@ -1,10 +1,12 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
-import { Button, Row, Col, Panel, Table, ListGroup, ListGroupItem, Collapse } from 'react-bootstrap';
+import React from 'react';
+import jQuery from 'jquery';
+import { Modal, Button, Row, Col, Panel, Table, ListGroup, ListGroupItem, Collapse } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
 import confirm from 'react-confirm2';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 const DocumentsUser = React.createClass({
   propTypes:{
@@ -47,10 +49,10 @@ const DocumentsUser = React.createClass({
     confirm('Are you sure?', {
       done: () => {
         console.log('ok, lets delete it');//DELETE /users/:user_id/documents/:document_name:
-        var urlDelete = '/users/' + file.owner + '/documents/:' + file.cn;
         jQuery.ajax({
           type: 'DELETE',
-          url: urlDelete
+          url: config.usersBaseUri + '/' + encodeURIComponent(file.owner) + '/documents/'+ encodeURIComponent(file.cn),
+          headers: auth.getAuthHeaders()
         })
         .done(function() {
           this.setState({in: true});
@@ -85,7 +87,7 @@ const DocumentsUser = React.createClass({
     });
   },
   render() {
-    console.log('Data so far is: ', this.state.data);
+    //console.log('Data so far is: ', this.state.data);
     var username = this.state.username;
     //We receive an array of objects. Each element of the array contains one document, from which we get the metadata and show them
     
@@ -98,17 +100,17 @@ const DocumentsUser = React.createClass({
 
     return (
       <div>
-        <Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-          <Bootstrap.Modal.Header>
-            <Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-            </Bootstrap.Modal.Header>
-          <Bootstrap.Modal.Body>
+        <Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+          <Modal.Header>
+            <Modal.Title>Error!</Modal.Title>
+            </Modal.Header>
+          <Modal.Body>
             <h4>{this.state.error}</h4>
-          </Bootstrap.Modal.Body>
-          <Bootstrap.Modal.Footer>
-            <Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-          </Bootstrap.Modal.Footer>
-        </Bootstrap.Modal>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.close}>Close</Button>
+          </Modal.Footer>
+        </Modal>
         <h3> List of documents related to user {username}:  </h3>
         <Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
           <ListGroup>

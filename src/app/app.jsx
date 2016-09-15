@@ -2,8 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import { hashHistory, Router, Route, Link, withRouter, IndexRoute } from 'react-router';
 //import withExampleBasename from 'components/withExampleBasename.js';
-var Bootstrap = require('react-bootstrap');
-import { Button, Col } from 'react-bootstrap';
+import { Modal, Button, Col } from 'react-bootstrap';
 
 import auth from 'components/auth.jsx';
 var Navigation = require('components/Navigation.jsx');
@@ -189,11 +188,11 @@ const Login = withRouter(React.createClass({
     render() {
       return (
         <div>
-          <Bootstrap.Modal show={this.state.showModal} error={this.state.error} className="login">
-            <Bootstrap.Modal.Header className="login">
-              <Bootstrap.Modal.Title>Login</Bootstrap.Modal.Title>
-              </Bootstrap.Modal.Header>
-            <Bootstrap.Modal.Body className="login">
+          <Modal show={this.state.showModal} error={this.state.error} className="login">
+            <Modal.Header className="login">
+              <Modal.Title>Login</Modal.Title>
+              </Modal.Header>
+            <Modal.Body className="login">
               <Formsy.Form
                 onValidSubmit={this.handleSubmit}
                 onChange={this.validateForm}
@@ -235,11 +234,11 @@ const Login = withRouter(React.createClass({
                         <p className="badLoginInformation" >Bad login information</p>
                       )}
               </Formsy.Form>
-            </Bootstrap.Modal.Body>
-            <Bootstrap.Modal.Footer className="login">
+            </Modal.Body>
+            <Modal.Footer className="login">
               
-            </Bootstrap.Modal.Footer>
-          </Bootstrap.Modal>
+            </Modal.Footer>
+          </Modal>
           </div>
       );
     }

@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 
 
 const DocumentsUsers = ({data}) => {
-  console.log('Data so far is: ', data);
+  //console.log('Data so far is: ', data);
   var groupedData = Underscore
     .chain(data)
     .groupBy('organizationalUnit')
@@ -39,6 +39,7 @@ const DocumentsUsers = ({data}) => {
                       console.log(user);
                       var isChecked = user.enabled;
                       var urlParams = { data: user };
+                      var userGroups = user.groups !== undefined ? user.groups : [];
                       return (
                           <tr key={j}>
                             <td>{user.username}</td>
@@ -49,7 +50,7 @@ const DocumentsUsers = ({data}) => {
                             <td>
                               <ul className="user-ul">
                               {
-                                user.groups.map(function(groupName, k){
+                                userGroups.map(function(groupName, k){
                                   return (
                                     <li key={k}>{groupName}</li>
                                   );

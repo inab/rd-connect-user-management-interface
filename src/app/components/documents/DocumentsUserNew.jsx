@@ -1,17 +1,20 @@
 import React from 'react';
-var Bootstrap = require('react-bootstrap');
-import { Collapse, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
+import { Modal, Collapse, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
-var jQuery = require('jquery');
+import jQuery from 'jquery';
 
 const { Select, File, Textarea } = FRC;
 
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 function htmlspecialchars(str) {
   return str.replace('&', '&amp;').replace('"', '&quot;').replace("'", '&#039;').replace('<', '&lt;').replace('>', '&gt;');
 }
 
+const MaxFileSizeInMB = 10;
+const MaxFileSize = MaxFileSizeInMB * 1024 * 1024;
 
 const DocumentsUserNew = React.createClass({
   propTypes:{
@@ -74,10 +77,10 @@ const DocumentsUserNew = React.createClass({
             documentFile: 'Document to upload cannot be empty (0 bytes)'
           }
         });
-      } else if (values.documentFile[0].size > 83886080){
+      } else if (values.documentFile[0].size > MaxFileSize){
         this.setState({
           validationErrors: {
-            documentFile: 'Document to upload cannot be bigger than 10MB'
+            documentFile: 'Document to upload cannot be bigger than '+MaxFileSizeInMB+'MB'
           }
         });
       } else {
@@ -153,9 +156,10 @@ const DocumentsUserNew = React.createClass({
       var documentGroupFormData = Object.assign({},formData);
       jQuery.ajax({
         type: 'POST',
-        url: '/groups/' + this.state.groupName + '/documents',
+        url: config.usersBaseUri +'/' + encodeURIComponent(this.state.username) + '/documents',
         contentType: 'multipart/form-data',
         processData: false,
+        headers: auth.getAuthHeaders(),
         data: documentGroupFormData
       })
       .done(function(data) {
@@ -168,15 +172,15 @@ const DocumentsUserNew = React.createClass({
         console.log('Failed to Create new group\'s document',jqXhr);
         var responseText = '';
         if (jqXhr.status === 0) {
-          responseText = 'Failed to Create new group\'s document. Not connect: Verify Network.';
+          responseText = 'Failed to Create new user\'s document. Not connect: Verify Network.';
         } else if (jqXhr.status === 404) {
-          responseText = 'Failed to Create new group\'s document. Not found [404]';
+          responseText = 'Failed to Create new user\'s document. Not found [404]';
         } else if (jqXhr.status === 500) {
-          responseText = 'Failed to Create new group\'s document. Internal Server Error [500].';
+          responseText = 'Failed to Create new user\'s document. Internal Server Error [500].';
         } else if (jqXhr.status === 'parsererror') {
-          responseText = 'Failed to Create new group\'s document. Sent JSON parse failed.';
+          responseText = 'Failed to Create new user\'s document. Sent JSON parse failed.';
         } else if (jqXhr.status === 'timeout') {
-          responseText = 'Failed to Create new groupº\'s document. Time out error.';
+          responseText = 'Failed to Create new user\'s document. Time out error.';
         } else if (jqXhr.status === 'abort') {
           responseText = 'Ajax request aborted.';
         } else {
@@ -199,18 +203,18 @@ const DocumentsUserNew = React.createClass({
 		singleSelectOptions.unshift({value: '', label: 'Select…'});
       return (
         <div>
-          <Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-            <Bootstrap.Modal.Header>
-              <Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-              </Bootstrap.Modal.Header>
-            <Bootstrap.Modal.Body>
+          <Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+            <Modal.Header>
+              <Modal.Title>Error!</Modal.Title>
+              </Modal.Header>
+            <Modal.Body>
               <h4>{this.state.error}</h4>
-            </Bootstrap.Modal.Body>
-            <Bootstrap.Modal.Footer>
-              <Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-            </Bootstrap.Modal.Footer>
-          </Bootstrap.Modal>
-          <h3> Create New Document for group {this.state.groupName} </h3>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={this.close}>Close</Button>
+            </Modal.Footer>
+          </Modal>
+          <h3> Create New Document for user {this.state.username} </h3>
           <Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
             <ListGroup>
               <ListGroupItem bsStyle="success">Document inserted successfully!!</ListGroupItem>

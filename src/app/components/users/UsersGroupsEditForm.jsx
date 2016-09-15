@@ -1,12 +1,14 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
+import React from 'react';
+import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Row, Col, Button } from 'react-bootstrap';
-var MultiselectField = require('./Multiselect.jsx');
+import { Modal, Row, Col, Button } from 'react-bootstrap';
+import MultiselectField from './Multiselect.jsx';
 import { hashHistory } from 'react-router';
 
-//var ModalError = require('./ModalError.jsx');
+//import ModalError from './ModalError.jsx';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 function userValidation(formData,errors) {
 	return errors;
@@ -44,9 +46,12 @@ var UsersGroupsEditForm = React.createClass({
 		var userData = Object.assign({},formData);
 		//console.log('El userData contiene: ',userData);
 		jQuery.ajax({
-			type: 'PUT',
-			url: '/users/groups/edit/:username',
-			data: userData
+			type: 'POST',
+			url: config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username),
+			headers: auth.getAuthHeaders(),
+			dataType: 'json',
+			contentType: 'application/json',
+			data: JSON.stringify(userData)
 		})
 		.done(function(data) {
 			self.clearForm();
@@ -133,17 +138,17 @@ var UsersGroupsEditForm = React.createClass({
 		//console.log('Show: ', this.state.showModal);
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-					<Bootstrap.Modal.Header closeButton>
-					<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-						</Bootstrap.Modal.Header>
-					<Bootstrap.Modal.Body>
+				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+					<Modal.Header closeButton>
+						<Modal.Title>Error!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
 						<h4>{this.state.error}</h4>
-					</Bootstrap.Modal.Body>
-					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-					</Bootstrap.Modal.Footer>
-				</Bootstrap.Modal>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.close}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 				<Row className = "show-grid">
 					<Col xs={12} md={8}>
 							<Form

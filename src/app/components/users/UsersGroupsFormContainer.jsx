@@ -1,7 +1,10 @@
-var React = require('react');
-var jQuery = require('jquery');
-var UsersGroupsEditForm = require('./UsersGroupsEditForm.jsx');
-var UsersGroupsViewForm = require('./UsersGroupsViewForm.jsx');
+import React from 'react';
+import jQuery from 'jquery';
+import UsersGroupsEditForm from './UsersGroupsEditForm.jsx';
+import UsersGroupsViewForm from './UsersGroupsViewForm.jsx';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 var UsersGroupsFormContainer = React.createClass({
 	propTypes:{
@@ -43,9 +46,6 @@ var UsersGroupsFormContainer = React.createClass({
 	loadGroupsFromServer: function() {
 		jQuery.ajax({
 			url: config.groupsBaseUri,
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
 			dataType: 'json',
 			cache: false,
 		})

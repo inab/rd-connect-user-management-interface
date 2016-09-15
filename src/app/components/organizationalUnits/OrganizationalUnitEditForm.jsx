@@ -1,16 +1,18 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
-var request = require('superagent');
+import React from 'react';
+import jQuery from 'jquery';
+import request from 'superagent';
 import Form from 'react-jsonschema-form';
-import { Row, Col } from 'react-bootstrap';
-var Dropzone = require('react-dropzone');
-var imageNotFoundSrc = require('../users/defaultNoImageFound.js');
+import { Modal, Button, Row, Col } from 'react-bootstrap';
+import Dropzone from 'react-dropzone';
+import imageNotFoundSrc from '../users/defaultNoImageFound.js';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 function organizationalUnitValidation(formData,errors) {
 	var imageString = formData.picture;
 	var prefix = 'data:image/jpeg';
-	var prefix2 = 'data:image/jpeg';
+	var prefix2 = 'data:image/png';
 
 	if ((imageString.startsWith(prefix)) === false && (imageString.startsWith(prefix2)) === false){
 		errors.picture.addError('Invalid image format');
@@ -20,7 +22,7 @@ function organizationalUnitValidation(formData,errors) {
 function validateImageInput(image) {
 	var responseText = null;
 	if ((image.type !== 'image/jpeg') && (image.type !== 'image/png')) {
-		responseText = 'Image should be in jpeg format';
+		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
 }
@@ -44,7 +46,7 @@ var OrganizationalUnitEditForm = React.createClass({
 	},
 	dropHandler: function (files) {
 		console.log('Received files: ', files);
-		var req = request.post('/organizationalUnits/:ou_id/picture');
+		var req = request.put(config.ouBaseUri+'/'+encodeURIComponent(this.state.data.organizationalUnit)+'/picture').set(auth.getAuthHeaders());
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			if (!error){
@@ -91,9 +93,12 @@ var OrganizationalUnitEditForm = React.createClass({
 		console.log('El formData contiene: ',formData);
 		var organizationalUnitData = Object.assign({},formData);
 		jQuery.ajax({
-			type: 'PUT',
-			url: '/some/url',
-			data: organizationalUnitData
+			type: 'POST',
+			url: config.ouBaseUri+'/'+encodeURIComponent(this.state.data.organizationalUnit),
+			headers: auth.getAuthHeaders(),
+			dataType: 'json',
+			contentType: 'application/json',
+			data: JSON.stringify(organizationalUnitData)
 		})
 		.done(function(data) {
 			self.clearForm();
@@ -208,17 +213,17 @@ var OrganizationalUnitEditForm = React.createClass({
 		}
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-					<Bootstrap.Modal.Header closeButton>
-						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-						</Bootstrap.Modal.Header>
-					<Bootstrap.Modal.Body>
+				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+					<Modal.Header closeButton>
+						<Modal.Title>Error!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
 						<h4>{this.state.error}</h4>
-					</Bootstrap.Modal.Body>
-					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-					</Bootstrap.Modal.Footer>
-				</Bootstrap.Modal>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.close}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 				<Row className = "show-grid">
 					<Col xs={12} md={8}>
 							<Form schema={schema}

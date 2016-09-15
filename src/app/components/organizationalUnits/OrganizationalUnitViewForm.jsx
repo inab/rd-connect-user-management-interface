@@ -1,9 +1,11 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
+import React from 'react';
+import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Row, Col, Button, LinkContainer} from 'react-bootstrap';
-//var ModalError = require('./ModalError.jsx');
+import { Modal, Row, Col, Button, LinkContainer} from 'react-bootstrap';
+//import ModalError from './ModalError.jsx';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 function organizationalUnitValidation(formData,errors) {
 	//if (formData.userPassword !== formData.userPassword2) {
@@ -31,9 +33,12 @@ var OrganizationalUnitViewForm = React.createClass({
 		//console.log(formData);
 		var organizationalUnitData = Object.assign({},formData);
 		jQuery.ajax({
-			type: 'PUT',
-			url: '/some/url',
-			data: organizationalUnitData
+			type: 'POST',
+			url: config.ouBaseUri+'/'+encodeURIComponent(this.state.data.organizationalUnit),
+			headers: auth.getAuthHeaders(),
+			dataType: 'json',
+			contentType: 'application/json',
+			data: JSON.stringify(organizationalUnitData)
 		})
 		.done(function(data) {
 			self.clearForm();
@@ -83,17 +88,17 @@ var OrganizationalUnitViewForm = React.createClass({
 		};
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-					<Bootstrap.Modal.Header closeButton>
-						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-						</Bootstrap.Modal.Header>
-					<Bootstrap.Modal.Body>
+				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+					<Modal.Header closeButton>
+						<Modal.Title>Error!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
 						<h4>{this.state.error}</h4>
-					</Bootstrap.Modal.Body>
-					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-					</Bootstrap.Modal.Footer>
-				</Bootstrap.Modal>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.close}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
 							<Form schema={schema}

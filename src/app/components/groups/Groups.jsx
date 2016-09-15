@@ -6,12 +6,11 @@ var Underscore = require('underscore');
 
 const Groups = ({data}) => {
   //console.log("Data so far is: ", data);
-  console.log('Data so far is: ', data);
   var sortedData = Underscore
     .chain(data)
     .sortBy(function(groupObjects){ return groupObjects.cn; })
     .value();
-  console.log('sortedData so far is: ', sortedData);
+  //console.log('sortedData so far is: ', sortedData);
   return (
     <div>
       <h3> List of Groups </h3>

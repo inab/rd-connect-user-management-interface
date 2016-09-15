@@ -1,12 +1,13 @@
 import React from 'react';
-var Bootstrap = require('react-bootstrap');
-import { Collapse, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
+import { Modal, Collapse, ListGroup, ListGroupItem, Button } from 'react-bootstrap';
 import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
-var jQuery = require('jquery');
+import jQuery from 'jquery';
 
 const { Select, File, Textarea } = FRC;
 
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 function htmlspecialchars(str) {
   return str.replace('&', '&amp;').replace('"', '&quot;').replace("'", '&#039;').replace('<', '&lt;').replace('>', '&gt;');
@@ -17,6 +18,9 @@ function validateSubmission(that, model){
 	return true;
 }
 
+
+const MaxFileSizeInMB = 10;
+const MaxFileSize = MaxFileSizeInMB * 1024 * 1024;
 
 const DocumentsGroupNew = React.createClass({
   propTypes:{
@@ -79,10 +83,10 @@ const DocumentsGroupNew = React.createClass({
             documentFile: 'Document to upload cannot be empty (0 bytes)'
           }
         });
-      } else if (values.documentFile[0].size > 83886080){
+      } else if (values.documentFile[0].size > MaxFileSize){
         this.setState({
           validationErrors: {
-            documentFile: 'Document to upload cannot be bigger than 10MB'
+            documentFile: 'Document to upload cannot be bigger than '+MaxFileSizeInMB+'MB'
           }
         });
       } else {
@@ -157,9 +161,10 @@ const DocumentsGroupNew = React.createClass({
       var documentGroupFormData = Object.assign({},formData);
       jQuery.ajax({
         type: 'POST',
-        url: '/groups/' + this.state.groupName + '/documents',
+        url: config.groupsBaseUri + '/' + encodeURIComponent(this.state.groupName) + '/documents',
         contentType: 'multipart/form-data',
         processData: false,
+        headers: auth.getAuthHeaders(),
         data: documentGroupFormData
       })
       .done(function(data) {
@@ -203,17 +208,17 @@ const DocumentsGroupNew = React.createClass({
 		singleSelectOptions.unshift({value: '', label: 'Select…'});
       return (
         <div>
-          <Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-            <Bootstrap.Modal.Header>
-              <Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-              </Bootstrap.Modal.Header>
-            <Bootstrap.Modal.Body>
+          <Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+            <Modal.Header>
+              <Modal.Title>Error!</Modal.Title>
+              </Modal.Header>
+            <Modal.Body>
               <h4>{this.state.error}</h4>
-            </Bootstrap.Modal.Body>
-            <Bootstrap.Modal.Footer>
-              <Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-            </Bootstrap.Modal.Footer>
-          </Bootstrap.Modal>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button onClick={this.close}>Close</Button>
+            </Modal.Footer>
+          </Modal>
           <h3> Create New Document for group {this.state.groupName} </h3>
           <Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
             <ListGroup>

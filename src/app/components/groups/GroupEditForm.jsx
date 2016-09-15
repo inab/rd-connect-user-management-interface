@@ -1,9 +1,11 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
+import React from 'react';
+import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Row, Col, Button } from 'react-bootstrap';
-var MultiselectField = require('./Multiselect.jsx');
+import { Modal, Row, Col, Button } from 'react-bootstrap';
+import MultiselectField from './Multiselect.jsx';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 var GroupEditForm = React.createClass({
 	propTypes:{
@@ -40,9 +42,11 @@ var GroupEditForm = React.createClass({
 		//console.log(formData);
 		var groupData = Object.assign({},formData);
 		jQuery.ajax({
-			type: 'PUT',
-			url: '/some/url',
-			data: groupData
+			type: 'POST',
+			url: config.groupsBaseUri + '/' + encodeURIComponent(this.state.data.cn),
+			headers: auth.getAuthHeaders(),
+			contentType: 'application/json',
+			data: JSON.stringify(groupData)
 		})
 		.done(function(data) {
 			self.clearForm();
@@ -133,17 +137,17 @@ var GroupEditForm = React.createClass({
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-					<Bootstrap.Modal.Header closeButton>
-						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-					</Bootstrap.Modal.Header>
-					<Bootstrap.Modal.Body>
+				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+					<Modal.Header closeButton>
+						<Modal.Title>Error!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
 						<h4>{this.state.error}</h4>
-					</Bootstrap.Modal.Body>
-					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-					</Bootstrap.Modal.Footer>
-				</Bootstrap.Modal>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.close}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
 						<Form schema={newSchema}

@@ -1,5 +1,5 @@
 import React from 'react';
-import Bootstrap from 'react-bootstrap';
+import { Modal , Button } from 'react-bootstrap';
 import jQuery from 'jquery';
 import UserEditForm from './UserEditForm.jsx';
 import UserViewForm from './UserViewForm.jsx';
@@ -129,17 +129,17 @@ var UserFormContainer = React.createClass({
 	if (this.state.error) {
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
-					<Bootstrap.Modal.Header closeButton>
-						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-					</Bootstrap.Modal.Header>
-					<Bootstrap.Modal.Body>
+				<Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
+					<Modal.Header closeButton>
+						<Modal.Title>Error!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
 						<h4>{this.state.error}</h4>
-					</Bootstrap.Modal.Body>
-					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={()=>hashHistory.goBack()}>Close</Bootstrap.Button>
-					</Bootstrap.Modal.Footer>
-				</Bootstrap.Modal>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={()=>hashHistory.goBack()}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 			</div>
 		);
 	}

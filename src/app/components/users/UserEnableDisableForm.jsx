@@ -1,8 +1,10 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
+import React from 'react';
+import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Row, Col } from 'react-bootstrap';
+import { Modal, Button, Row, Col } from 'react-bootstrap';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 function userValidation(formData,errors) {
 	return errors;
@@ -27,15 +29,16 @@ var UserEnableDisableForm = React.createClass({
 		//console.log('formData contiene: ', formData);
 		var userData = Object.assign({},formData);
 		var enabled = formData.enabled;
+		var urlEnabled = config.usersBaseUri + encodeURIComponent(this.props.data.username);
 		if (enabled){
-			var urlEnabled = '/some/url/enable';
+			 urlEnabled += '/disable';
 		} else {
-			var urlEnabled = '/some/url/disable';
+			 urlEnabled += '/enable';
 		}
 		jQuery.ajax({
-			type: 'PUT',
+			type: 'POST',
 			url: urlEnabled,
-			data: userData
+			headers: auth.getAuthHeaders(),
 		})
 		.done(function(data) {
 			self.clearForm();
@@ -98,17 +101,17 @@ var UserEnableDisableForm = React.createClass({
 
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-					<Bootstrap.Modal.Header closeButton>
-						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-						</Bootstrap.Modal.Header>
-					<Bootstrap.Modal.Body>
+				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+					<Modal.Header closeButton>
+						<Modal.Title>Error!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
 						<h4>{this.state.error}</h4>
-					</Bootstrap.Modal.Body>
-					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-					</Bootstrap.Modal.Footer>
-				</Bootstrap.Modal>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.close}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
 							<Form schema={schema}

@@ -1,11 +1,13 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
-var request = require('superagent');
+import React from 'react';
+import { Modal, Button, Row, Col } from 'react-bootstrap';
+import jQuery from 'jquery';
+import request from 'superagent';
 import Form from 'react-jsonschema-form';
-import { Row, Col } from 'react-bootstrap';
-var Dropzone = require('react-dropzone');
-var imageNotFoundSrc = require('./defaultNoImageFound.js');
+import Dropzone from 'react-dropzone';
+import imageNotFoundSrc from './defaultNoImageFound.js';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 function userValidation(formData,errors) {
 	if (formData.userPassword !== formData.userPassword2) {
@@ -15,8 +17,8 @@ function userValidation(formData,errors) {
 }
 function validateImageInput(image,that) {
 	var responseText = null;
-	if (image.type !== 'image/jpeg') {
-		responseText = 'Image should be in jpeg format';
+	if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
 }
@@ -40,11 +42,18 @@ var UserEditForm = React.createClass({
 	},
 	dropHandler: function (files) {
 		console.log('Received files: ', files);
-		var req = request.post('/users/:user_id/picture');
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			//var pictureFromBlob= new File([file.preview], file.name);
 			if (!error){
+				this.setState({files: files});
+				this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
+				//console.log("Picture in the state after validation: ", file.preview);
+				/*
+				var req = request
+					.put(config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username) + '/picture')
+					.type(file.type)
+					.set(auth.getAuthHeaders())
 				req.attach(file.name, file);
 				req.end(function(err, res){
 					if (!err && res){
@@ -75,6 +84,7 @@ var UserEditForm = React.createClass({
 						this.setState({error: responseText, showModal: true});
 					}
 				}.bind(this));
+				*/
 			} else {
 				this.setState({error: error, showModal: true});
 			}
@@ -90,12 +100,15 @@ var UserEditForm = React.createClass({
 		delete userData.userPassword2;
 		console.log('El userData contiene: ',userData);
 		jQuery.ajax({
-			type: 'PUT',
-			url: '/some/url',
-			data: userData
+			type: 'POST',
+			url: config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username),
+			headers: auth.getAuthHeaders(),
+			dataType: 'json',
+			contentType: 'application/json',
+			data: JSON.stringify(userData)
 		})
 		.done(function(data) {
-			self.clearForm();
+			//self.clearForm();
 		})
 		.fail(function(jqXhr) {
 			console.log('Failed to Update User Information',jqXhr);
@@ -191,17 +204,17 @@ var UserEditForm = React.createClass({
 		}
 		return (
 			<div>
-				<Bootstrap.Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
-					<Bootstrap.Modal.Header closeButton>
-						<Bootstrap.Modal.Title>Error!</Bootstrap.Modal.Title>
-						</Bootstrap.Modal.Header>
-					<Bootstrap.Modal.Body>
+				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+					<Modal.Header closeButton>
+						<Modal.Title>Error!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
 						<h4>{this.state.error}</h4>
-					</Bootstrap.Modal.Body>
-					<Bootstrap.Modal.Footer>
-						<Bootstrap.Button onClick={this.close}>Close</Bootstrap.Button>
-					</Bootstrap.Modal.Footer>
-				</Bootstrap.Modal>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.close}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
 						<Form schema={schema}

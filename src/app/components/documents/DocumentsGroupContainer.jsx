@@ -1,6 +1,9 @@
-var React = require('react');
-var jQuery = require('jquery');
-var DocumentsGroup = require('./DocumentsGroup.jsx');
+import React from 'react';
+import jQuery from 'jquery';
+import DocumentsGroup from './DocumentsGroup.jsx';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 //This container should retrieve information about documents related to a given user
 var DocumentsGroupContainer = React.createClass({
@@ -21,13 +24,11 @@ var DocumentsGroupContainer = React.createClass({
 	},
 	loadGroupDocumentsInfoFromServer: function() {
 		jQuery.ajax({
-			url: 'json/documents-' + this.props.params.groupName + '.json',
+			url: config.groupsBaseUri + '/' + encodeURIComponent(this.props.params.groupName) + '/documents',
 			type: 'GET',
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
+			cache: false,
+			headers: auth.getAuthHeaders(),
 		})
 		.done(function(data) {
 			this.setState({data: data});

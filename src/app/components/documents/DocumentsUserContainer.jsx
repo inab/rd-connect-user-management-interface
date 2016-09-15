@@ -1,6 +1,9 @@
-var React = require('react');
-var jQuery = require('jquery');
-var DocumentsUser = require('./DocumentsUser.jsx');
+import React from 'react';
+import jQuery from 'jquery';
+import DocumentsUser from './DocumentsUser.jsx';
+
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 //This container should retrieve information about documents related to a given user
 var DocumentsUserContainer = React.createClass({
@@ -21,13 +24,11 @@ var DocumentsUserContainer = React.createClass({
 	},
 	loadUserDocumentsInfoFromServer: function() {
 		jQuery.ajax({
-			url: 'json/documents-' + this.props.params.username + '.json',
+			url: config.usersBaseUri + '/' + encodeURIComponent(this.props.params.username) + '/documents',
 			type: 'GET',
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
+			cache: false,
+			headers: auth.getAuthHeaders(),
 		})
 		.done(function(data) {
 			this.setState({data: data});

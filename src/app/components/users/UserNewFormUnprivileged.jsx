@@ -1,14 +1,16 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
-var request = require('superagent');
+import React from 'react';
+import Bootstrap from 'react-bootstrap';
+import jQuery from 'jquery';
+import request from 'superagent';
 import Form from 'react-jsonschema-form';
 import { Row, Col, Button } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
-var Dropzone = require('react-dropzone');
-var imageNotFoundSrc = require('./defaultNoImageFound.js');
-var MultiselectField = require('./Multiselect.jsx');
+import Dropzone from 'react-dropzone';
+import imageNotFoundSrc from './defaultNoImageFound.js';
+import MultiselectField from './Multiselect.jsx';
 
+import config from 'config.jsx';
+import auth from 'components/auth.jsx';
 
 //var ModalError = require('./ModalError.jsx');
 
@@ -20,8 +22,8 @@ function userValidation(formData,errors) {
 }
 function validateImageInput(image,that) {
 	var responseText = null;
-	if (image.type !== 'image/jpeg') {
-		responseText = 'Image should be in jpeg format';
+	if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
 }
@@ -73,7 +75,9 @@ var UserNewFormUnprivileged = React.createClass({
 	},
 	dropHandler: function (files) {
 		console.log('Received files: ', files);
-		var req = request.post('/users/:user_id/picture');
+		// TODO: Where the user is?
+		var username = '';
+		var req = request.put(config.usersBaseUri + '/' + encodeURIComponent(username) + '/picture');
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			if (!error){
@@ -125,8 +129,12 @@ var UserNewFormUnprivileged = React.createClass({
 		console.log('El userData contiene: ',userData);
 		jQuery.ajax({
 			type: 'PUT',
-			url: '/some/url',
-			data: userData
+			url: config.usersBaseUri,
+			dataType: 'json',
+			//processData: false,
+			contentType: 'application/json',
+			headers: auth.getAuthHeaders(),
+			data: JSON.stringify(userData)
 		})
 		.done(function(data) {
 			self.clearForm();

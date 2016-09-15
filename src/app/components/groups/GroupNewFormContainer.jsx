@@ -1,6 +1,8 @@
-var React = require('react');
-var jQuery = require('jquery');
-var GroupNewForm = require('./GroupNewForm.jsx');
+import React from 'react';
+import jQuery from 'jquery';
+import GroupNewForm from './GroupNewForm.jsx';
+
+import config from 'config.jsx';
 
 var GroupNewFormContainer = React.createClass({
   getInitialState: function() {
@@ -11,13 +13,8 @@ var GroupNewFormContainer = React.createClass({
   },
   loadGroupSchema: function() {
 	jQuery.ajax({
-		url: 'json/groupValidation.json',
-		type: 'GET',
+		url: config.groupsBaseUri + '?schema',
 		dataType: 'json',
-		headers: {
-			'X-CAS-Referer': window.location.href
-		},
-		contentType: 'application/json; charset=utf-8',
 	})
 	.done(function(schema) {
 		this.setState({schema: schema});

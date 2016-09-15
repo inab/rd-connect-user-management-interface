@@ -1,7 +1,8 @@
-var React = require('react');
-var jQuery = require('jquery');
-var DocumentsUsers = require('./DocumentsUsers.jsx');
+import React from 'react';
+import jQuery from 'jquery';
+import DocumentsUsers from './DocumentsUsers.jsx';
 
+import config from 'config.jsx';
 
 var DocumentsUsersContainer = React.createClass({
 	getInitialState: function() {
@@ -16,10 +17,7 @@ var DocumentsUsersContainer = React.createClass({
 	},
 	loadUsersFromServer: function() {
 		jQuery.ajax({
-			url: 'json/users.json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
+			url: config.usersBaseUri,
 			dataType: 'json',
 			cache: false,
 			success: function(data) {

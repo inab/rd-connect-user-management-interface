@@ -1,11 +1,13 @@
-var React = require('react');
-var Bootstrap = require('react-bootstrap');
-var jQuery = require('jquery');
-var GroupEditForm = require('./GroupEditForm.jsx');
-var GroupViewForm = require('./GroupViewForm.jsx');
-var Underscore = require('underscore');
+import React from 'react';
+import Bootstrap from 'react-bootstrap';
+import jQuery from 'jquery';
+import GroupEditForm from './GroupEditForm.jsx';
+import GroupViewForm from './GroupViewForm.jsx';
+import Underscore from 'underscore';
 
 import { hashHistory } from 'react-router';
+
+import config from 'config.jsx';
 
 var GroupFormContainer = React.createClass({
 	propTypes:{
@@ -34,13 +36,9 @@ var GroupFormContainer = React.createClass({
 	},
 	loadUsers: function() {
 		jQuery.ajax({
-			url: 'json/users.json',
-			type: 'GET',
+			url: config.usersBaseUri,
+			cache: false,
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(users) {
 			var sortedUsers = Underscore
@@ -73,13 +71,8 @@ var GroupFormContainer = React.createClass({
 	},
 	loadGroupSchema: function() {
 		jQuery.ajax({
-			url: 'json/groupValidation.json',
-			type: 'GET',
+			url: config.groupsBaseUri + '?schema',
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(schema) {
 			this.setState({schema: schema});
@@ -108,13 +101,8 @@ var GroupFormContainer = React.createClass({
   },
   loadGroupData: function() {
 		jQuery.ajax({
-			url: 'json/group-' + this.props.params.groupName + '.json',
-			type: 'GET',
+			url: config.groupsBaseUri + '/' + encodeURIComponent(this.props.params.groupName),
 			dataType: 'json',
-			headers: {
-				'X-CAS-Referer': window.location.href
-			},
-			contentType: 'application/json; charset=utf-8',
 		})
 		.done(function(data) {
 			this.setState({data: data});

@@ -2,7 +2,7 @@ var React = require('react');
 import { Modal, Row, Col, Button, Jumbotron, Panel } from 'react-bootstrap';
 import { Link } from 'react-router';
 //var ModalError = require('./ModalError.jsx');
-//import { hashHistory } from 'react-router';
+import { hashHistory } from 'react-router';
 var imageNotFoundSrc = require('./defaultNoImageFound.js');
 
 var UserViewForm = React.createClass({
@@ -142,9 +142,7 @@ var UserViewForm = React.createClass({
 					</Row>
 				</Jumbotron>
 				<div className="right">
-					<Link className="btn btn-primary editViewButton" role="button" to="/users/list">
-						Back
-					</Link>
+					<Button className="btn btn-primary editViewButton" onClick={()=>hashHistory.goBack()}>Back</Button>
 					<Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
 						Edit User Info
 					</Link>

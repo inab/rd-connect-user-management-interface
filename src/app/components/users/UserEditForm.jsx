@@ -5,7 +5,7 @@ import request from 'superagent';
 import Form from 'react-jsonschema-form';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.js';
-
+import { hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
@@ -98,7 +98,7 @@ var UserEditForm = React.createClass({
 		console.log('El formData contiene: ',formData);
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
-		console.log('El userData contiene: ',userData);
+		console.log('El userData jarl contiene: ',userData);
 		jQuery.ajax({
 			type: 'POST',
 			url: config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username),
@@ -109,6 +109,8 @@ var UserEditForm = React.createClass({
 		})
 		.done(function(data) {
 			//self.clearForm();
+			console.log('User modified correctly!!');
+			hashHistory.goBack();
 		})
 		.fail(function(jqXhr) {
 			console.log('Failed to Update User Information',jqXhr);
@@ -129,7 +131,10 @@ var UserEditForm = React.createClass({
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
 			}
 			this.setState({error: responseText, showModal: true});
-		}.bind(this));
+		}.bind(this))
+		.always(() => {
+			console.log('Ale, ya me he enfadado');
+		});
 	},
 	render: function() {
 		var schema = this.props.schema;

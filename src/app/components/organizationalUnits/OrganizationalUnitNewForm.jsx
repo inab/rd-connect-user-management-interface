@@ -186,8 +186,10 @@ var OrganizationalUnitNewForm = React.createClass({
 							//validate={organizationalUnitValidation}
 							liveValidate= {false}
 							>
-								<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} >Cancel</Button>
-								<Button bsStyle="primary" type="submit">Submit</Button>
+								<div className="button-submit">
+									<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
+									<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit</Button>
+								</div>
 							</Form>
 					</Col>
 					<Col xs={6} md={4} >

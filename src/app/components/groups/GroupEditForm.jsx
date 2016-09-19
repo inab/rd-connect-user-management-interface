@@ -3,9 +3,10 @@ import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import { Modal, Row, Col, Button } from 'react-bootstrap';
 import MultiselectField from './Multiselect.jsx';
-
+import { hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
+var Underscore = require('underscore');
 
 var GroupEditForm = React.createClass({
 	propTypes:{
@@ -19,14 +20,16 @@ var GroupEditForm = React.createClass({
 			showModal: false,
 			schema: null,
 			data: null,
-			users: null
+			users: null,
+			startMembers: null
 		};
 	},
 	componentWillMount: function(){
 		this.setState({
 			schema: this.props.schema,
 			data: this.props.data,
-			users: this.props.users
+			users: this.props.users,
+			startMembers: this.props.data.members
 		});
 	},
 	close(){
@@ -35,22 +38,99 @@ var GroupEditForm = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
-	updateGroupData: function({formData}){
-		//console.log('yay I\'m valid!');
-		formData.members = this.state.data.members;
-		console.log('Formdata contiene', formData);
-		//console.log(formData);
-		var groupData = Object.assign({},formData);
+	modifyGroupFeatures:function(formData){
 		jQuery.ajax({
 			type: 'POST',
 			url: config.groupsBaseUri + '/' + encodeURIComponent(this.state.data.cn),
 			headers: auth.getAuthHeaders(),
 			contentType: 'application/json',
-			data: JSON.stringify(groupData)
+			data: JSON.stringify(formData)
 		})
 		.done(function(data) {
-			self.clearForm();
+			//This is a two ajax call process. Once the members are deleted, we call to add the members in formData.members
+			hashHistory.goBack();
+
 		})
+		.fail(function(jqXhr) {
+			console.log('Failed modifying group features. ',jqXhr);
+			var responseText = '';
+			if (jqXhr.status === 0) {
+				responseText = 'Failed modifying group features. Not connect: Verify Network.';
+			} else if (jqXhr.status === 404) {
+				responseText = 'Failed modifying group features. Not found [404]';
+			} else if (jqXhr.status === 500) {
+				responseText = 'Failed modifying group features. Internal Server Error [500].';
+			} else if (jqXhr.status === 'parsererror') {
+				responseText = 'Failed modifying group features. Sent JSON parse failed.';
+			} else if (jqXhr.status === 'timeout') {
+				responseText = 'Failed modifying group features. Time out error.';
+			} else if (jqXhr.status === 'abort') {
+				responseText = 'Ajax request aborted.';
+			} else {
+				responseText = 'Uncaught Error: ' + jqXhr.responseText;
+			}
+			this.setState({error: responseText, showModal: true});
+		}.bind(this));
+	},
+	addMembersToGroup:function(formData, membersToAdd){
+		console.log('inside addMembersToGroup, members contains: ',formData.members);
+		jQuery.ajax({
+			type: 'POST',
+			url: config.groupsBaseUri + '/' + encodeURIComponent(this.state.data.cn) + '/members',
+			headers: auth.getAuthHeaders(),
+			contentType: 'application/json',
+			data: JSON.stringify(membersToAdd)
+		})
+		.done(function(data) {
+			//This is a two ajax call process. Once the members are deleted, we call to add the members in formData.members
+			this.modifyGroupFeatures(formData);
+
+		}.bind(this))
+		.fail(function(jqXhr) {
+			console.log('Failed to add members to Group ',jqXhr);
+			var responseText = '';
+			if (jqXhr.status === 0) {
+				responseText = 'Failed to add members to Group. Not connect: Verify Network.';
+			} else if (jqXhr.status === 404) {
+				responseText = 'Failed to add members to Group. Not found [404]';
+			} else if (jqXhr.status === 500) {
+				responseText = 'Failed to add members to Group. Internal Server Error [500].';
+			} else if (jqXhr.status === 'parsererror') {
+				responseText = 'Failed to add members to Group. Sent JSON parse failed.';
+			} else if (jqXhr.status === 'timeout') {
+				responseText = 'Failed to add members to Group. Time out error.';
+			} else if (jqXhr.status === 'abort') {
+				responseText = 'Ajax request aborted.';
+			} else {
+				responseText = 'Uncaught Error: ' + jqXhr.responseText;
+			}
+			this.setState({error: responseText, showModal: true});
+		}.bind(this));
+	},
+	updateGroupData: function({formData}){
+		//console.log('yay I\'m valid!');
+		//First we delete all the members and later we add the final members
+		formData.members = this.state.data.members;
+		//console.log('Formdata contiene', formData);
+		//console.log(config.groupsBaseUri + '/' + encodeURIComponent(this.state.data.cn)  + '/members');
+		//console.log('this.state.data.members contains the initial members, to erase: ', this.state.startMembers);
+		//console.log(formData);
+		var groupData = Object.assign({},formData);
+		var startMembers = Object.assign([],this.state.startMembers);
+		var startMembers = Underscore.difference(startMembers,groupData.members);
+		var membersToAdd = Underscore.difference(groupData.members, this.state.startMembers);
+
+		jQuery.ajax({
+			type: 'DELETE',
+			url: config.groupsBaseUri + '/' + encodeURIComponent(this.state.data.cn) + '/members',
+			headers: auth.getAuthHeaders(),
+			contentType: 'application/json',
+			data: JSON.stringify(startMembers)
+		})
+		.done(function(data) {
+			//Once the members are deleted, we call to add the members in formData.members
+			this.addMembersToGroup(formData, membersToAdd);
+		}.bind(this))
 		.fail(function(jqXhr) {
 			console.log('Failed to Update Group Information',jqXhr);
 			var responseText = '';

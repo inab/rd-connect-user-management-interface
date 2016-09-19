@@ -54,7 +54,7 @@ var UsersGroupsEditForm = React.createClass({
 			data: JSON.stringify(userData)
 		})
 		.done(function(data) {
-			self.clearForm();
+			hashHistory.goBack();
 		})
 		.fail(function(jqXhr) {
 			console.log('Failed to Update User Information',jqXhr);

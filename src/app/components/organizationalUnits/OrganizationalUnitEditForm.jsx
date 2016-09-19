@@ -5,7 +5,7 @@ import Form from 'react-jsonschema-form';
 import { Modal, Button, Row, Col } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from '../users/defaultNoImageFound.js';
-
+import { hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
@@ -94,14 +94,14 @@ var OrganizationalUnitEditForm = React.createClass({
 		var organizationalUnitData = Object.assign({},formData);
 		jQuery.ajax({
 			type: 'POST',
-			url: config.ouBaseUri+'/'+encodeURIComponent(this.state.data.organizationalUnit),
+			url: config.ouBaseUri + '/' + encodeURIComponent(organizationalUnitData.organizationalUnit),
 			headers: auth.getAuthHeaders(),
 			dataType: 'json',
 			contentType: 'application/json',
 			data: JSON.stringify(organizationalUnitData)
 		})
 		.done(function(data) {
-			self.clearForm();
+			hashHistory.goBack();
 		})
 		.fail(function(jqXhr) {
 			console.log('Failed to Update Organizational Unit Information',jqXhr);

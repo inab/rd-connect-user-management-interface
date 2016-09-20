@@ -117,40 +117,50 @@ var GroupEditForm = React.createClass({
 		//console.log(formData);
 		var groupData = Object.assign({},formData);
 		var startMembers = Object.assign([],this.state.startMembers);
-		var startMembers = Underscore.difference(startMembers,groupData.members);
+		startMembers = Underscore.difference(startMembers,groupData.members);
 		var membersToAdd = Underscore.difference(groupData.members, this.state.startMembers);
 
-		jQuery.ajax({
-			type: 'DELETE',
-			url: config.groupsBaseUri + '/' + encodeURIComponent(this.state.data.cn) + '/members',
-			headers: auth.getAuthHeaders(),
-			contentType: 'application/json',
-			data: JSON.stringify(startMembers)
-		})
-		.done(function(data) {
-			//Once the members are deleted, we call to add the members in formData.members
+		if(startMembers.length > 0) {
+			jQuery.ajax({
+				type: 'DELETE',
+				url: config.groupsBaseUri + '/' + encodeURIComponent(this.state.data.cn) + '/members',
+				headers: auth.getAuthHeaders(),
+				contentType: 'application/json',
+				data: JSON.stringify(startMembers)
+			})
+			.done(function(data) {
+				//Once the members are deleted, we call to add the members in formData.members
+				if(membersToAdd.length > 0) {
+					this.addMembersToGroup(formData, membersToAdd);
+				} else {
+					this.modifyGroupFeatures(formData);
+				}
+			}.bind(this))
+			.fail(function(jqXhr) {
+				console.log('Failed to Update Group Information',jqXhr);
+				var responseText = '';
+				if (jqXhr.status === 0) {
+					responseText = 'Failed to Update Group Information. Not connect: Verify Network.';
+				} else if (jqXhr.status === 404) {
+					responseText = 'Failed to Update Group Information. Not found [404]';
+				} else if (jqXhr.status === 500) {
+					responseText = 'Failed to Update Group Information. Internal Server Error [500].';
+				} else if (jqXhr.status === 'parsererror') {
+					responseText = 'Failed to Update Group Information. Sent JSON parse failed.';
+				} else if (jqXhr.status === 'timeout') {
+					responseText = 'Failed to Update Group Information. Time out error.';
+				} else if (jqXhr.status === 'abort') {
+					responseText = 'Ajax request aborted.';
+				} else {
+					responseText = 'Uncaught Error: ' + jqXhr.responseText;
+				}
+				this.setState({error: responseText, showModal: true});
+			}.bind(this));
+		} else if(membersToAdd.length > 0) {
 			this.addMembersToGroup(formData, membersToAdd);
-		}.bind(this))
-		.fail(function(jqXhr) {
-			console.log('Failed to Update Group Information',jqXhr);
-			var responseText = '';
-			if (jqXhr.status === 0) {
-				responseText = 'Failed to Update Group Information. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
-				responseText = 'Failed to Update Group Information. Not found [404]';
-			} else if (jqXhr.status === 500) {
-				responseText = 'Failed to Update Group Information. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
-				responseText = 'Failed to Update Group Information. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
-				responseText = 'Failed to Update Group Information. Time out error.';
-			} else if (jqXhr.status === 'abort') {
-				responseText = 'Ajax request aborted.';
-			} else {
-				responseText = 'Uncaught Error: ' + jqXhr.responseText;
-			}
-			this.setState({error: responseText, showModal: true});
-		}.bind(this));
+		} else {
+			this.modifyGroupFeatures(formData);
+		}
 	},
 	logChange: function(val){
 		console.log('Selected: ' + val);

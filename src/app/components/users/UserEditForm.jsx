@@ -167,6 +167,9 @@ var UserEditForm = React.createClass({
 		console.log('DATA: ',data);
 		const uiSchema = {
 			'ui:order': schemaOrdered,
+			'username': {
+				'ui:readonly': true,
+			},
 			'userPassword': {
 				'ui:widget': 'password',
 				'ui:placeholder': '************',
@@ -230,7 +233,12 @@ var UserEditForm = React.createClass({
 							onError={onError}
 							validate={userValidation}
 							liveValidate
-						/>
+						>
+							<div className="button-submit">
+								<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
+								<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit</Button>
+							</div>
+						</Form>
 					</Col>
 					<Col xs={6} md={4} >
 						<div>

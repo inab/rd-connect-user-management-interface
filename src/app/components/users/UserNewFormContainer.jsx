@@ -21,6 +21,7 @@ var UserNewFormContainer = React.createClass({
 			data: null,
 			schema: null,
 			groups: null,
+			users: null,
 			error: null,
 			showModal: false,
 			task: null };
@@ -35,6 +36,22 @@ var UserNewFormContainer = React.createClass({
 	open(){
 		this.setState({showModal: true});
 	},
+	loadUsersFromServer: function() {
+		jQuery.ajax({
+			url: config.usersBaseUri,
+			dataType: 'json',
+			cache: false,
+		})
+		.done(function(users) {
+			//console.log('success!');
+			this.setState({users: users});
+		}.bind(this))
+		.fail(function(xhr, status, err) {
+			//console.error('json/OrganizationalUnitalUnits.json', status, err);
+			console.error(xhr.status);
+			this.setState({error: xhr.status + ' (Retrieving List of Users)'});
+		}.bind(this));
+	},
 	loadGroupsFromServer: function() {
 		jQuery.ajax({
 			url: config.groupsBaseUri,
@@ -44,6 +61,7 @@ var UserNewFormContainer = React.createClass({
 		.done(function(groups) {
 			//console.log('success!');
 			this.setState({groups: groups});
+			this.loadUsersFromServer();
 		}.bind(this))
 		.fail(function(xhr, status, err) {
 			//console.error('json/OrganizationalUnitalUnits.json', status, err);
@@ -118,18 +136,18 @@ var UserNewFormContainer = React.createClass({
 	},
 
 	render: function() {
-		if ((this.state.schema) && (this.state.data)) {
+		if ((this.state.schema) && (this.state.data) && (this.state.users)) {
 			if (this.state.task === 'new_privileged'){
 				return (
 					<div>
-						<UserNewForm   schema={this.state.schema} data={this.state.data}/>
+						<UserNewForm   schema={this.state.schema} data={this.state.data} users={this.state.users}/>
 					</div>
 				);
 			} else if (this.state.task === 'new_unprivileged'){
 				if (this.state.groups){
 					return (
 						<div>
-							<UserNewFormUnprivileged   schema={this.state.schema} data={this.state.data} groups={this.state.groups}/>
+							<UserNewFormUnprivileged   schema={this.state.schema} data={this.state.data} groups={this.state.groups} users={this.state.users} />
 						</div>
 					);
 				}

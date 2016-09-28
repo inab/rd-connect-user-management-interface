@@ -6,18 +6,14 @@ import { Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem } from 'rea
 import { hashHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.js';
+import Underscore from 'underscore';
 
 //import ModalError from './ModalError.jsx';
 
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
-function userValidation(formData,errors) {
-	if (formData.userPassword !== formData.userPassword2) {
-		errors.userPassword2.addError('Passwords don\'t match');
-	}
-		return errors;
-}
+
 function validateImageInput(image,that) {
 	var responseText = null;
 	if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
@@ -29,13 +25,27 @@ function validateImageInput(image,that) {
 var UserNewForm = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.array.isRequired
+		data: React.PropTypes.array.isRequired,
+		users: React.PropTypes.array.isRequired
 	},
 	getInitialState: function() {
 		return { error: null, showModal: false, files: [], picture : null, in: false};
 	},
 	componentWillMount: function() {
-		this.setState({picture: this.props.data.picture});
+		this.setState({picture: this.props.data.picture, schema: this.props.schema, data: this.props.data, users: this.props.users});
+	},
+	userValidation(formData,errors) {
+		if (formData.userPassword !== formData.userPassword2) {
+			errors.userPassword2.addError('Passwords don\'t match');
+		}
+		//Now we test if user exist...
+		var username = formData.username;
+		var arrayOfUsers = this.state.users;
+		var usersRepeated = jQuery.grep(arrayOfUsers, function(e){ return e.username === username; });
+		if (usersRepeated.length !== 0 ){
+			errors.username.addError('The username is in use. Please choose a different one');
+		}
+			return errors;
 	},
 	close(){
 		this.setState({showModal: false});
@@ -54,7 +64,7 @@ var UserNewForm = React.createClass({
     },
 	dropHandler: function (files) {
 		console.log('Received files: ', files);
-		var req = request.put(config.usersBaseUri + '/' + encodeURIComponent(this.prop.data.username) + '/picture').set(auth.getAuthHeaders());
+		var req = request.put(config.usersBaseUri + '/' + encodeURIComponent(this.state.data.username) + '/picture').set(auth.getAuthHeaders());
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			if (!error){
@@ -102,6 +112,9 @@ var UserNewForm = React.createClass({
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
 		console.log('El userData contiene: ',userData);
+		//var userExists = this.testIfUserExists(userData);
+		var responseText = '';
+		
 		jQuery.ajax({
 			type: 'PUT',
 			url: config.usersBaseUri,
@@ -111,12 +124,10 @@ var UserNewForm = React.createClass({
 			data: JSON.stringify(userData)
 		})
 		.done(function(data) {
-			self.clearForm();
-			this.setState({in: true});
+			hashHistory.goBack();
 		})
 		.fail(function(jqXhr) {
 			console.log('Failed to Create New User',jqXhr);
-			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to Create New User. Not connect: Verify Network.';
 			} else if (jqXhr.status === 404) {
@@ -137,7 +148,8 @@ var UserNewForm = React.createClass({
 	},
 	render: function() {
 		const formData = {};
-		var schema = this.props.schema;
+		var schema = this.state.schema;
+
 		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
 		delete schema.properties.groups;
 		delete schema.title;
@@ -145,7 +157,7 @@ var UserNewForm = React.createClass({
 		delete schema.properties.picture;
 
 		//We generate the enums property for the Organizational Units extracting the info from data
-		var arrayOUobjects = this.props.data; var arrayOUstrings = [];
+		var arrayOUobjects = this.state.data; var arrayOUstrings = [];
 		for (var i = 0; i < arrayOUobjects.length; i++) {
 			arrayOUstrings.push(arrayOUobjects[i].organizationalUnit);
 	}
@@ -193,12 +205,14 @@ var UserNewForm = React.createClass({
 				'type': 'string'
 			}
 		};
+		
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.addUserData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
-		console.log('Error: ', this.state.error);
-		console.log('Show: ', this.state.showModal);
+		//console.log('Error: ', this.state.error);
+		//console.log('Show: ', this.state.showModal);
 		var userImage = this.state.picture;
+		
 		if (typeof userImage === 'undefined'){
 			userImage = imageNotFoundSrc;
 		}
@@ -226,11 +240,12 @@ var UserNewForm = React.createClass({
 						<Form schema={schema}
 						uiSchema={uiSchema}
 						formData={formData}
-						onChange={log('changed')}
+						//onChange={log('changed')}
 						onSubmit={onSubmit}
 						onError={onError}
-						validate={userValidation}
-						liveValidate= {false}
+						validate={this.userValidation}
+						liveValidate
+						showErrorList={false}
 						>
 							<div className="button-submit">
 								<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>

@@ -12,14 +12,14 @@ var UsersGroups = ({data}) => {
       .toArray()
       .sortBy(function(ouObjects){ return ouObjects[0].organizationalUnit; })
       .value();
-    console.log('groupData so far is: ', groupData);
+    //console.log('groupData so far is: ', groupData);
     return (
     <div>
       <h3> Lists of groups that a user is member of </h3>
           {groupData.map(function(ou,i){
               var organizationalUnit = ou[0].organizationalUnit;
               var headerText = organizationalUnit;
-              console.log('ou contains: ', ou);
+              //console.log('ou contains: ', ou);
               return (
                 <Row className="show-grid">
                   <Col xs={12} md={10} >
@@ -38,9 +38,9 @@ var UsersGroups = ({data}) => {
                         </thead>
                         <tbody>
                         {ou.map(function(user,j){
-                          console.log('ou contains: ', ou);
+                          //console.log('ou contains: ', ou);
                           var arrayGroups = user.groups;
-                          console.log('user.groups contains: ', user.groups);
+                          //console.log('user.groups contains: ', user.groups);
                           var isChecked = user.enabled;
                           return (
                             <tr key={j}>
@@ -54,7 +54,7 @@ var UsersGroups = ({data}) => {
                                 {
                                   typeof arrayGroups !== 'undefined'
                                   ?
-                                    user.groups.map(function(group, k){
+                                    user.groups.sort().map(function(group, k){
                                       return (
                                         <li><strong>{group}</strong></li>
                                       );

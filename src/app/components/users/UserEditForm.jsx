@@ -1,7 +1,6 @@
 import React from 'react';
 import { Modal, Button, Row, Col } from 'react-bootstrap';
 import jQuery from 'jquery';
-import request from 'superagent';
 import Form from 'react-jsonschema-form';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.js';
@@ -95,46 +94,90 @@ var UserEditForm = React.createClass({
     },
 	updateUserData: function({formData}){
 		console.log('yay I\'m valid!');
-		console.log('El formData contiene: ',formData);
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
-		console.log('El userData jarl contiene: ',userData);
-		jQuery.ajax({
-			type: 'POST',
-			url: config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username),
-			headers: auth.getAuthHeaders(),
-			dataType: 'json',
-			contentType: 'application/json',
-			data: JSON.stringify(userData)
-		})
-		.done(function(data) {
-			//self.clearForm();
-			console.log('User modified correctly!!');
-			hashHistory.goBack();
-		})
-		.fail(function(jqXhr) {
-			console.log('Failed to Update User Information',jqXhr);
-			var responseText = '';
-			if (jqXhr.status === 0) {
-				responseText = 'Failed to Update User Information. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
-				responseText = 'Failed to Update User Information. Not found [404]';
-			} else if (jqXhr.status === 500) {
-				responseText = 'Failed to Update User Information. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
-				responseText = 'Failed to Update User Information. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
-				responseText = 'Failed to Update User Information. Time out error.';
-			} else if (jqXhr.status === 'abort') {
-				responseText = 'Ajax request aborted.';
-			} else {
-				responseText = 'Uncaught Error: ' + jqXhr.responseText;
-			}
-			this.setState({error: responseText, showModal: true});
-		}.bind(this))
-		.always(() => {
-			console.log('Ale, ya me he enfadado');
-		});
+		//Before submitting the editted data we add the information for the picture:
+		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
+		var reader = new window.FileReader();
+		console.log('myBlob needs to be controlled, contains: ', myBlob);
+		var insertImage = false;
+		if (typeof myBlob !== 'undefined'){
+			insertImage = true;
+			reader.readAsDataURL(myBlob);
+			reader.onloadend = function() {
+				var stringBase64Image = reader.result;
+				userData.picture = stringBase64Image;
+				jQuery.ajax({
+					type: 'POST',
+					url: config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username),
+					contentType: 'application/json',
+					headers: auth.getAuthHeaders(),
+					dataType: 'json',
+					data: JSON.stringify(userData)
+				})
+				.done(function(data) {
+					console.log('User modified correctly!!');
+					hashHistory.goBack();
+				})
+				.fail(function(jqXhr) {
+					console.log('Failed to Update User Information',jqXhr.responseText);
+					var responseText = '';
+					if (jqXhr.status === 0) {
+						responseText = 'Failed to Update User Information. Not connect: Verify Network.';
+					} else if (jqXhr.status === 404) {
+						responseText = 'Failed to Update User Information. Not found [404]';
+					} else if (jqXhr.status === 500) {
+						responseText = 'Failed to Update User Information. Internal Server Error [500].';
+					} else if (jqXhr.status === 'parsererror') {
+						responseText = 'Failed to Update User Information. Sent JSON parse failed.';
+					} else if (jqXhr.status === 'timeout') {
+						responseText = 'Failed to Update User Information. Time out error.';
+					} else if (jqXhr.status === 'abort') {
+						responseText = 'Ajax request aborted.';
+					} else {
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+					}
+					this.setState({error: responseText, showModal: true});
+				}.bind(this))
+				.always(() => {
+				});
+			}.bind(this);
+		} else {
+			jQuery.ajax({
+					type: 'POST',
+					url: config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username),
+					contentType: 'application/json',
+					headers: auth.getAuthHeaders(),
+					dataType: 'json',
+					data: JSON.stringify(userData)
+				})
+				.done(function(data) {
+					console.log('User modified correctly!!');
+					hashHistory.goBack();
+				})
+				.fail(function(jqXhr) {
+					console.log('Failed to Update User Information',jqXhr.responseText);
+					var responseText = '';
+					if (jqXhr.status === 0) {
+						responseText = 'Failed to Update User Information. Not connect: Verify Network.';
+					} else if (jqXhr.status === 404) {
+						responseText = 'Failed to Update User Information. Not found [404]';
+					} else if (jqXhr.status === 500) {
+						responseText = 'Failed to Update User Information. Internal Server Error [500].';
+					} else if (jqXhr.status === 'parsererror') {
+						responseText = 'Failed to Update User Information. Sent JSON parse failed.';
+					} else if (jqXhr.status === 'timeout') {
+						responseText = 'Failed to Update User Information. Time out error.';
+					} else if (jqXhr.status === 'abort') {
+						responseText = 'Ajax request aborted.';
+					} else {
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+					}
+					this.setState({error: responseText, showModal: true});
+				}.bind(this))
+				.always(() => {
+				});
+		}
 	},
 	render: function() {
 		var schema = this.props.schema;
@@ -146,6 +189,7 @@ var UserEditForm = React.createClass({
 		var order = ['username','cn','givenName','surname','userPassword','userPassword2'];
 
 		//We remove picture from the schema since this will be managed by react-dropzone component
+		var schemaPicture = schema.properties.picture;
 		delete schema.properties.picture;
 
 		//We filter all the properties retrieving only the elements that are not in 'order' array
@@ -249,8 +293,8 @@ var UserEditForm = React.createClass({
 								Click here or drop image for {data.username}
 							</Dropzone>
 							{this.state.files.length > 0 ? <div>
-							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} width="100" alt="image_user" className="imagePreview" /> )}</div>
-							</div> : <div><img src={userImage} width="100" alt="image_user" className="imagePreview" /></div>}
+							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} name="documentFile" width="100" alt="image_user" className="imagePreview" /> )}</div>
+							</div> : <div><img src={userImage} name="documentFile" width="100" alt="image_user" className="imagePreview" /></div>}
 						</div>
 					</Col>
 				</Row>

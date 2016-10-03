@@ -108,43 +108,48 @@ var UserNewForm = React.createClass({
     },
 	addUserData: function({formData}){
 		console.log('yay I\'m valid!');
-		console.log(formData);
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
 		console.log('El userData contiene: ',userData);
 		//var userExists = this.testIfUserExists(userData);
 		var responseText = '';
-		
-		jQuery.ajax({
-			type: 'PUT',
-			url: config.usersBaseUri,
-			headers: auth.getAuthHeaders(),
-			dataType: 'json',
-			contentType: 'application/json',
-			data: JSON.stringify(userData)
-		})
-		.done(function(data) {
-			hashHistory.goBack();
-		})
-		.fail(function(jqXhr) {
-			console.log('Failed to Create New User',jqXhr);
-			if (jqXhr.status === 0) {
-				responseText = 'Failed to Create New User. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
-				responseText = 'Failed to Create New User. Not found [404]';
-			} else if (jqXhr.status === 500) {
-				responseText = 'Failed to Create New User. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
-				responseText = 'Failed to Create New User. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
-				responseText = 'Failed to Create New User. Time out error.';
-			} else if (jqXhr.status === 'abort') {
-				responseText = 'Ajax request aborted.';
-			} else {
-				responseText = 'Uncaught Error: ' + jqXhr.responseText;
-			}
-			this.setState({error: responseText, showModal: true});
-		}.bind(this));
+		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
+		var reader = new window.FileReader();
+		reader.readAsDataURL(myBlob);
+		reader.onloadend = function() {
+			var stringBase64Image = reader.result;
+			userData.picture = stringBase64Image;
+			jQuery.ajax({
+				type: 'PUT',
+				url: config.usersBaseUri,
+				headers: auth.getAuthHeaders(),
+				dataType: 'json',
+				contentType: 'application/json',
+				data: JSON.stringify(userData)
+			})
+			.done(function(data) {
+				hashHistory.goBack();
+			})
+			.fail(function(jqXhr) {
+				console.log('Failed to Create New User',jqXhr);
+				if (jqXhr.status === 0) {
+					responseText = 'Failed to Create New User. Not connect: Verify Network.';
+				} else if (jqXhr.status === 404) {
+					responseText = 'Failed to Create New User. Not found [404]';
+				} else if (jqXhr.status === 500) {
+					responseText = 'Failed to Create New User. Internal Server Error [500].';
+				} else if (jqXhr.status === 'parsererror') {
+					responseText = 'Failed to Create New User. Sent JSON parse failed.';
+				} else if (jqXhr.status === 'timeout') {
+					responseText = 'Failed to Create New User. Time out error.';
+				} else if (jqXhr.status === 'abort') {
+					responseText = 'Ajax request aborted.';
+				} else {
+					responseText = 'Uncaught Error: ' + jqXhr.responseText;
+				}
+				this.setState({error: responseText, showModal: true});
+			}.bind(this));
+		}.bind(this);
 	},
 	render: function() {
 		const formData = {};

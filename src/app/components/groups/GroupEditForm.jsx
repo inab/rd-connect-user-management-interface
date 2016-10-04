@@ -8,6 +8,16 @@ import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 var Underscore = require('underscore');
 
+
+function groupValidation(formData,errors) {
+	console.log('FormData inside groupValidation is: ', formData);
+	//Check if there is at least one owner for the group
+	if (formData.owner.length === 0) {
+		errors.owner.addError('Please select at least one owner');
+	}
+		return errors;
+}
+
 var GroupEditForm = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
@@ -353,17 +363,17 @@ var GroupEditForm = React.createClass({
 						onChange={log('changed')}
 						onSubmit={onSubmit}
 						onError={onError}
-						//validate={groupValidation}
+						validate={groupValidation}
 						liveValidate
 						>
 						<MultiselectField label="Members of this group" options={options} initialSelected={initialMembersSelected} onChangeSelected={this.handleChangeSelected}/>
 						<div className="button-submit">
-							<Button bsStyle="info" type="submit">Submit</Button>
+							<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
+							<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit</Button>
 						</div>
 						</Form>
 					</Col>
-					<Col xs={6} md={4}>
-					</Col>
+					<Col xs={6} md={4} />
 				</Row>
 			</div>
 		);

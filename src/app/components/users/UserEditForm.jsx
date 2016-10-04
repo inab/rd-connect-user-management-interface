@@ -40,7 +40,7 @@ var UserEditForm = React.createClass({
 		this.setState({showModal: true});
 	},
 	dropHandler: function (files) {
-		console.log('Received files: ', files);
+		//console.log('Received files: ', files);
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			//var pictureFromBlob= new File([file.preview], file.name);
@@ -93,13 +93,13 @@ var UserEditForm = React.createClass({
       this.refs.dropzone.open();
     },
 	updateUserData: function({formData}){
-		console.log('yay I\'m valid!');
+		//console.log('yay I\'m valid!');
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
 		//Before submitting the editted data we add the information for the picture:
 		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
 		var reader = new window.FileReader();
-		console.log('myBlob needs to be controlled, contains: ', myBlob);
+		//console.log('myBlob needs to be controlled, contains: ', myBlob);
 		var insertImage = false;
 		if (typeof myBlob !== 'undefined'){
 			insertImage = true;
@@ -201,14 +201,14 @@ var UserEditForm = React.createClass({
 		var schemaOrdered = order.concat(userSchemaKeys);
 
 		var data = this.props.data;
-		console.log('Picture en el state contiene: ', this.state.picture);
-		console.log('File en el state contiene: ', this.state.files);
+		//console.log('Picture en el state contiene: ', this.state.picture);
+		//console.log('File en el state contiene: ', this.state.files);
 		//Once we already have picture value, we remove from data since we have removed it from schema.
 		//All picture related stuff will be managed by react-dropzone component.
 		delete data.picture;
 		delete data.userPassword;
-		console.log('SCHEMA: ',schema);
-		console.log('DATA: ',data);
+		//console.log('SCHEMA: ',schema);
+		//console.log('DATA: ',data);
 		const uiSchema = {
 			'ui:order': schemaOrdered,
 			'username': {
@@ -248,8 +248,8 @@ var UserEditForm = React.createClass({
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateUserData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
-		console.log('Error: ', this.state.error);
-		console.log('Show: ', this.state.showModal);
+		//console.log('Error: ', this.state.error);
+		//console.log('Show: ', this.state.showModal);
 		var userImage = this.state.picture;
 		if (typeof userImage === 'undefined'){
 			userImage = imageNotFoundSrc;

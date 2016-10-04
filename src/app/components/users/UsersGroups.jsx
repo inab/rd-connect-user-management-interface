@@ -27,7 +27,6 @@ var UsersGroups = ({data}) => {
                       <Table responsive>
                         <thead>
                           <tr>
-                            <th>#</th>
                             <th>Common Name</th>
                             <th>Email</th>
                             <th>Category</th>
@@ -44,7 +43,6 @@ var UsersGroups = ({data}) => {
                           var isChecked = user.enabled;
                           return (
                             <tr key={j}>
-                              <td>{j}</td>
                               <td>{user.cn}</td>
                               <td>{user.email}</td>
                               <td>{user.userCategory}</td>

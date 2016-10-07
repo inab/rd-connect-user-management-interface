@@ -39,7 +39,7 @@ var UserFormContainer = React.createClass({
 	},
 	loadUserSchema: function() {
 		jQuery.ajax({
-			url: config.usersBaseUri+'?schema',
+			url: config.usersBaseUri + '?schema',
 			type: 'GET',
 			dataType: 'json',
 		})
@@ -101,7 +101,7 @@ var UserFormContainer = React.createClass({
 	},
 
   render: function() {
-	//console.log('task: ', this.state.task);
+	console.log('task: ', this.state.task);
 	//console.log('schema: ', this.state.schema);
 	//console.log('data: ', this.state.data);
 	//console.log('error: ', this.state.error);

@@ -12,6 +12,7 @@ var Main = require('components/main.jsx');
 var Box = require('components/Box.jsx');
 var UsersContainer = require('components/users/UsersContainer.jsx');
 var UserFormContainer = require('components/users/UserFormContainer.jsx');
+var UserEditFormContainer = require('components/users/UserEditFormContainer.jsx');
 var UserNewFormContainer = require('components/users/UserNewFormContainer.jsx');
 var UsersGroupsContainer = require('components/users/UsersGroupsContainer.jsx');
 var UsersGroupsFormContainer = require('components/users/UsersGroupsFormContainer.jsx');
@@ -279,7 +280,7 @@ render((
                 <Route path="/users" name="Users" component={Box} onEnter={requireAuth}>
                     <IndexRoute component={UsersContainer}/>
                     <Route path="list" name="List" component={UsersContainer} task={'list'} />
-                    <Route path="edit/:username" name="Edit" staticName component={UserFormContainer} task={'edit'}/>
+                    <Route path="edit/:username" name="Edit" staticName component={UserEditFormContainer} task={'edit'}/>
                     <Route path="view/:username" name="View" staticName component={UserFormContainer} task={'view'}/>
                     <Route path="enable-disable/:username" name="Enable-Disable" staticName component={UserFormContainer} task={'enable_disable'}/>
                     <Route path="new" name="New" component={UserNewFormContainer} task={'new_privileged'}/>

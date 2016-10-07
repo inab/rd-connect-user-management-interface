@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
 var imageNotFoundSrc = require('./defaultNoImageFound.js');
 
+
 var UserViewForm = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
@@ -86,7 +87,7 @@ var UserViewForm = React.createClass({
 							<Panel header="Preferred way to address the user">
 								<p>{this.props.data.title}</p>
 							</Panel>
-							{typeof this.props.data.telephoneNumber !== 'undefined' 
+							{typeof this.props.data.telephoneNumber !== 'undefined'
 								? <Panel header="Contact Phone Number">
 										{this.props.data.telephoneNumber.map(function(telephone, l){
 											return (

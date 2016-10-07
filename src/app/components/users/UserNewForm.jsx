@@ -38,14 +38,32 @@ var UserNewForm = React.createClass({
 		if (formData.userPassword !== formData.userPassword2) {
 			errors.userPassword2.addError('Passwords don\'t match');
 		}
-		//Now we test if user exist...
+		//Now we test if user exists...
 		var username = formData.username;
 		var arrayOfUsers = this.state.users;
 		var usersRepeated = jQuery.grep(arrayOfUsers, function(e){ return e.username === username; });
 		if (usersRepeated.length !== 0 ){
 			errors.username.addError('The username is in use. Please choose a different one');
 		}
-			return errors;
+
+		//Now we test if email exists...
+		var email = formData.email;
+		var arrayOfUsers = this.state.users;
+		//console.log('arrayOfUsers contains: ', arrayOfUsers);
+		var emailRepeated = jQuery.grep(arrayOfUsers, function(e){
+			//console.log('e contains: ', e );
+			if (typeof email !== 'undefined'){
+				//e.email is an array of emails. We have to look inside each one
+				if (typeof e.email !== 'undefined'){
+					for (var x = 0; x < e.email.length; x++){
+						if (e.email[x] === email[x]) {
+							errors.email.addError('The email is in use. Please choose a different one');
+						}
+					}
+				}
+			}
+		});
+		return errors;
 	},
 	close(){
 		this.setState({showModal: false});

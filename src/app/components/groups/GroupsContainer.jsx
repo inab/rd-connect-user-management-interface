@@ -10,7 +10,7 @@ var GroupsContainer = React.createClass({
 	},
 	componentWillMount: function() {
 		this.loadGroupsFromServer();
-		//setInterval(this.loadGroupsFromServer, 20000);
+		setInterval(this.loadGroupsFromServer, 15000);
 	},
 	loadGroupsFromServer: function() {
 		jQuery.ajax({

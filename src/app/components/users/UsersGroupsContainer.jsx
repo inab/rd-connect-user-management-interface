@@ -12,6 +12,7 @@ var UsersGroupsContainer = React.createClass({
 	},
 	componentWillMount: function() {
 		this.loadUsersFromServer();
+		setInterval(this.loadUsersFromServer, 15000);
 	},
 	loadUsersFromServer: function() {
 		jQuery.ajax({

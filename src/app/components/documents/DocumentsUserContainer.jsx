@@ -19,7 +19,7 @@ var DocumentsUserContainer = React.createClass({
 	},
 	componentWillMount: function() {
 		this.loadUserDocumentsInfoFromServer();
-		//setInterval(this.loadUsersFromServer, 20000);
+		setInterval(this.loadUserDocumentsInfoFromServer, 15000);
 		console.log('This state contains data for user: ', this.state.data);
 	},
 	loadUserDocumentsInfoFromServer: function() {

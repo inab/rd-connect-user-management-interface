@@ -11,7 +11,7 @@ var OrganizationalUnitsContainer = React.createClass({
 	},
 	componentWillMount: function() {
 		this.loadUsersFromServer();
-		//setInterval(this.loadOrganizationalUnitsFromServer, 20000);
+		setInterval(this.loadOrganizationalUnitsFromServer, 15000);
 	},
 	loadOrganizationalUnitsFromServer: function() {
 		jQuery.ajax({

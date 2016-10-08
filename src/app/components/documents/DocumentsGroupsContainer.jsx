@@ -13,7 +13,7 @@ var DocumentsGroupsContainer = React.createClass({
 	},
 	componentWillMount: function() {
 		this.loadGroupsFromServer();
-		//setInterval(this.loadUsersFromServer, 20000);
+		setInterval(this.loadGroupsFromServer, 15000);
 	},
 	loadGroupsFromServer: function() {
 		jQuery.ajax({

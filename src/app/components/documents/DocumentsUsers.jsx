@@ -36,7 +36,7 @@ const DocumentsUsers = ({data}) => {
                       </thead>
                       <tbody>
                     {ou.map(function(user,j){
-                      console.log(user);
+                      //console.log(user);
                       var isChecked = user.enabled;
                       var urlParams = { data: user };
                       var userGroups = user.groups !== undefined ? user.groups : [];

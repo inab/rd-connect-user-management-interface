@@ -60,8 +60,6 @@ const DocumentsGroups = ({data}) => {
                     </tbody>
             </Table>
           </Panel>
-                );
-              })}
         </Col>
       </Row>
     </div>

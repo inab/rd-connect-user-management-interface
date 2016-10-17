@@ -27,9 +27,13 @@ var UserEditFormContainer = React.createClass({
 			task: null
 		};
 	},
-	componentWillMount: function() {
+	componentDidMount: function() {
 		this.setState({task: this.props.route.task});
 		this.loadUserData();
+	},
+	componentWillUnmount: function(){
+		this.serverDataRequest.abort();
+		this.serverSchemaRequest.abort();
 	},
 	close(){
 		this.setState({showModal: false});
@@ -38,7 +42,7 @@ var UserEditFormContainer = React.createClass({
 		this.setState({showModal: true});
 	},
 	loadUserSchema: function() {
-		jQuery.ajax({
+		this.serverSchemaRequest = jQuery.ajax({
 			url: config.usersBaseUri + '?schema',
 			type: 'GET',
 			dataType: 'json',
@@ -68,7 +72,7 @@ var UserEditFormContainer = React.createClass({
 		}.bind(this));
 	},
 	loadUserData: function() {
-		jQuery.ajax({
+		this.serverDataRequest = jQuery.ajax({
 			url: config.usersBaseUri + '/' + encodeURIComponent(this.props.params.username),
 			type: 'GET',
 			cache: false,

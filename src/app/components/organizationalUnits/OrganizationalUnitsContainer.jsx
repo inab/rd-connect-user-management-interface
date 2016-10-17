@@ -11,10 +11,14 @@ var OrganizationalUnitsContainer = React.createClass({
 	},
 	componentWillMount: function() {
 		this.loadUsersFromServer();
-		setInterval(this.loadOrganizationalUnitsFromServer, 15000);
+		this.loadUsersInterval = setInterval(this.loadOrganizationalUnitsFromServer, 15000);
+	},
+	componentWillUnmount: function(){
+		clearInterval(this.loadUsersInterval);
+		this.serverRequest.abort();
 	},
 	loadOrganizationalUnitsFromServer: function() {
-		jQuery.ajax({
+		this.serverRequest = jQuery.ajax({
 			url: config.ouBaseUri,
 			dataType: 'json',
 			cache: false,

@@ -11,24 +11,28 @@ var UsersContainer = React.createClass({
 		};
 
 	},
-	componentWillMount: function() {
+	componentDidMount: function() {
 		this.loadUsersFromServer();
-		setInterval(this.loadUsersFromServer, 15000);
+		this.loadUsersInterval = setInterval(this.loadUsersFromServer, 15000);
+	},
+	componentWillUnmount: function(){
+		clearInterval(this.loadUsersInterval);
+		this.serverRequest.abort();
 	},
 	loadUsersFromServer: function() {
-		jQuery.ajax({
+		this.serverRequest = jQuery.ajax({
 			url: config.usersBaseUri,
 			dataType: 'json',
 			cache: false,
-			success: function(data) {
-				this.setState({data: data});
-			}.bind(this),
-			error: function(xhr, status, err) {
-				//console.error("json/users.json", status, err);
-				console.error(xhr.status);
-				this.setState({error: xhr.status + ' (Retrieving users)'});
-			}.bind(this)
-		});
+		})
+		.done(function(data) {
+			this.setState({data: data});
+		}.bind(this))
+		.fail(function(xhr, status, err) {
+			//console.error("json/users.json", status, err);
+			console.error(xhr.status);
+			this.setState({error: xhr.status + ' (Retrieving users)'});
+		}.bind(this));
 	},
 	render: function() {
 		if (this.state.error) {

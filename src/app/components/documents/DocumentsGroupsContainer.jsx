@@ -13,10 +13,14 @@ var DocumentsGroupsContainer = React.createClass({
 	},
 	componentWillMount: function() {
 		this.loadGroupsFromServer();
-		setInterval(this.loadGroupsFromServer, 15000);
+		this.loadGroupsInterval = setInterval(this.loadGroupsFromServer, 15000);
+	},
+	componentWillUnmount: function(){
+		clearInterval(this.loadGroupsInterval);
+		this.serverRequest.abort();
 	},
 	loadGroupsFromServer: function() {
-		jQuery.ajax({
+		this.serverRequest = jQuery.ajax({
 			url: config.groupsBaseUri,
 			dataType: 'json',
 			cache: false,

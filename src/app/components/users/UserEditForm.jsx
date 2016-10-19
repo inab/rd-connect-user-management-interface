@@ -28,16 +28,21 @@ var UserEditForm = React.createClass({
 		data: React.PropTypes.object.isRequired
 	},
 	getInitialState: function() {
-		return { error: null, showModal: false, files: [], picture : null};
+		return { modalTitle: null, error: null, showModal: false, files: [], picture : null};
 	},
 	componentWillMount: function() {
 		this.setState({picture: this.props.data.picture});
 	},
 	close(){
-		this.setState({showModal: false});
+		if (this.state.modalTitle === 'Error'){
+			this.setState({showModal: false});
+		} else {
+			this.setState({showModal: false});
+			hashHistory.goBack();
+		}
 	},
 	open(){
-		this.setState({showModal: true});
+		this.setState({showModal: true, modalTitle: this.state.modalTitle});
 	},
 	dropHandler: function (files) {
 		//console.log('Received files: ', files);
@@ -85,7 +90,7 @@ var UserEditForm = React.createClass({
 				}.bind(this));
 				*/
 			} else {
-				this.setState({error: error, showModal: true});
+				this.setState({modalTitle: 'Error', error: error, showModal: true});
 			}
         });
     },
@@ -117,7 +122,7 @@ var UserEditForm = React.createClass({
 				})
 				.done(function(data) {
 					console.log('User modified correctly!!');
-					hashHistory.goBack();
+					this.setState({ modalTitle: 'Success', error: 'User modified correctly!!', showModal: true});
 				})
 				.fail(function(jqXhr) {
 					console.log('Failed to Update User Information',jqXhr.responseText);
@@ -137,7 +142,7 @@ var UserEditForm = React.createClass({
 					} else {
 						responseText = 'Uncaught Error: ' + jqXhr.responseText;
 					}
-					this.setState({error: responseText, showModal: true});
+					this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
 				}.bind(this))
 				.always(() => {
 				});
@@ -153,8 +158,9 @@ var UserEditForm = React.createClass({
 				})
 				.done(function(data) {
 					console.log('User modified correctly!!');
-					hashHistory.goBack();
-				})
+					this.setState({modalTitle:'Success', error: 'User modified correctly!!', showModal: true});
+					
+				}.bind(this))
 				.fail(function(jqXhr) {
 					console.log('Failed to Update User Information',jqXhr.responseText);
 					var responseText = '';
@@ -173,7 +179,7 @@ var UserEditForm = React.createClass({
 					} else {
 						responseText = 'Uncaught Error: ' + jqXhr.responseText;
 					}
-					this.setState({error: responseText, showModal: true});
+					this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
 				}.bind(this))
 				.always(() => {
 				});
@@ -258,7 +264,7 @@ var UserEditForm = React.createClass({
 			<div>
 				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
 					<Modal.Header closeButton>
-						<Modal.Title>Error!</Modal.Title>
+						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<h4>{this.state.error}</h4>

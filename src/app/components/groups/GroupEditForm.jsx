@@ -26,6 +26,7 @@ var GroupEditForm = React.createClass({
 	},
 	getInitialState: function() {
 		return {
+			modalTitle: null,
 			error: null,
 			showModal: false,
 			schema: null,
@@ -45,10 +46,15 @@ var GroupEditForm = React.createClass({
 		});
 	},
 	close(){
-		this.setState({showModal: false});
+		if (this.state.modalTitle === 'Error'){
+			this.setState({showModal: false});
+		} else {
+			this.setState({showModal: false});
+			hashHistory.goBack();
+		}
 	},
 	open(){
-		this.setState({showModal: true});
+		this.setState({showModal: true, modalTitle: this.state.modalTitle});
 	},
 	modifyGroupFeatures:function(formData){
 		jQuery.ajax({
@@ -60,9 +66,9 @@ var GroupEditForm = React.createClass({
 		})
 		.done(function(data) {
 			//This is a two ajax call process. Once the members are deleted, we call to add the members in formData.members
-			hashHistory.goBack();
+			this.setState({ modalTitle: 'Success', error: 'Group modified correctly!!', showModal: true});
 
-		})
+		}.bind(this))
 		.fail(function(jqXhr) {
 			console.log('Failed modifying group features. ',jqXhr);
 			var responseText = '';
@@ -81,7 +87,7 @@ var GroupEditForm = React.createClass({
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
 			}
-			this.setState({error: responseText, showModal: true});
+			this.setState({modaTitle: 'Error', error: responseText, showModal: true});
 		}.bind(this));
 	},
 	deleteOwners: function(formData, ownersToDelete){
@@ -113,7 +119,7 @@ var GroupEditForm = React.createClass({
 				} else {
 					responseText = 'Uncaught Error: ' + jqXhr.responseText;
 				}
-				this.setState({error: responseText, showModal: true});
+				this.setState({modalTitle: 'Error', error: responseText, showModal: true});
 			}.bind(this));
 	},
 	addOwnersToGroup:function(formData){
@@ -159,7 +165,7 @@ var GroupEditForm = React.createClass({
 				} else {
 					responseText = 'Uncaught Error: ' + jqXhr.responseText;
 				}
-				this.setState({error: responseText, showModal: true});
+				this.setState({modalTitle: 'Error', error: responseText, showModal: true});
 			}.bind(this));
 		} else if (ownersToDelete.length > 0) {
 			this.deleteOwners(formData, ownersToDelete);
@@ -200,7 +206,7 @@ var GroupEditForm = React.createClass({
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
 			}
-			this.setState({error: responseText, showModal: true});
+			this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
 		}.bind(this));
 	},
 	updateGroupData: function({formData}){
@@ -250,7 +256,7 @@ var GroupEditForm = React.createClass({
 				} else {
 					responseText = 'Uncaught Error: ' + jqXhr.responseText;
 				}
-				this.setState({error: responseText, showModal: true});
+				this.setState({modalTitle: 'Error', error: responseText, showModal: true});
 			}.bind(this));
 		} else if(membersToAdd.length > 0) {
 			this.addMembersToGroup(groupData, membersToAdd);
@@ -344,9 +350,9 @@ var GroupEditForm = React.createClass({
 		
 		return (
 			<div>
-				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+				<Modal show={this.state.showModal} onHide={this.close}>
 					<Modal.Header closeButton>
-						<Modal.Title>Error!</Modal.Title>
+						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<h4>{this.state.error}</h4>

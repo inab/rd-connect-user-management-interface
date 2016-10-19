@@ -10,7 +10,7 @@ import config from 'config.jsx';
 
 var OrganizationalUnitFormContainer = React.createClass({
 	propTypes:{
-		route: React.PropTypes.array,
+		route: React.PropTypes.object,
 		params: React.PropTypes.object
 	},
 	//mixins: [ History ], //This is to browse history back when organizational unit is not found after showing modal error

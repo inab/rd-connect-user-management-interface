@@ -41,6 +41,7 @@ var GroupNewForm = React.createClass({
 			type: 'PUT',
 			url: config.groupsBaseUri,
 			headers: auth.getAuthHeaders(),
+			dataType: 'json',
 			contentType: 'application/json',
 			data: JSON.stringify(groupData)
 		})
@@ -71,6 +72,7 @@ var GroupNewForm = React.createClass({
 	},
 	render: function() {
 		var schema = this.props.schema;
+		console.log("Schema: ", schema);
 		delete schema.title;
 		console.log(schema);
 		const formData = undefined;

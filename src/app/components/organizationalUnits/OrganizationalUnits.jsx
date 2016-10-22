@@ -5,25 +5,30 @@ import { Link } from 'react-router';
 var imageNotFoundSrc = require('../users/defaultNoImageFound.js');
 
 const OrganizationalUnits = ({data, organizationalUnits}) => {
-    console.log('Users grouped by OU and sorted so far is: ', data);//Users grouped by OU and sorted
-    console.log('organizationalUnits so far is: ', organizationalUnits);//Array of OU(objects)
-    //var ouImage = this.props.data.picture;
-		//if (typeof userImage === 'undefined'){
-		//	userImage = imageNotFoundSrc.src;
-		//}
+    var dataUsers= Object.assign({},data);
+    //console.log('dataUsers ', dataUsers);
+    //console.log('organizationalUnits contains: ', organizationalUnits);//Array of OU(objects)
+    //We create an structure to search for organizationalUnit info doing something like lookup[organizationalUnitName]
+    var lookup = {};
+    for (var i = 0, len = organizationalUnits.length; i < len; i++) {
+        lookup[organizationalUnits[i].organizationalUnit] = organizationalUnits[i];
+    }
+    //console.log('lookup object: ', lookup);
     return (
       <div>
-        <h3> List of Organizational Units </h3>
+        <h3> List of Organizational Units</h3>
         <Accordion>
-          {data.map(function(ou,i){
-              console.log('ou contains', ou);
-              var organizationalUnit = ou[0].organizationalUnit;
-              var organizationalUnitObject = organizationalUnits[i];
-              var ouImage = organizationalUnitObject.picture;
-              console.log('organizationalUnit contains', organizationalUnit);
-              console.log('organizationalUnitObject contains', organizationalUnitObject);
-            return (
-              <Panel header={organizationalUnit} key={i} eventKey={i}>
+        {Object.keys(organizationalUnits).map(function(key, i) {
+            var objOrganizationalUnit = organizationalUnits[key];
+            var organizationalUnitName = objOrganizationalUnit.organizationalUnit;
+            var listOfUsers = Object.assign( [], dataUsers[organizationalUnitName]);
+            //console.log('listOfUsers: ', listOfUsers);
+            var picture = objOrganizationalUnit.picture;
+
+             if(objOrganizationalUnit.links !== undefined) var links = objOrganizationalUnit.links;
+             else links = [];
+             return (
+              <Panel header={objOrganizationalUnit.organizationalUnit} key={i} eventKey={i}>
                 <Table responsive striped bordered condensed hover className="table-list">
                   <thead>
                     <tr>
@@ -36,22 +41,32 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                   </thead>
                   <tbody>
                       <tr>
-                        <td>{organizationalUnitObject.organizationalUnit}</td>
-                        <td>{organizationalUnitObject.description}</td>
-                        <td><img src={ouImage} width="100" alt="image_organizationalUnit" /></td>
-                        <td>Links</td>
+                        <td>{objOrganizationalUnit.organizationalUnit}</td>
+                        <td>{objOrganizationalUnit.description}</td>
+                        <td><img src={picture} width="100" alt="image_organizationalUnit" /></td>
                         <td>
-                          <Link className="btn btn-primary editViewButton" role="button" to={'/organizationalUnits/edit/' + encodeURIComponent(`${organizationalUnitObject.organizationalUnit}`)}>
+                          <ul className="user-ul">
+                              {
+                                links.map(function(objLink, k){
+                                  return (
+                                    <li key={k}><a href={objLink.uri} target="_blank">{objLink.uri}</a></li>
+                                  );
+                                })
+                              }
+                            </ul>
+                        </td>
+                        <td style={{textAlign:'center'}}>
+                          <Link className="btn btn-primary editViewButton" role="button" to={'/organizationalUnits/edit/' + encodeURIComponent(`${objOrganizationalUnit.organizationalUnit}`)}>
                             Edit
                           </Link>
                       </td>
                       </tr>
                     </tbody>
                   </Table>
-                  <h4>Users inside {organizationalUnit} OU:</h4>
+                  <h4>Users inside {objOrganizationalUnit.organizationalUnit} OU:</h4>
                   <Table responsive striped bordered condensed hover>
                     <thead>
-                      <tr>
+                        <tr>
                         <th>#</th>
                         <th>User Name</th>
                         <th>Common Name</th>
@@ -59,30 +74,29 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                         <th>Enabled</th>
                         <th>Email</th>
                         <th>Edit user's info</th>
-                      </tr>
+                        </tr>
                     </thead>
                     <tbody>
-                    {ou.map(function(user,j){
-                      var isChecked = user.enabled;
-                      return (
-                        <tr key={j}>
-                          <td>{j + 1}</td>
-                          <td>{user.username}</td>
-                          <td>{user.cn}</td>
-                          <td>{user.userCategory}</td>
-                          <td><Checkbox checked={isChecked} readOnly /></td>
-                          <td>{user.email}</td>
-                          <td>
-                            <Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>Edit</Link>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                      {listOfUsers.map(function(user,j){
+                        var isChecked = user.enabled;
+                        return (
+                          <tr key={j}>
+                              <td>{j + 1}</td>
+                              <td>{user.username}</td>
+                              <td>{user.cn}</td>
+                              <td>{user.userCategory}</td>
+                              <td><Checkbox checked={isChecked} readOnly /></td>
+                              <td>{user.email}</td>
+                              <td style={{textAlign:'center'}}>
+                              <Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>Edit</Link>
+                              </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
-                  </Table>
+                    </Table>
                 </Panel>
-              );
-          })}
+             )})}
         </Accordion>
       </div>
     );

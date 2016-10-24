@@ -29,7 +29,7 @@ var UserNewForm = React.createClass({
 		users: React.PropTypes.array.isRequired
 	},
 	getInitialState: function() {
-		return { error: null, showModal: false, files: [], picture : null, in: false};
+		return { modalTitle: null, error: null, showModal: false, files: [], picture : null, in: false};
 	},
 	componentWillMount: function() {
 		this.setState({picture: this.props.data.picture, schema: this.props.schema, data: this.props.data, users: this.props.users});
@@ -66,10 +66,15 @@ var UserNewForm = React.createClass({
 		return errors;
 	},
 	close(){
-		this.setState({showModal: false});
+		if (this.state.modalTitle === 'Error'){
+			this.setState({showModal: false});
+		} else {
+			this.setState({showModal: false});
+			hashHistory.goBack();
+		}
 	},
 	open(){
-		this.setState({showModal: true});
+		this.setState({showModal: true, modalTitle: this.state.modalTitle});
 	},
 	toggle(){
       this.setState({ in: !this.state.in });
@@ -113,11 +118,11 @@ var UserNewForm = React.createClass({
 						else if (err) {
 							responseText = 'Ajax generic error';
 						}
-						this.setState({error: responseText, showModal: true});
+						this.setState({modalTitle: 'Error', error: responseText, showModal: true});
 					}
 				}.bind(this));
 			} else {
-				this.setState({error: error, showModal: true});
+				this.setState({modalTitle: 'Error', error: error, showModal: true});
 			}
         });
     },
@@ -146,8 +151,8 @@ var UserNewForm = React.createClass({
 				data: JSON.stringify(userData)
 			})
 			.done(function(data) {
-				hashHistory.goBack();
-			})
+				this.setState({ modalTitle: 'Success', error: 'Group created correctly!!', showModal: true});
+			}.bind(this))
 			.fail(function(jqXhr) {
 				console.log('Failed to Create New User',jqXhr);
 				if (jqXhr.status === 0) {
@@ -165,7 +170,7 @@ var UserNewForm = React.createClass({
 				} else {
 					responseText = 'Uncaught Error: ' + jqXhr.responseText;
 				}
-				this.setState({error: responseText, showModal: true});
+				this.setState({modaTitle: 'Error', error: responseText, showModal: true});
 			}.bind(this));
 		}.bind(this);
 	},
@@ -243,7 +248,7 @@ var UserNewForm = React.createClass({
 			<div>
 				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
 					<Modal.Header closeButton>
-						<Modal.Title>Error!</Modal.Title>
+						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<h4>{this.state.error}</h4>

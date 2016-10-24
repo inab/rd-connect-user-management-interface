@@ -35,16 +35,21 @@ var OrganizationalUnitNewForm = React.createClass({
 		schema: React.PropTypes.object.isRequired
 	},
 	getInitialState: function() {
-		return { error: null, showModal:false, files: [], picture : null, in: false};
+		return { modalTitle: null, error: null, showModal:false, files: [], picture : null, in: false};
 	},
 	componentWillMount: function() {
-		this.setState({picture: imageNotFoundSrc});
+		this.setState({picture: imageNotFoundSrc, schema: this.props.schema});
 	},
 	close(){
-		this.setState({showModal: false});
+		if (this.state.modalTitle === 'Error'){
+			this.setState({showModal: false});
+		} else {
+			this.setState({showModal: false});
+			hashHistory.goBack();
+		}
 	},
 	open(){
-		this.setState({showModal: true});
+		this.setState({showModal: true, modalTitle: this.state.modalTitle});
 	},
 	toggle(){
       this.setState({ in: !this.state.in });
@@ -89,11 +94,11 @@ var OrganizationalUnitNewForm = React.createClass({
 						else if (err) {
 							responseText = 'Ajax generic error';
 						}
-						this.setState({error: responseText, showModal: true});
+						this.setState({modalTitle: 'Error', error: responseText, showModal: true});
 					}
 				}.bind(this));
 			} else {
-				this.setState({error: error, showModal: true});
+				this.setState({modalTitle: 'Error', error: error, showModal: true});
 			}
         });
     },
@@ -114,9 +119,8 @@ var OrganizationalUnitNewForm = React.createClass({
 			data: JSON.stringify(organizationalUnitData)
 		})
 		.done(function(data) {
-			self.clearForm();
-			this.setState({in: true});
-		})
+			this.setState({ modalTitle: 'Success', error: 'Organizational Unit created correctly!!', showModal: true});
+		}.bind(this))
 		.fail(function(jqXhr) {
 			console.log('Failed to Update Organizational Unit Information',jqXhr);
 			var responseText = '';
@@ -135,7 +139,7 @@ var OrganizationalUnitNewForm = React.createClass({
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
 			}
-			this.setState({error: responseText, showModal: true});
+			this.setState({modaTitle: 'Error', error: responseText, showModal: true});
 		}.bind(this));
 	},
 	render: function() {
@@ -161,7 +165,7 @@ var OrganizationalUnitNewForm = React.createClass({
 			<div>
 				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
 					<Modal.Header>
-						<Modal.Title>Error!</Modal.Title>
+						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 					</Modal.Header>
 					<Modal.Body>
 						<h4>{this.state.error}</h4>

@@ -16,13 +16,21 @@ var GroupNewForm = React.createClass({
 		schema: React.PropTypes.object.isRequired
 	},
 	getInitialState: function() {
-		return { error: null, showModal: false, in: false};
+		return { modalTitle: null, error: null, showModal: false, in: false};
+	},
+	componentWillMount: function() {
+		this.setState({ schema: this.props.schema});
 	},
 	close(){
-		this.setState({showModal: false});
+		if (this.state.modalTitle === 'Error'){
+			this.setState({showModal: false});
+		} else {
+			this.setState({showModal: false});
+			hashHistory.goBack();
+		}
 	},
 	open(){
-		this.setState({showModal: true});
+		this.setState({showModal: true, modalTitle: this.state.modalTitle});
 	},
 	toggle(){
       this.setState({ in: !this.state.in });
@@ -46,9 +54,8 @@ var GroupNewForm = React.createClass({
 			data: JSON.stringify(groupData)
 		})
 		.done(function(data) {
-			self.clearForm();
-			this.setState({in: true});
-		})
+			this.setState({ modalTitle: 'Success', error: 'Group created correctly!!', showModal: true});
+		}.bind(this))
 		.fail(function(jqXhr) {
 			console.log('Failed to add new group',jqXhr);
 			var responseText = '';
@@ -67,12 +74,12 @@ var GroupNewForm = React.createClass({
 			} else {
 				responseText = 'Failed to add new group. Uncaught Error: ' + jqXhr.responseText;
 			}
-			this.setState({error: responseText, showModal: true});
+			this.setState({modaTitle: 'Error', error: responseText, showModal: true});
 		}.bind(this));
 	},
 	render: function() {
-		var schema = this.props.schema;
-		console.log("Schema: ", schema);
+		var schema = this.state.schema;
+		console.log('Schema: ', schema);
 		delete schema.title;
 		console.log(schema);
 		const formData = undefined;
@@ -87,9 +94,9 @@ var GroupNewForm = React.createClass({
 		console.log('Show: ', this.state.showModal);
 		return (
 			<div>
-				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+				<Modal show={this.state.showModal} onHide={this.close}>
 					<Modal.Header closeButton>
-						<Modal.Title>Error!</Modal.Title>
+						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 						</Modal.Header>
 					<Modal.Body>
 						<h4>{this.state.error}</h4>

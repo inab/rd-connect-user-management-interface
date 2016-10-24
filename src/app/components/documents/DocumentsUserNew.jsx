@@ -3,7 +3,7 @@ import { Modal, Collapse, ListGroup, ListGroupItem, Button } from 'react-bootstr
 import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
 import jQuery from 'jquery';
-
+import { hashHistory } from 'react-router';
 const { Select, File, Textarea } = FRC;
 
 import config from 'config.jsx';
@@ -24,6 +24,7 @@ const DocumentsUserNew = React.createClass({
       return {
         canSubmit: false,
         username: this.props.params.username,
+        modalTitle: null,
         error: null,
         showModal:false,
         in: false,
@@ -47,10 +48,15 @@ const DocumentsUserNew = React.createClass({
       });
     },
     close(){
-      this.setState({showModal: false});
+      if (this.state.modalTitle === 'Error'){
+        this.setState({showModal: false});
+      } else {
+        this.setState({showModal: false});
+        hashHistory.goBack();
+      }
     },
     open(){
-      this.setState({showModal: true});
+      this.setState({showModal: true, modalTitle: this.state.modalTitle});
     },
     toggle(){
       this.setState({ in: !this.state.in });
@@ -163,11 +169,8 @@ const DocumentsUserNew = React.createClass({
         data: documentGroupFormData
       })
       .done(function(data) {
-        //self.clearForm();
-        this.resetForm();
-        this.setState({in: true});
-        //this.setState({ in: !this.state.in });
-      })
+        this.setState({ modalTitle: 'Success', error: 'User\'s document created correctly!!', showModal: true});
+      }.bind(this))
       .fail(function(jqXhr) {
         console.log('Failed to Create new group\'s document',jqXhr);
         var responseText = '';
@@ -186,7 +189,7 @@ const DocumentsUserNew = React.createClass({
         } else {
           responseText = 'Uncaught Error: ' + jqXhr.responseText;
         }
-        this.setState({error: responseText, showModal: true});
+        this.setState({modaTitle: 'Error', error: responseText, showModal: true});
       }.bind(this));
     },
     render() {
@@ -205,7 +208,7 @@ const DocumentsUserNew = React.createClass({
         <div>
           <Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
             <Modal.Header>
-              <Modal.Title>Error!</Modal.Title>
+              <Modal.Title>{this.state.modalTitle}</Modal.Title>
               </Modal.Header>
             <Modal.Body>
               <h4>{this.state.error}</h4>

@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 var imageNotFoundSrc = require('../users/defaultNoImageFound.js');
 
 const OrganizationalUnits = ({data, organizationalUnits}) => {
-    var dataUsers= Object.assign({},data);
+    var dataUsers = Object.assign({},data);
     //console.log('dataUsers ', dataUsers);
     //console.log('organizationalUnits contains: ', organizationalUnits);//Array of OU(objects)
     //We create an structure to search for organizationalUnit info doing something like lookup[organizationalUnitName]
@@ -16,7 +16,9 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
     //console.log('lookup object: ', lookup);
     return (
       <div>
-        <h3> List of Organizational Units</h3>
+        <h3 style={{float:'left'}}> List of Organizational Units</h3>
+        <div className="right"><Link className="btn btn-primary" role="button" to={'/organizationalUnits/new/'}>Add New Organization</Link></div>
+        <div className="clear-both" />
         <Accordion>
         {Object.keys(organizationalUnits).map(function(key, i) {
             var objOrganizationalUnit = organizationalUnits[key];

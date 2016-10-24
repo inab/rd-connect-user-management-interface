@@ -16,9 +16,12 @@ const Users = ({data}) => {
 
   return (
      <div>
-      <h3> List of Users </h3>
+      <h3 style={{float:'left'}}> List of Users</h3>
+      <div className="right">
+        <Link className="btn btn-primary" role="button" to={'/users/new/'}>Add New User</Link>
+      </div>
+      <div className="clear-both" />
       <Row className="show-grid">
-        <Col xs={12} md={10} >
               {groupedData.map(function(ou,i){
                 var organizationalUnit = ou[0].organizationalUnit;
                 return (
@@ -77,7 +80,6 @@ const Users = ({data}) => {
             </Panel>
             );
           })}
-        </Col>
       </Row>
     </div>
   );

@@ -13,9 +13,12 @@ const Groups = ({data}) => {
   //console.log('sortedData so far is: ', sortedData);
   return (
     <div>
-      <h3> List of Groups </h3>
+      <h3 style={{float:'left'}}> List of Groups </h3>
+      <div className="right">
+        <Link className="btn btn-primary" role="button" to={'/groups/new/'}>Add New Group</Link>
+      </div>
+      <div className="clear-both" />
       <Row className="show-grid">
-        <Col xs={12} md={10} >
               {sortedData.map(function(group,i){
                 var listOwners = group.owner.sort();
                 var groupMembers = group.members.sort();
@@ -65,7 +68,6 @@ const Groups = ({data}) => {
           </Panel>
                 );
               })}
-        </Col>
       </Row>
     </div>
   );

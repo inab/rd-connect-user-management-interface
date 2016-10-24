@@ -34,8 +34,6 @@ var Navigation = React.createClass({
                     <NavDropdown id="NavDropdown-Groups" eventKey={4} title="Groups">
                         <LinkContainer to="/groups/list"><MenuItem eventKey={4.1}>List Groups</MenuItem></LinkContainer>
                         <LinkContainer to="/groups/new"><MenuItem eventKey={4.2}>New Group</MenuItem></LinkContainer>
-                        <MenuItem divider />
-                        <LinkContainer to="/groupAction5"><MenuItem eventKey={4.3}>Separated Groups link</MenuItem></LinkContainer>
                     </NavDropdown>
                     <NavDropdown id="NavDropdown-Documents" eventKey={5} title="Documents">
                             <LinkContainer to="/documents/users"><MenuItem eventKey={5.1}>Users</MenuItem></LinkContainer>

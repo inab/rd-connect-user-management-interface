@@ -32,7 +32,7 @@ var UserNewForm = React.createClass({
 		return { modalTitle: null, error: null, showModal: false, files: [], picture : null, in: false};
 	},
 	componentWillMount: function() {
-		this.setState({picture: this.props.data.picture, schema: this.props.schema, data: this.props.data, users: this.props.users});
+		this.setState({picture: imageNotFoundSrc, schema: this.props.schema, data: this.props.data, users: this.props.users});
 	},
 	userValidation(formData,errors) {
 		if (formData.userPassword !== formData.userPassword2) {
@@ -136,12 +136,12 @@ var UserNewForm = React.createClass({
 		console.log('El userData contiene: ',userData);
 		//var userExists = this.testIfUserExists(userData);
 		var responseText = '';
-		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
-		var reader = new window.FileReader();
-		reader.readAsDataURL(myBlob);
-		reader.onloadend = function() {
-			var stringBase64Image = reader.result;
-			userData.picture = stringBase64Image;
+		//var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
+		//var reader = new window.FileReader();
+		//reader.readAsDataURL(myBlob);
+		//reader.onloadend = function() {
+		//	var stringBase64Image = reader.result;
+		//	userData.picture = stringBase64Image;
 			jQuery.ajax({
 				type: 'PUT',
 				url: config.usersBaseUri,
@@ -151,7 +151,7 @@ var UserNewForm = React.createClass({
 				data: JSON.stringify(userData)
 			})
 			.done(function(data) {
-				this.setState({ modalTitle: 'Success', error: 'Group created correctly!!', showModal: true});
+				this.setState({ modalTitle: 'Success', error: 'User created correctly!!', showModal: true});
 			}.bind(this))
 			.fail(function(jqXhr) {
 				console.log('Failed to Create New User',jqXhr);
@@ -172,7 +172,7 @@ var UserNewForm = React.createClass({
 				}
 				this.setState({modaTitle: 'Error', error: responseText, showModal: true});
 			}.bind(this));
-		}.bind(this);
+		//}.bind(this);
 	},
 	render: function() {
 		const formData = {};
@@ -183,7 +183,11 @@ var UserNewForm = React.createClass({
 		delete schema.title;
 		//We remove picture from the schema since this will be managed by react-dropzone component
 		delete schema.properties.picture;
-
+		
+		var userImage = this.state.picture;
+		if (typeof userImage === 'undefined'){
+			userImage = imageNotFoundSrc;
+		}
 		//We generate the enums property for the Organizational Units extracting the info from data
 		var arrayOUobjects = this.state.data; var arrayOUstrings = [];
 		for (var i = 0; i < arrayOUobjects.length; i++) {
@@ -286,7 +290,7 @@ var UserNewForm = React.createClass({
 							<button type="button" onClick={this.onOpenClick} className="changeImageButton">
 								Add image
 							</button>
-							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
+							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} /*onDrop={this.dropHandler}*/ ref="dropzone" >
 								Click here or drop image
 							</Dropzone>
 							{this.state.files.length > 0 ? <div>

@@ -123,7 +123,7 @@ var UserEditForm = React.createClass({
 				.done(function(data) {
 					console.log('User modified correctly!!');
 					this.setState({ modalTitle: 'Success', error: 'User modified correctly!!', showModal: true});
-				})
+				}.bind(this))
 				.fail(function(jqXhr) {
 					console.log('Failed to Update User Information',jqXhr.responseText);
 					var responseText = '';
@@ -159,7 +159,7 @@ var UserEditForm = React.createClass({
 				.done(function(data) {
 					console.log('User modified correctly!!');
 					this.setState({modalTitle:'Success', error: 'User modified correctly!!', showModal: true});
-					
+
 				}.bind(this))
 				.fail(function(jqXhr) {
 					console.log('Failed to Update User Information',jqXhr.responseText);

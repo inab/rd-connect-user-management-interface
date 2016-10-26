@@ -1,6 +1,5 @@
 import React from 'react';
 import jQuery from 'jquery';
-import request from 'superagent';
 import Form from 'react-jsonschema-form';
 import { Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
@@ -11,17 +10,9 @@ import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
 function organizationalUnitValidation(formData,errors) {
-	if (this.formdata.picture){
-		var imageString = formData.picture;
-		var prefix = 'data:image/jpeg';
-		var prefix2 = 'data:image/png';
-
-		if ((imageString.startsWith(prefix)) === false && (imageString.startsWith(prefix2)) === false){
-			errors.picture.addError('Invalid image format');
-		}
-	}
-		return errors;
+	return errors;
 }
+
 function validateImageInput(image) {
 	var responseText = null;
 	if ((image.type !== 'image/jpeg') && (image.type !== 'image/png')) {
@@ -61,42 +52,11 @@ var OrganizationalUnitNewForm = React.createClass({
       }, 3000);
     },
 	dropHandler: function (files) {
-		//console.log('Received files: ', files);
-		var req = request.put(config.ouBaseUri + '/' + encodeURIComponent(ou_id) + '/picture').set(auth.getAuthHeaders());
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			if (!error){
-				req.attach(file.name, file);
-				req.end(function(err, res){
-					if (!err && res){
-						this.setState({files: files});
-						this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
-						//console.log("Picture in the state after validation: ", file.preview);
-					}
-					else {
-						var responseText = '';
-						//console.log("err in ajax request contains: ",err);
-						if (err && err.status === 404) {
-							responseText = 'Failed to Update User\'s image. Not found [404]';
-						}
-						else if (err && err.status === 500) {
-							responseText = 'Failed to Update User\'s image. Internal Server Error [500]';
-						}
-						else if (err && err.status === 'parsererror') {
-							responseText = 'Failed to Update User\'s image. Sent JSON parse failed';
-						}
-						else if (err && err.status === 'timeout') {
-							responseText = 'Failed to Update User\'s image. Time out error';
-						}
-						else if (err && err.status === 'abort') {
-							responseText = ('Ajax request aborted');
-						}
-						else if (err) {
-							responseText = 'Ajax generic error';
-						}
-						this.setState({modalTitle: 'Error', error: responseText, showModal: true});
-					}
-				}.bind(this));
+				this.setState({files: files});
+				this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
 			} else {
 				this.setState({modalTitle: 'Error', error: error, showModal: true});
 			}
@@ -110,37 +70,86 @@ var OrganizationalUnitNewForm = React.createClass({
 		//console.log(formData);
 		var organizationalUnitData = Object.assign({},formData);
 		//delete userData.userPassword2;
-		jQuery.ajax({
-			type: 'PUT',
-			url: config.ouBaseUri,
-			headers: auth.getAuthHeaders(),
-			dataType: 'json',
-			contentType: 'application/json',
-			data: JSON.stringify(organizationalUnitData)
-		})
-		.done(function(data) {
-			this.setState({ modalTitle: 'Success', error: 'Organizational Unit created correctly!!', showModal: true});
-		}.bind(this))
-		.fail(function(jqXhr) {
-			console.log('Failed to Update Organizational Unit Information',jqXhr);
-			var responseText = '';
-			if (jqXhr.status === 0) {
-				responseText = 'Failed to Update Organizational Unit Information. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
-				responseText = 'Failed to Update Organizational Unit Information. Not found [404]';
-			} else if (jqXhr.status === 500) {
-				responseText = 'Failed to Update Organizational Unit Information. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
-				responseText = 'Failed to Update Organizational Unit Information. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
-				responseText = 'Failed to Update Organizational Unit Information. Time out error.';
-			} else if (jqXhr.status === 'abort') {
-				responseText = 'Ajax request aborted.';
-			} else {
-				responseText = 'Uncaught Error: ' + jqXhr.responseText;
-			}
-			this.setState({modaTitle: 'Error', error: responseText, showModal: true});
-		}.bind(this));
+		var responseText = '';
+		//Before submitting the editted data we add the information for the picture:
+		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
+		var reader = new window.FileReader();
+		var insertImage = false;
+		if (typeof myBlob !== 'undefined'){
+			insertImage = true;
+			reader.readAsDataURL(myBlob);
+			reader.onloadend = function() {
+				var stringBase64Image = reader.result;
+				organizationalUnitData.picture = stringBase64Image;
+				jQuery.ajax({
+					type: 'PUT',
+					url: config.ouBaseUri,
+					headers: auth.getAuthHeaders(),
+					dataType: 'json',
+					contentType: 'application/json',
+					data: JSON.stringify(organizationalUnitData)
+				})
+				.done(function(data) {
+					this.setState({ modalTitle: 'Success', error: 'Organizational Unit created correctly!!', showModal: true});
+				}.bind(this))
+				.fail(function(jqXhr) {
+					console.log('Failed to Update Organizational Unit Information',jqXhr);
+					if (jqXhr.status === 0) {
+						responseText = 'Failed to Update Organizational Unit Information. Not connect: Verify Network.';
+					} else if (jqXhr.status === 404) {
+						responseText = 'Failed to Update Organizational Unit Information. Not found [404]';
+					} else if (jqXhr.status === 500) {
+						responseText = 'Failed to Update Organizational Unit Information. Internal Server Error [500].';
+					} else if (jqXhr.status === 'parsererror') {
+						responseText = 'Failed to Update Organizational Unit Information. Sent JSON parse failed.';
+					} else if (jqXhr.status === 'timeout') {
+						responseText = 'Failed to Update Organizational Unit Information. Time out error.';
+					} else if (jqXhr.status === 'abort') {
+						responseText = 'Ajax request aborted.';
+					} else {
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+					}
+					this.setState({modaTitle: 'Error', error: responseText, showModal: true});
+				}.bind(this));
+			}.bind(this);
+		} else {
+			var ouName = jQuery('input #root_organizationalUnit ').val();
+			insertImage = false;
+			jQuery.ajax({
+					type: 'PUT',
+					url: config.ouBaseUri + '/' + encodeURIComponent(ouName),
+					contentType: 'application/json',
+					headers: auth.getAuthHeaders(),
+					dataType: 'json',
+					data: JSON.stringify(organizationalUnitData)
+				})
+				.done(function(data) {
+					console.log('User created correctly!!');
+					this.setState({modalTitle:'Success', error: 'User created correctly!!', showModal: true});
+
+				}.bind(this))
+				.fail(function(jqXhr) {
+					console.log('Failed to create new user',jqXhr.responseText);
+					if (jqXhr.status === 0) {
+						responseText = 'Failed to create new user. Not connect: Verify Network.';
+					} else if (jqXhr.status === 404) {
+						responseText = 'Failed to create new user. Not found [404]';
+					} else if (jqXhr.status === 500) {
+						responseText = 'Failed to create new user. Internal Server Error [500].';
+					} else if (jqXhr.status === 'parsererror') {
+						responseText = 'Failed to create new user. Sent JSON parse failed.';
+					} else if (jqXhr.status === 'timeout') {
+						responseText = 'Failed to create new user. Time out error.';
+					} else if (jqXhr.status === 'abort') {
+						responseText = 'Ajax request aborted.';
+					} else {
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+					}
+					this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
+				}.bind(this))
+				.always(() => {
+				});
+		}
 	},
 	render: function() {
 		var schema = this.props.schema;
@@ -187,8 +196,9 @@ var OrganizationalUnitNewForm = React.createClass({
 							onChange={log('changed')}
 							onSubmit={onSubmit}
 							onError={onError}
-							//validate={organizationalUnitValidation}
-							liveValidate= {false}
+							validate={organizationalUnitValidation}
+							liveValidate
+							showErrorList={false}
 							>
 								<div className="button-submit">
 									<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
@@ -201,7 +211,7 @@ var OrganizationalUnitNewForm = React.createClass({
 							<button type="button" onClick={this.onOpenClick} className="changeImageButton">
 								Add image
 							</button>
-							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} /*onDrop={this.dropHandler}*/ ref="dropzone" >
+							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
 								Click here or drop image
 							</Dropzone>
 							{this.state.files.length > 0 ? <div>

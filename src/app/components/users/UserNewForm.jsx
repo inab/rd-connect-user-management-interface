@@ -86,41 +86,11 @@ var UserNewForm = React.createClass({
       }, 3000);
     },
 	dropHandler: function (files) {
-		console.log('Received files: ', files);
-		var req = request.put(config.usersBaseUri + '/' + encodeURIComponent(this.state.data.username) + '/picture').set(auth.getAuthHeaders());
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			if (!error){
-				req.attach(file.name, file);
-				req.end(function(err, res){
-					if (!err && res){
-						this.setState({files: files});
-						this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
-						//console.log("Picture in the state after validation: ", file.preview);
-					}
-					else {
-						var responseText = '';
-						if (err && err.status === 404) {
-							responseText = 'Failed to Update User\'s image. Not found [404]';
-						}
-						else if (err && err.status === 500) {
-							responseText = 'Failed to Update User\'s image. Internal Server Error [500]';
-						}
-						else if (err && err.status === 'parsererror') {
-							responseText = 'Failed to Update User\'s image. Sent JSON parse failed';
-						}
-						else if (err && err.status === 'timeout') {
-							responseText = 'Failed to Update User\'s image. Time out error';
-						}
-						else if (err && err.status === 'abort') {
-							responseText = ('Ajax request aborted');
-						}
-						else if (err) {
-							responseText = 'Ajax generic error';
-						}
-						this.setState({modalTitle: 'Error', error: responseText, showModal: true});
-					}
-				}.bind(this));
+				this.setState({files: files});
+				this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
 			} else {
 				this.setState({modalTitle: 'Error', error: error, showModal: true});
 			}
@@ -136,43 +106,85 @@ var UserNewForm = React.createClass({
 		console.log('El userData contiene: ',userData);
 		//var userExists = this.testIfUserExists(userData);
 		var responseText = '';
-		//var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
-		//var reader = new window.FileReader();
-		//reader.readAsDataURL(myBlob);
-		//reader.onloadend = function() {
-		//	var stringBase64Image = reader.result;
-		//	userData.picture = stringBase64Image;
+		//Before submitting the editted data we add the information for the picture:
+		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
+		var reader = new window.FileReader();
+		var insertImage = false;
+		if (typeof myBlob !== 'undefined'){
+			insertImage = true;
+			reader.readAsDataURL(myBlob);
+			reader.onloadend = function() {
+				var stringBase64Image = reader.result;
+				userData.picture = stringBase64Image;
+				jQuery.ajax({
+					type: 'PUT',
+					url: config.usersBaseUri,
+					headers: auth.getAuthHeaders(),
+					dataType: 'json',
+					contentType: 'application/json',
+					data: JSON.stringify(userData)
+				})
+				.done(function(data) {
+					this.setState({ modalTitle: 'Success', error: 'User created correctly!!', showModal: true});
+				}.bind(this))
+				.fail(function(jqXhr) {
+					console.log('Failed to Create New User',jqXhr);
+					if (jqXhr.status === 0) {
+						responseText = 'Failed to Create New User. Not connect: Verify Network.';
+					} else if (jqXhr.status === 404) {
+						responseText = 'Failed to Create New User. Not found [404]';
+					} else if (jqXhr.status === 500) {
+						responseText = 'Failed to Create New User. Internal Server Error [500].';
+					} else if (jqXhr.status === 'parsererror') {
+						responseText = 'Failed to Create New User. Sent JSON parse failed.';
+					} else if (jqXhr.status === 'timeout') {
+						responseText = 'Failed to Create New User. Time out error.';
+					} else if (jqXhr.status === 'abort') {
+						responseText = 'Ajax request aborted.';
+					} else {
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+					}
+					this.setState({modaTitle: 'Error', error: responseText, showModal: true});
+				}.bind(this));
+		}.bind(this);
+		} else {
+			var username = jQuery('input #root_username ').val();
 			jQuery.ajax({
-				type: 'PUT',
-				url: config.usersBaseUri,
-				headers: auth.getAuthHeaders(),
-				dataType: 'json',
-				contentType: 'application/json',
-				data: JSON.stringify(userData)
-			})
-			.done(function(data) {
-				this.setState({ modalTitle: 'Success', error: 'User created correctly!!', showModal: true});
-			}.bind(this))
-			.fail(function(jqXhr) {
-				console.log('Failed to Create New User',jqXhr);
-				if (jqXhr.status === 0) {
-					responseText = 'Failed to Create New User. Not connect: Verify Network.';
-				} else if (jqXhr.status === 404) {
-					responseText = 'Failed to Create New User. Not found [404]';
-				} else if (jqXhr.status === 500) {
-					responseText = 'Failed to Create New User. Internal Server Error [500].';
-				} else if (jqXhr.status === 'parsererror') {
-					responseText = 'Failed to Create New User. Sent JSON parse failed.';
-				} else if (jqXhr.status === 'timeout') {
-					responseText = 'Failed to Create New User. Time out error.';
-				} else if (jqXhr.status === 'abort') {
-					responseText = 'Ajax request aborted.';
-				} else {
-					responseText = 'Uncaught Error: ' + jqXhr.responseText;
-				}
-				this.setState({modaTitle: 'Error', error: responseText, showModal: true});
-			}.bind(this));
-		//}.bind(this);
+					type: 'PUT',
+					url: config.usersBaseUri + '/' + encodeURIComponent(username),
+					contentType: 'application/json',
+					headers: auth.getAuthHeaders(),
+					dataType: 'json',
+					data: JSON.stringify(userData)
+				})
+				.done(function(data) {
+					console.log('User created correctly!!');
+					this.setState({modalTitle:'Success', error: 'User created correctly!!', showModal: true});
+
+				}.bind(this))
+				.fail(function(jqXhr) {
+					console.log('Failed to create new user',jqXhr.responseText);
+					var responseText = '';
+					if (jqXhr.status === 0) {
+						responseText = 'Failed to create new user. Not connect: Verify Network.';
+					} else if (jqXhr.status === 404) {
+						responseText = 'Failed to create new user. Not found [404]';
+					} else if (jqXhr.status === 500) {
+						responseText = 'Failed to create new user. Internal Server Error [500].';
+					} else if (jqXhr.status === 'parsererror') {
+						responseText = 'Failed to create new user. Sent JSON parse failed.';
+					} else if (jqXhr.status === 'timeout') {
+						responseText = 'Failed to create new user. Time out error.';
+					} else if (jqXhr.status === 'abort') {
+						responseText = 'Ajax request aborted.';
+					} else {
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+					}
+					this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
+				}.bind(this))
+				.always(() => {
+				});
+		}
 	},
 	render: function() {
 		const formData = {};
@@ -290,7 +302,7 @@ var UserNewForm = React.createClass({
 							<button type="button" onClick={this.onOpenClick} className="changeImageButton">
 								Add image
 							</button>
-							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} /*onDrop={this.dropHandler}*/ ref="dropzone" >
+							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
 								Click here or drop image
 							</Dropzone>
 							{this.state.files.length > 0 ? <div>

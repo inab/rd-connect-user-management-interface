@@ -117,7 +117,7 @@ var OrganizationalUnitNewForm = React.createClass({
 			insertImage = false;
 			jQuery.ajax({
 					type: 'PUT',
-					url: config.ouBaseUri + '/' + encodeURIComponent(ouName),
+					url: config.ouBaseUri,
 					contentType: 'application/json',
 					headers: auth.getAuthHeaders(),
 					dataType: 'json',

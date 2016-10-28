@@ -148,10 +148,10 @@ var UserNewForm = React.createClass({
 				}.bind(this));
 		}.bind(this);
 		} else {
-			var username = jQuery('input #root_username ').val();
+			var username = jQuery('#root_username').val();
 			jQuery.ajax({
 					type: 'PUT',
-					url: config.usersBaseUri + '/' + encodeURIComponent(username),
+					url: config.usersBaseUri,
 					contentType: 'application/json',
 					headers: auth.getAuthHeaders(),
 					dataType: 'json',

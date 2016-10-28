@@ -113,7 +113,6 @@ var OrganizationalUnitNewForm = React.createClass({
 				}.bind(this));
 			}.bind(this);
 		} else {
-			var ouName = jQuery('input #root_organizationalUnit ').val();
 			insertImage = false;
 			jQuery.ajax({
 					type: 'PUT',

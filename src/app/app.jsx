@@ -3,6 +3,8 @@ import { render } from 'react-dom';
 import { hashHistory, Router, Route, Link, withRouter, IndexRoute } from 'react-router';
 //import withExampleBasename from 'components/withExampleBasename.js';
 import { Modal, Button, Col } from 'react-bootstrap';
+import Raven from 'raven-js';
+import sentryConfig from './sentryConfig.js';
 
 import auth from 'components/auth.jsx';
 var Navigation = require('components/Navigation.jsx');
@@ -34,8 +36,19 @@ import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
 
 const {Form, Input } = FRC;
-
-
+var _APP_INFO = {
+  name: 'RD-Connect User Management Interface',
+  branch: 'Master',
+  version: '1.0'
+};
+var sentryURL = 'https://' + sentryConfig.sentryKey + '@sentry.io/' + sentryConfig.sentryApp;
+Raven.config(sentryURL, {
+  release: _APP_INFO.version,
+  tags: {
+    branch: _APP_INFO.branch,
+    whatever: 'we want'
+  }
+}).install();
 
 const App = React.createClass({
   getInitialState() {
@@ -237,7 +250,7 @@ const Login = withRouter(React.createClass({
               </Formsy.Form>
             </Modal.Body>
             <Modal.Footer className="login">
-              
+
             </Modal.Footer>
           </Modal>
           </div>

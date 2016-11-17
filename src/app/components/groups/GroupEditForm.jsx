@@ -292,9 +292,9 @@ var GroupEditForm = React.createClass({
 		console.log('this.state inside handleChangeSelected contains: ', this.state);
 	},
 	render: function() {
-		//console.log('Schema contains: ', this.state.schema);
+		console.log('Schema contains: ', this.state.schema);
 		//console.log('Users contains: ', this.state.users);
-		//console.log('Data contains: ', this.state.data);
+		console.log('Data contains: ', this.state.data);
 		//We need to be sure that the new user added to this group is an existing user
 		var newSchema = Object.create(this.state.schema);
 		newSchema.type = this.state.schema.type;
@@ -334,7 +334,8 @@ var GroupEditForm = React.createClass({
 		//return false;
 		var newData = Object.create(this.state.data);
 		newData.cn = this.state.data.cn;
-		newData.owner = this.state.data.owner; //Managed by React-select Multiselect component
+		newData.owner = this.state.data.owner;//Managed by React-select Multiselect component
+		newData.groupPurpose = this.state.data.groupPurpose;
 		//newData.members = this.props.data.members; //Managed by React-select Multiselect component
 		newData.description = this.state.data.description;
 

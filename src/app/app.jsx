@@ -4,7 +4,7 @@ import { hashHistory, Router, Route, Link, withRouter, IndexRoute } from 'react-
 //import withExampleBasename from 'components/withExampleBasename.js';
 import { Modal, Button, Col } from 'react-bootstrap';
 import Raven from 'raven-js';
-import sentryConfig from './sentryConfig.js';
+//import sentryConfig from './sentryConfig.js';
 
 import auth from 'components/auth.jsx';
 var Navigation = require('components/Navigation.jsx');
@@ -41,7 +41,7 @@ var _APP_INFO = {
   branch: 'Master',
   version: '1.0'
 };
-var sentryURL = 'https://' + sentryConfig.sentryKey + '@sentry.io/' + sentryConfig.sentryApp;
+/*var sentryURL = 'https://' + sentryConfig.sentryKey + '@sentry.io/' + sentryConfig.sentryApp;
 Raven.config(sentryURL, {
   release: _APP_INFO.version,
   tags: {
@@ -49,7 +49,7 @@ Raven.config(sentryURL, {
     whatever: 'we want'
   }
 }).install();
-
+*/
 const App = React.createClass({
   getInitialState() {
     return {

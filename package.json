@@ -73,7 +73,7 @@
     "react-dropzone": "^3.5.3",
     "react-jsonschema-form": "^0.37.0",
     "react-select": "^1.0.0-beta14",
-    "react-tap-event-plugin": "^1.0.0",
+    "react-tap-event-plugin": "^2.0.1",
     "superagent": "^2.2.0",
     "tipso": "^1.0.8"
   }

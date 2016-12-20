@@ -3,9 +3,9 @@
 	```bash
 	yum install -y gcc gcc-c++
 	cd /tmp
-	wget https://nodejs.org/download/release/latest-v4.x/node-v4.5.0.tar.xz
-	tar xf node-v4.5.0.tar.xz
-	cd node-v4.5.0
+	wget https://nodejs.org/download/release/v4.7.0/node-v4.7.0.tar.xz
+	tar xf node-v4.7.0.tar.xz
+	cd node-v4.7.0
 	./configure
 	make
 	make install
@@ -19,6 +19,7 @@
 	git clone https://github.com/inab/rd-connect-user-management-interface.git
 	cd rd-connect-user-management-interface
 	npm install
+	npm install --dev
 	export PATH="${PWD}/node_modules/.bin:$PATH"
 	gulp build
 	```

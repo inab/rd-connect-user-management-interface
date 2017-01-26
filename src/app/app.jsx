@@ -240,6 +240,7 @@ const Login = withRouter(React.createClass({
                       type="password"
                       placeholder="Type your password"
                       layout="vertical"
+					  autocomplete="off"
                       required
                   />
                 </fieldset>

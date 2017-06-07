@@ -21,7 +21,7 @@ module.exports = {
         dest: destCSS
     },
     importCSS: {
-		src: ['assets/*.css','node_modules/bootstrap/dist/css/bootstrap.min.css'],
+		src: ['assets/*.css','node_modules/bootstrap/dist/css/bootstrap.min.css*'],
 		dest: destCSS
 	},
 	fonts: {

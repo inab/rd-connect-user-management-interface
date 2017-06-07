@@ -49,6 +49,7 @@
     "browser-sync": "^2.18.0",
     "eslint-plugin-react": "^6.8.0",
     "pretty-hrtime": "^1.0.2",
+    "prop-types": "^15.5.10",
     "require-dir": "^0.3.0",
     "watchify": "^3.8.0",
     "raven-js": "^3.9.1"

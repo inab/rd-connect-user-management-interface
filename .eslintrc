@@ -42,8 +42,8 @@
         "react/require-extension": 0,
         "react/self-closing-comp": 1,
         "react/sort-comp": 1,
-        "react/wrap-multilines": 1,
-
+        //"react/wrap-multilines": 1,
+        "jsx-wrap-multilines": 1,
         "no-cond-assign": 1,             // disallow assignment in conditional expressions
         "no-console": 0,                 // disallow use of console (off by default in the node environment)
         "no-constant-condition": 1,      // disallow use of constant expressions in conditions

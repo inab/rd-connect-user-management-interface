@@ -4,7 +4,7 @@ import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.js';
-import { hashHistory } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
@@ -100,7 +100,6 @@ var UserEditForm = React.createClass({
 	updateUserData: function({formData}){
 		//console.log('yay I\'m valid!');
 		var userData = Object.assign({},formData);
-		delete userData.userPassword2;
 		//Before submitting the editted data we add the information for the picture:
 		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
 		var reader = new window.FileReader();
@@ -189,10 +188,13 @@ var UserEditForm = React.createClass({
 		var schema = this.props.schema;
 		// Replicating userPassword for schema validation and Ordering Schema for ui:order
 		//Adding a userPassword2 field to validate userPassword change
-		schema.properties.userPassword2 = schema.properties.userPassword;
+		//schema.properties.userPassword2 = schema.properties.userPassword;
+		//We remove userPassword from the schema since password modifications will be done from another form
+		delete schema.properties.userPassword;
 
 		//First we create an array with the fields with the desired order.
-		var order = ['username','cn','givenName','surname','userPassword','userPassword2'];
+		//var order = ['username','cn','givenName','surname','userPassword','userPassword2'];
+		var order = ['username','cn','givenName','surname'];
 
 		//We remove picture from the schema since this will be managed by react-dropzone component
 		var schemaPicture = schema.properties.picture;
@@ -212,7 +214,7 @@ var UserEditForm = React.createClass({
 		//Once we already have picture value, we remove from data since we have removed it from schema.
 		//All picture related stuff will be managed by react-dropzone component.
 		delete data.picture;
-		delete data.userPassword;
+		//delete data.userPassword;
 		//console.log('SCHEMA: ',schema);
 		//console.log('DATA: ',data);
 		const uiSchema = {
@@ -220,7 +222,7 @@ var UserEditForm = React.createClass({
 			'username': {
 				'ui:readonly': true,
 			},
-			'userPassword': {
+			/*'userPassword': {
 				'ui:widget': 'password',
 				'ui:placeholder': '************',
 				'ui:help': 'Hint: Make it strong!'
@@ -229,7 +231,7 @@ var UserEditForm = React.createClass({
 				'ui:widget': 'password',
 				'ui:placeholder': '************',
 				'ui:help': 'Passwords have to match!'
-			},
+			},*/
 			'cn': {
 				'ui:readonly': true,
 			},
@@ -291,16 +293,19 @@ var UserEditForm = React.createClass({
 						</Form>
 					</Col>
 					<Col xs={6} md={4} >
+						<Link className="btn btn-primary changePasswordButton" role="button" to={'/users/password/' + data.username}>
+							Change Password
+						</Link>
 						<div>
-							<button type="button" onClick={this.onOpenClick} className="changeImageButton">
-								Change image
-							</button>
 							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
 								Click here or drop image for {data.username}
 							</Dropzone>
 							{this.state.files.length > 0 ? <div>
 							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} name="documentFile" width="100" alt="image_user" className="imagePreview" /> )}</div>
 							</div> : <div><img src={userImage} name="documentFile" width="100" alt="image_user" className="imagePreview" /></div>}
+							<Link className="btn btn-primary changeImageButton" role="button" onClick={this.onOpenClick}>
+								Change Image
+							</Link>
 						</div>
 					</Col>
 				</Row>

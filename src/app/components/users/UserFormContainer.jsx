@@ -4,6 +4,7 @@ import jQuery from 'jquery';
 import UserEditForm from './UserEditForm.jsx';
 import UserViewForm from './UserViewForm.jsx';
 import UserEnableDisableForm from './UserEnableDisableForm.jsx';
+import UserPassword from './UserPassword.jsx';
 
 import { hashHistory } from 'react-router';
 
@@ -11,7 +12,7 @@ import config from 'config.jsx';
 
 var UserFormContainer = React.createClass({
 	propTypes:{
-		route: React.PropTypes.array,
+		route: React.PropTypes.object,
 		params: React.PropTypes.object
 	},
 	//mixins: [ History ], //This is to browse history back when user is not found after showing modal error
@@ -27,7 +28,7 @@ var UserFormContainer = React.createClass({
 			task: null
 		};
 	},
-	componentDidMount: function() {
+	componentWillMount: function() {
 		this.setState({task: this.props.route.task});
 		this.loadUserData();
 	},
@@ -109,45 +110,52 @@ var UserFormContainer = React.createClass({
 	//console.log('schema: ', this.state.schema);
 	//console.log('data: ', this.state.data);
 	//console.log('error: ', this.state.error);
-	if (this.state.schema && this.state.data) {
-		if (this.state.task === 'edit'){
+		if (this.state.schema && this.state.data) {
+			if (this.state.task === 'password'){
+				return (
+					<div>
+						<UserPassword schema={this.state.schema}  data={this.state.data} />
+					</div>
+				);
+			}
+			if (this.state.task === 'edit'){
+				return (
+					<div>
+						<UserEditForm schema={this.state.schema}  data={this.state.data}  />
+					</div>
+				);
+			} else if (this.state.task === 'view'){
+				return (
+					<div>
+						<UserViewForm schema={this.state.schema}  data={this.state.data}  />
+					</div>
+				);
+			} else if (this.state.task === 'enable_disable'){
+				return (
+					<div>
+						<UserEnableDisableForm schema={this.state.schema}  data={this.state.data}  />
+					</div>
+				);
+			}
+		}
+		if (this.state.error) {
 			return (
 				<div>
-					<UserEditForm schema={this.state.schema}  data={this.state.data}  />
-				</div>
-			);
-		} else if (this.state.task === 'view'){
-			return (
-				<div>
-					<UserViewForm schema={this.state.schema}  data={this.state.data}  />
-				</div>
-			);
-		} else if (this.state.task === 'enable_disable'){
-			return (
-				<div>
-					<UserEnableDisableForm schema={this.state.schema}  data={this.state.data}  />
+					<Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
+						<Modal.Header closeButton>
+							<Modal.Title>Error!</Modal.Title>
+						</Modal.Header>
+						<Modal.Body>
+							<h4>{this.state.error}</h4>
+						</Modal.Body>
+						<Modal.Footer>
+							<Button onClick={()=>hashHistory.goBack()}>Close</Button>
+						</Modal.Footer>
+					</Modal>
 				</div>
 			);
 		}
+		return <div>Loading...</div>;
 	}
-	if (this.state.error) {
-		return (
-			<div>
-				<Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
-					<Modal.Header closeButton>
-						<Modal.Title>Error!</Modal.Title>
-					</Modal.Header>
-					<Modal.Body>
-						<h4>{this.state.error}</h4>
-					</Modal.Body>
-					<Modal.Footer>
-						<Button onClick={()=>hashHistory.goBack()}>Close</Button>
-					</Modal.Footer>
-				</Modal>
-			</div>
-		);
-	}
-	return <div>Loading...</div>;
-}
 });
 module.exports = UserFormContainer;

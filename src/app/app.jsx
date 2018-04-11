@@ -201,7 +201,7 @@ const Login = withRouter(React.createClass({
         <div>
           <Modal show={this.state.showModal} error={this.state.error} className="login">
             <Modal.Header className="login">
-              <Modal.Title>Login</Modal.Title>
+              <Modal.Title>RD-Connect UMI Login</Modal.Title>
               </Modal.Header>
             <Modal.Body className="login">
               <Formsy.Form

@@ -19,7 +19,6 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
         <h3 style={{float:'left'}}> List of Organizational Units</h3>
         <div className="right"><Link className="btn btn-primary" role="button" to={'/organizationalUnits/new/'}>Add New Organization</Link></div>
         <div className="clear-both" />
-        <Accordion>
         {Object.keys(organizationalUnits).map(function(key, i) {
             var objOrganizationalUnit = organizationalUnits[key];
             var organizationalUnitName = objOrganizationalUnit.organizationalUnit;
@@ -30,7 +29,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
              if(objOrganizationalUnit.links !== undefined) var links = objOrganizationalUnit.links;
              else links = [];
              return (
-              <Panel header={objOrganizationalUnit.organizationalUnit} key={i} eventKey={i}>
+              <Panel defaultExpanded collapsible header={objOrganizationalUnit.description} key={i} eventKey={i}>
                 <Table responsive striped bordered condensed hover className="table-list">
                   <thead>
                     <tr>
@@ -84,8 +83,8 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                         return (
                           <tr key={j}>
                               <td>{j + 1}</td>
-								<td><Link to={'/users/view/' + encodeURIComponent(`${user.username}`)}>{user.username}</Link></td>
-                              <td>{user.cn}</td>
+                              <td>{user.username}</td>
+								<td><Link to={'/users/view/' + encodeURIComponent(`${user.username}`)}>{user.cn}</Link></td>
                               <td>{user.userCategory}</td>
                               <td><Checkbox checked={isChecked} readOnly /></td>
 								<td>{
@@ -103,7 +102,6 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                     </Table>
                 </Panel>
              )})}
-        </Accordion>
       </div>
     );
   };

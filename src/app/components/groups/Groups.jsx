@@ -24,11 +24,11 @@ const Groups = ({data}) => {
                 var groupMembers = group.members.sort();
                 //var listMembers=group.members.join(", ");
                 return (
-                  <Panel collapsible defaultExpanded center header={group.cn} key={i}>
+                  <Panel collapsible defaultExpanded center header={group.description} key={i}>
                     <Table responsive className="table-list">
                       <thead>
                         <tr>
-                          <th>Description</th>
+                          <th>Short name</th>
                           <th>Purpose</th>
                           <th>Owner</th>
                           <th>Members</th>
@@ -37,25 +37,27 @@ const Groups = ({data}) => {
                       </thead>
                       <tbody>
                     <tr key={i}>
-                      <td>{group.description}</td>
+                      <td>{group.cn}</td>
                       <td>{group.groupPurpose}</td>
                       <td>
-                        <ul className="user-ul">
                         {listOwners.map(function(owner, j){
-                            return (
-                                <li key={j}><Link to={'/users/view/' + owner}>{owner}</Link></li>
-                            );
+							let retval = []
+							if(j>0) {
+								retval.push(", ");
+							}
+							retval.push(<Link to={'/users/view/' + owner}>{owner}</Link>);
+							return retval;
                           })}
-                        </ul>
                       </td>
                       <td>
-                        <ul className="user-ul">
                         {groupMembers.map(function(member, k){
-                            return (
-                                <li key={k}><Link to={'/users/view/' + member}>{member}</Link></li>
-                            );
+							let retval = []
+							if(k>0) {
+								retval.push(", ");
+							}
+							retval.push(<Link to={'/users/view/' + member}>{member}</Link>);
+							return retval;
                           })}
-                        </ul>
                       </td>
                       <td>
                         <Link className="btn btn-primary editViewButton" role="button" to={'/groups/edit/' + encodeURIComponent(`${group.cn}`)}>

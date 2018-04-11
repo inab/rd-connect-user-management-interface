@@ -18,7 +18,7 @@ var UsersGroups = ({data}) => {
       <h3> Lists of groups that a user is member of </h3>
           {groupData.map(function(ou,i){
               var organizationalUnit = ou[0].organizationalUnit;
-              var headerText = organizationalUnit;
+              var headerText = ou[0].organizationalUnit;
               //console.log('ou contains: ', ou);
               return (
                 <Row className="show-grid">

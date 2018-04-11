@@ -293,7 +293,7 @@ var UserEditForm = React.createClass({
 						</Form>
 					</Col>
 					<Col xs={6} md={4} >
-						<Link className="btn btn-primary changePasswordButton" role="button" to={'/users/password/' + data.username}>
+						<Link className="btn btn-primary changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(`${data.username}`)}>
 							Change Password
 						</Link>
 						<div>

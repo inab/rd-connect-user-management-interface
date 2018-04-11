@@ -238,7 +238,7 @@ const Login = withRouter(React.createClass({
                       type="password"
                       placeholder="Type your password"
                       layout="horizontal"
-					  autocomplete="off"
+					  autoComplete="off"
 					  style={{width:"95%"}}
                       required
                   />

@@ -3,6 +3,7 @@ var React = require('react');
 import {Panel, Table, Accordion, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router';
 var imageNotFoundSrc = require('../users/defaultNoImageFound.js');
+import UserTable from '../users/UserTable.jsx';
 
 const OrganizationalUnits = ({data, organizationalUnits}) => {
     var dataUsers = Object.assign({},data);
@@ -65,41 +66,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                     </tbody>
                   </Table>
                   <h4>Users inside {objOrganizationalUnit.organizationalUnit} OU:</h4>
-                  <Table responsive striped bordered condensed hover>
-                    <thead>
-                        <tr>
-                        <th>#</th>
-                        <th>User Name</th>
-                        <th>Full Name</th>
-                        <th>User Category</th>
-                        <th>Enabled</th>
-                        <th>Email</th>
-                        <th>Edit user's info</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      {listOfUsers.map(function(user,j){
-                        var isChecked = user.enabled;
-                        return (
-                          <tr key={j}>
-                              <td>{j + 1}</td>
-                              <td>{user.username}</td>
-								<td><Link to={'/users/view/' + encodeURIComponent(`${user.username}`)}>{user.cn}</Link></td>
-                              <td>{user.userCategory}</td>
-                              <td><Checkbox checked={isChecked} readOnly /></td>
-								<td>{
-									user.email instanceof Array ? user.email.map((email,i) => {
-										return [ <a href={"mailto:"+email} target="_blank">{email}</a> , <br /> ];
-									}) : <i>(none)</i>
-								}</td>
-                              <td style={{textAlign:'center'}}>
-                              <Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>Edit</Link>
-                              </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                    </Table>
+                  <UserTable users={listOfUsers} />
                 </Panel>
              )})}
       </div>

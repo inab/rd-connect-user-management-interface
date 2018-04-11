@@ -1,6 +1,6 @@
 import React from 'react';
 import jQuery from 'jquery';
-import { FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
+import { Modal, Grid, Row, Col, Button, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
@@ -10,16 +10,16 @@ import ReactMustache from 'react-mustache'
 var userPassword = React.createClass({
 	propTypes:{
 		data: React.PropTypes.object.isRequired,
-		schema: React.PropTypes.object.isRequired
 	},
 	getInitialState: function() {
 		return {
+			modalTitle: null,
+			error: null,
+			showModal: false,
 			data: null,
-			schema: null,
 			valuePassword1: '',
 			valuePassword2: '',
 			zxcvbnObject1:null,
-			zxcvbnObject2:null,
 			mustachePassword1:'',
 			mustachePassword2:'',
 			template:'',
@@ -29,29 +29,23 @@ var userPassword = React.createClass({
 	componentWillMount: function(){
 		this.setState({data: this.props.data, suggestionsMessage: 'Password strength estimator based on zxcvbn'});
 	},
+	close(){
+		if (this.state.modalTitle === 'Error'){
+			this.setState({showModal: false});
+		} else {
+			this.setState({showModal: false});
+			hashHistory.goBack();
+		}
+	},
+	open(){
+		this.setState({showModal: true, modalTitle: this.state.modalTitle});
+	},
 	getValidationPassword1() {
 		var zxcv = zxcvbn(this.state.valuePassword1);
 		this.state.zxcvbnObject1 = zxcv;
-		console.log(zxcv);
-		console.log(zxcv.sequence);
+		//console.log(zxcv);
+		//console.log(zxcv.sequence);
 		var template = '<table class=""> \
-    <tbody>\
-        <tr>\
-            <td>password: </td>\
-            <td colspan="2"><strong>{{password}}</strong></td>\
-        </tr>\
-        <tr>\
-            <td>guesses_log10: </td>\
-            <td colspan="2">{{guesses_log10}}</td>\
-        </tr>\
-        <tr>\
-            <td>score: </td>\
-            <td>{{score}}</td>\
-        </tr>\
-        <tr>\
-            <td>function runtime (ms): </td>\
-            <td colspan="2">{{calc_time}}</td>\
-        </tr>\
         <tr>\
             <td colspan="3">guess times:</td>\
         </tr>\
@@ -75,12 +69,8 @@ var userPassword = React.createClass({
             <td>{{crack_times_display.offline_fast_hashing_1e10_per_second}} ({{crack_times_seconds.offline_fast_hashing_1e10_per_second}})</td>\
             <td> (offline attack, fast hash, many cores)</td>\
         </tr>\
-        <tr>\
-            <td colspan="3"><strong>match sequence:</strong></td>\
-        </tr>\
     </tbody>\
-</table>\
-<table><tbody><tr><td>Suggestions:</td><td>{{feedback.suggestions}}</td></tr><tr><td>Warnings:</td><td>{{feedback.warning}}</td></tr></tbody></table>';
+</table>';
 		this.state.template = template;
 		//var mustachePassword1 = Mustache.render(template, zxcv);
 		//this.state.mustachePassword1 = mustachePassword1;
@@ -99,6 +89,13 @@ var userPassword = React.createClass({
 		}
 
 	},
+	getValidationPassword2() {		
+		if(this.state.valuePassword1===this.state.valuePassword2) {
+			return this.getValidationPassword1();
+		} else {
+			return 'error';
+		}
+	},
 	handleChange1(e) {
 		this.setState({ valuePassword1: e.target.value });
 	},
@@ -106,7 +103,41 @@ var userPassword = React.createClass({
 		this.setState({ valuePassword2: e.target.value });
 	},
 	changePassword: function(){
-		console.log('yay I\'m valid!');
+		jQuery.ajax({
+				type: 'POST',
+				url: config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username) + '/resetPassword',
+				contentType: 'application/json',
+				headers: auth.getAuthHeaders(),
+				dataType: 'json',
+				data: JSON.stringify({userPassword: this.state.valuePassword1})
+			})
+			.done(function(data) {
+				console.log('Password correctly updated!!');
+				this.setState({modalTitle:'Success', error: 'Password changed correctly!!', showModal: true});
+
+			}.bind(this))
+			.fail(function(jqXhr) {
+				console.log('Failed to change user password',jqXhr.responseText);
+				var responseText = '';
+				if (jqXhr.status === 0) {
+					responseText = 'Failed to change user password. Not connect: Verify Network.';
+				} else if (jqXhr.status === 404) {
+					responseText = 'Failed to change user password. Not found [404]';
+				} else if (jqXhr.status === 500) {
+					responseText = 'Failed to change user password. Internal Server Error [500].';
+				} else if (jqXhr.status === 'parsererror') {
+					responseText = 'Failed to create new user. Sent JSON parse failed.';
+				} else if (jqXhr.status === 'timeout') {
+					responseText = 'Failed to create new user. Time out error.';
+				} else if (jqXhr.status === 'abort') {
+					responseText = 'Ajax request aborted.';
+				} else {
+					responseText = 'Uncaught Error: ' + jqXhr.responseText;
+				}
+				this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
+			}.bind(this))
+			.always(() => {
+			});
 		/*
 		jQuery.ajax({
 			type: 'PUT',
@@ -144,23 +175,60 @@ var userPassword = React.createClass({
 	},
 	render: function() {
 		var suggestions = this.state.suggestionsMessage;
+		const onSubmit = () => this.changePassword();
 		return (
 			<div>
-				<form>
-					<FormGroup
-					controlId="formBasicText"
-					validationState={this.getValidationPassword1()}
-					>
-					<ControlLabel>Create new password</ControlLabel>
-					<FormControl
-						type="text"
-						value={this.state.valuePassword1}
-						placeholder="New password"
-						onChange={this.handleChange1}
-					/>
-					<FormControl.Feedback />
-					<HelpBlock>{suggestions}</HelpBlock>
-					</FormGroup>
+				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+					<Modal.Header closeButton>
+						<Modal.Title>{this.state.modalTitle}</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<h4>{this.state.error}</h4>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={this.close}>Close</Button>
+					</Modal.Footer>
+				</Modal>
+				<form onSubmit={onSubmit}>
+					<Grid>
+						<Row>
+							<Col sm={12} md={6}>
+								<FormGroup
+								controlId="formBasicText"
+								validationState={this.getValidationPassword1()}
+								>
+								<ControlLabel>Write new password</ControlLabel>
+								<FormControl
+									type="password"
+									value={this.state.valuePassword1}
+									placeholder="New password"
+									onChange={this.handleChange1}
+								/>
+								<FormControl.Feedback />
+								<HelpBlock>{suggestions}</HelpBlock>
+								</FormGroup>
+							</Col>
+							<Col sm={12} md={6}>
+								<FormGroup
+								controlId="formBasicText"
+								validationState={this.getValidationPassword2()}
+								>
+									<ControlLabel>Repeat password</ControlLabel>
+									<FormControl
+										type="password"
+										value={this.state.valuePassword2}
+										placeholder="Repeat password"
+										onChange={this.handleChange2}
+									/>
+									<FormControl.Feedback />
+								</FormGroup>
+							</Col>
+						</Row>
+					</Grid>
+					<div className="button-submit">
+						<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
+						<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Change password</Button>
+					</div>
 				</form>
 				<ReactMustache template={this.state.template} data={this.state.zxcvbnObject1} />
 			</div>

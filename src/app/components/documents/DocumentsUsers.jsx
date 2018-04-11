@@ -26,7 +26,7 @@ const DocumentsUsers = ({data}) => {
                       <thead>
                         <tr>
                           <th>User Name</th>
-                          <th>Common Name</th>
+                          <th>Full Name</th>
                           <th>Email</th>
                           <th>Category</th>
                           <th>Enabled</th>
@@ -42,21 +42,22 @@ const DocumentsUsers = ({data}) => {
                       var userGroups = user.groups !== undefined ? user.groups : [];
                       return (
                           <tr key={j}>
-                            <td>{user.username}</td>
+                            <td><Link to={'/users/view/' + encodeURIComponent(`${user.username}`)}>{user.username}</Link></td>
                             <td>{user.cn}</td>
-                            <td>{user.email}</td>
+                            <td><a href={"mailto:"+user.email} target="_blank">{user.email}</a></td>
                             <td>{user.userCategory}</td>
                             <td><Checkbox checked={isChecked} readOnly /></td>
                             <td>
-                              <ul className="user-ul">
-                              {
-                                userGroups.map(function(groupName, k){
-                                  return (
-                                    <li key={k}>{groupName}</li>
-                                  );
-                                })
-                              }
-                              </ul>
+							{
+								userGroups.length > 0 ? userGroups.map((group,pos) => {
+									let retArray = [];
+									if(pos>0) {
+									  retArray.push(", ");
+									}
+									retArray.push(<Link to={'/groups/edit/' + encodeURIComponent(`${group}`)}>{group}</Link>);
+									return retArray;
+								}) : <i>(none)</i>
+							}
                             </td>
                             <td className="border4colspan">
                               

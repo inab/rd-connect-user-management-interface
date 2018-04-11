@@ -45,10 +45,16 @@ var UserViewForm = React.createClass({
 						<Button onClick={this.close}>Close</Button>
 					</Modal.Footer>
 				</Modal>
+				<div className="right">
+					<Button className="btn btn-primary editViewButton" onClick={()=>hashHistory.goBack()}>Back</Button>
+					<Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
+						Edit User Info
+					</Link>
+				</div>
 				<Jumbotron>
 					<Row className="show-grid">
 						<Col xs={16} md={10}>
-							<Panel header="Common Name">
+							<Panel header="Full Name">
 								<p>{this.props.data.cn}</p>
 							</Panel>
 							<Panel header="Username">

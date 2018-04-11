@@ -73,16 +73,13 @@ const App = React.createClass({
             <div>
                 <header className="primary-header">
                     <div className="loginBox">
-                        <ul>
-                            <li>
+						<Link to="/userProfile">User's Profile</Link>
+						&nbsp;|&nbsp;
                                 {this.state.loggedIn ? (
                                 <Link to="/logout">Log out</Link>
                                 ) : (
                                 <Link to="/login">Login</Link>
                                 )}
-                            </li>
-                            <li><Link to="/userProfile">User's Profile</Link></li>
-                        </ul>
                     </div>
                     <Navigation projectName="react-bootstrap-starter" />
                 </header>
@@ -186,9 +183,9 @@ const Login = withRouter(React.createClass({
       const username = model.username;
       //const pass = this.refs.pass.value;
       const password = model.password;
-      auth.login(username, password, (loggedIn) => {
+      auth.login(username, password, (loggedIn,status,errorMsg) => {
         if (!loggedIn){
-          return this.setState({ error: true });
+          return this.setState({ error: true, errorMsg: errorMsg, status: status });
         }
         const { location } = this.props;
         if (location.state && location.state.nextPathname) {
@@ -226,7 +223,8 @@ const Login = withRouter(React.createClass({
                     type="text"
                     placeholder="Type your username (For example: a.canada)."
                     help=""
-                    layout="vertical"
+                    layout="horizontal"
+					  style={{width:"95%"}}
                     required
                 />
               </fieldset>
@@ -239,19 +237,40 @@ const Login = withRouter(React.createClass({
                       label=""
                       type="password"
                       placeholder="Type your password"
-                      layout="vertical"
+                      layout="horizontal"
 					  autocomplete="off"
+					  style={{width:"95%"}}
                       required
                   />
                 </fieldset>
                       <Button type="submit" bsStyle="primary" className="right" disabled={!this.state.canSubmit} >Login</Button>
-                      {this.state.error && (
-                        <p className="badLoginInformation" >Bad login information</p>
-                      )}
               </Formsy.Form>
             </Modal.Body>
             <Modal.Footer className="login">
-
+                      {this.state.error && (
+                        <p className="badLoginInformation" >{(function(state) {
+							let message;
+							switch(state.status) {
+								case 404:
+									message="CAS server is unreachable";
+									break;
+								case 401:
+									message="Error while authenticating (bad login information?)";
+									break;
+								case 404:
+									message="CAS UMI or server are unreachable";
+									break;
+								default:
+									if(state.status>=500) {
+										message="CAS UserManagement internal error ("+state.status+")";
+									} else {
+										message="CAS UserManagement error ("+state.status+")";
+									}
+									break;
+							}
+							return message;
+						})(this.state)}</p>
+                      )}
             </Modal.Footer>
           </Modal>
           </div>

@@ -93,10 +93,10 @@ class Auth {
 		pretendRequest(username, password, (res) => {
 			if (res.authenticated) {
 				this.setLoginData(res.userProps);
-				if (cb) cb(true);
+				if (cb) cb(true,null,null);
 				this.onChange(true);
 			} else {
-				if (cb) cb(false);
+				if (cb) cb(false,res.status,res.errorMsg);
 				this.onChange(false);
 			}
 		});
@@ -156,7 +156,7 @@ function pretendRequest(username, password, cb) {
 		});
 	})
 	.fail((xhr, status, err) => {
-		cb({ authenticated: false });
+		cb({ authenticated: false, status: xhr.status, errorMsg: err });
 	});
 	
 	/*

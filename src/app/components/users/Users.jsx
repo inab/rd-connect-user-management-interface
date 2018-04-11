@@ -57,7 +57,7 @@ const Users = ({data}) => {
                             <td><Checkbox checked={isChecked} readOnly /></td>
                             <td>
 							{
-								typeof arrayGroups !== 'undefined' ? arrayGroups.map((group,pos) => {
+								user.groups instanceof Array ? user.groups.map((group,pos) => {
 									let retArray = [];
 									if(pos>0) {
 									  retArray.push(", ");

@@ -30,7 +30,7 @@ const Users = ({data}) => {
                       <thead>
                         <tr>
                           <th>User Name</th>
-                          <th>Common Name</th>
+                          <th>Full Name</th>
                           <th>Email</th>
                           <th>Category</th>
                           <th>Enabled</th>
@@ -47,20 +47,25 @@ const Users = ({data}) => {
                       return (
                           <tr key={j}>
                             <td>{user.username}</td>
-                            <td>{user.cn}</td>
-                            <td>{user.email}</td>
+								<td><Link to={'/users/view/' + encodeURIComponent(`${user.username}`)}>{user.cn}</Link></td>
+								<td>{
+									user.email instanceof Array ? user.email.map((email,i) => {
+										return [ <a href={"mailto:"+email} target="_blank">{email}</a> , <br /> ];
+									}) : <i>(none)</i>
+								}</td>
                             <td>{user.userCategory}</td>
                             <td><Checkbox checked={isChecked} readOnly /></td>
                             <td>
-                              <ul className="user-ul">
-                              {
-								userGroups.map(function(groupName, k){
-									return (
-										<li key={k}>{groupName}</li>
-									);
-								})
-                              }
-                              </ul>
+							{
+								typeof arrayGroups !== 'undefined' ? arrayGroups.map((group,pos) => {
+									let retArray = [];
+									if(pos>0) {
+									  retArray.push(", ");
+									}
+									retArray.push(<Link to={'/groups/edit/' + encodeURIComponent(`${group}`)}>{group}</Link>);
+									return retArray;
+								}) : <i>(none)</i>
+							}
                             </td>
                             <td className="border4colspan">
                               <Link className="btn btn-primary editViewButton" role="button" to={'/users/view/' + encodeURIComponent(`${user.username}`)}>

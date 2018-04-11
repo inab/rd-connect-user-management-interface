@@ -80,7 +80,7 @@ var UserViewForm = React.createClass({
 							<Panel header="Email Addresses">
 								{this.props.data.email.map(function(mail, k){
 									return (
-										<p key={k}>{mail}</p>
+										<p key={k}><a href={"mailto:"+mail} target="_blank">{mail}</a></p>
 									);
 								})}
 							</Panel>

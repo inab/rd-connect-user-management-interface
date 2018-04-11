@@ -27,7 +27,7 @@ var UsersGroups = ({data}) => {
                       <Table responsive>
                         <thead>
                           <tr>
-                            <th>Common Name</th>
+                            <th>Full Name</th>
                             <th>Email</th>
                             <th>Category</th>
                             <th>Enabled</th>
@@ -43,24 +43,26 @@ var UsersGroups = ({data}) => {
                           var isChecked = user.enabled;
                           return (
                             <tr key={j}>
-                              <td>{user.cn}</td>
-                              <td>{user.email}</td>
+								<td><Link to={'/users/view/' + encodeURIComponent(`${user.username}`)}>{user.cn}</Link></td>
+								<td>{
+									user.email instanceof Array ? user.email.map((email,i) => {
+										return [ <a href={"mailto:"+email} target="_blank">{email}</a> , <br /> ];
+									}) : <i>(none)</i>
+								}</td>
                               <td>{user.userCategory}</td>
                               <td><Checkbox checked={isChecked} readOnly /></td>
-                              <td>
-                                <ul className="user-ul">
-                                {
-                                  typeof arrayGroups !== 'undefined'
-                                  ?
-                                    user.groups.sort().map(function(group, k){
-                                      return (
-                                        <li><strong>{group}</strong></li>
-                                      );
-                                    })
-                                  : <li>No groups defined</li>
-                                }
-                                </ul>
-                              </td>
+                            <td>
+							{
+								typeof arrayGroups !== 'undefined' ? arrayGroups.map((group,pos) => {
+									let retArray = [];
+									if(pos>0) {
+									  retArray.push(", ");
+									}
+									retArray.push(<Link to={'/groups/edit/' + encodeURIComponent(`${group}`)}>{group}</Link>);
+									return retArray;
+								}) : <i>(none)</i>
+							}
+                            </td>
                               <td>
                                 <Link className="btn btn-primary editViewButton" role="button" to={'/users/groups/edit/' + encodeURIComponent(`${user.username}`)}>
                                   Edit

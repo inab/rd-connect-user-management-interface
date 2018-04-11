@@ -27,7 +27,7 @@ const OrganizationalUnitsUsers = ({data}) => {
                 <tr>
                   <th>#</th>
                   <th>User Name</th>
-                  <th>Common Name</th>
+                  <th>Full Name</th>
                   <th>User Category</th>
                   <th>Enabled</th>
                   <th>Email</th>
@@ -40,10 +40,14 @@ const OrganizationalUnitsUsers = ({data}) => {
                   <tr key={j}>
                     <td>{j + 1}</td>
                     <td>{user.username}</td>
-                    <td>{user.cn}</td>
+					<td><Link to={'/users/view/' + encodeURIComponent(`${user.username}`)}>{user.username}</Link></td>
                     <td>{user.userCategory}</td>
                     <td><Checkbox checked={isChecked} readOnly /></td>
-                    <td>{user.email}</td>
+					<td>{
+						user.email instanceof Array ? user.email.map((email,i) => {
+							return [ <a href={"mailto:"+email} target="_blank">{email}</a> , <br /> ];
+						}) : <i>(none)</i>
+					}</td>
                   </tr>
                 );
               })}

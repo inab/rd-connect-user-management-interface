@@ -42,9 +42,13 @@ const DocumentsUsers = ({data}) => {
                       var userGroups = user.groups !== undefined ? user.groups : [];
                       return (
                           <tr key={j}>
-                            <td><Link to={'/users/view/' + encodeURIComponent(`${user.username}`)}>{user.username}</Link></td>
-                            <td>{user.cn}</td>
-                            <td><a href={"mailto:"+user.email} target="_blank">{user.email}</a></td>
+                            <td>{user.username}</td>
+                            <td><Link to={'/users/view/' + encodeURIComponent(`${user.username}`)}>{user.cn}</Link></td>
+                            <td>{
+								user.email instanceof Array ? user.email.map((email,i) => {
+									return [ <a href={"mailto:"+email} target="_blank">{email}</a> , <br /> ];
+								}) : <i>(none)</i>
+							}</td>
                             <td>{user.userCategory}</td>
                             <td><Checkbox checked={isChecked} readOnly /></td>
                             <td>

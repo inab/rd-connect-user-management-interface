@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 import { Button, Row, Col, Panel, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';

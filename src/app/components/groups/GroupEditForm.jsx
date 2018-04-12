@@ -6,7 +6,7 @@ import MultiselectField from './Multiselect.jsx';
 import { hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
-var Underscore = require('underscore');
+import Underscore from 'underscore';
 
 
 function groupValidation(formData,errors) {

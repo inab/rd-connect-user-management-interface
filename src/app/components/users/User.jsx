@@ -1,8 +1,8 @@
-var React = require('react');
+import React from 'react';
 import { Link } from 'react-router';
 import { Checkbox, Row, Col } from 'react-bootstrap';
 
-var User = React.createClass({
+const User = React.createClass({
 	propTypes:{
 		data: React.PropTypes.object.isRequired,
 		index: React.PropTypes.number

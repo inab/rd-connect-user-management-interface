@@ -1,8 +1,8 @@
-var React = require('react');
+import React from 'react';
 
 import {Panel, Table, Accordion, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router';
-var imageNotFoundSrc = require('../users/defaultNoImageFound.js');
+import imageNotFoundSrc from '../users/defaultNoImageFound.jsx';
 import UserTable from '../users/UserTable.jsx';
 
 const OrganizationalUnits = ({data, organizationalUnits}) => {

@@ -1,8 +1,8 @@
-var React = require('react');
+import React from 'react';
 import { Checkbox, Row, Col, Panel, Table } from 'react-bootstrap';
-var Underscore = require('underscore');
+import Underscore from 'underscore';
 import { Link } from 'react-router';
-//var User = require('./User.jsx');
+//import User from './User.jsx';
 import UserTable from './UserTable.jsx';
 
 

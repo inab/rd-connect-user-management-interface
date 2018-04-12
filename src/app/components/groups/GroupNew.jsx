@@ -1,6 +1,6 @@
-var React = require('react');
+import React from 'react';
 
-//var Navigation = require('./navigation.jsx');
+//import Navigation from './navigation.jsx';
 
 var GroupNew = React.createClass({
 

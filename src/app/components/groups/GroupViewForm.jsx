@@ -1,9 +1,9 @@
-var React = require('react');
+import React from 'react';
 import Form from 'react-jsonschema-form';
 import { Row, Col, Button} from 'react-bootstrap';
 import { LinkContainer } from 'react-router';
 
-//var ModalError = require('./ModalError.jsx');
+//import ModalError from './ModalError.jsx';
 
 function groupValidation(formData,errors) {
 		return errors;

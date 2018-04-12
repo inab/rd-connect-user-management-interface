@@ -1,6 +1,6 @@
-var React = require('react');
-var Navigation = require('./Navigation.jsx');
-var Breadcrumbs = require('react-breadcrumbs');
+import React from 'react';
+import Navigation from './Navigation.jsx';
+import Breadcrumbs from 'react-breadcrumbs';
 
 
 var Main = React.createClass({

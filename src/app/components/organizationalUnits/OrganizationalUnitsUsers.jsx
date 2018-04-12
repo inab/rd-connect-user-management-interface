@@ -1,7 +1,7 @@
-var React = require('react');
+import React from 'react';
 
 import { Panel, Table, Checkbox } from 'react-bootstrap';
-var Underscore = require('underscore');
+import Underscore from 'underscore';
 
 
 

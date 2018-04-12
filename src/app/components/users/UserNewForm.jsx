@@ -5,7 +5,7 @@ import Form from 'react-jsonschema-form';
 import { Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
-import imageNotFoundSrc from './defaultNoImageFound.js';
+import imageNotFoundSrc from './defaultNoImageFound.jsx';
 import Underscore from 'underscore';
 
 //import ModalError from './ModalError.jsx';

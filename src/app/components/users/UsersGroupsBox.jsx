@@ -1,5 +1,5 @@
-var React = require('react');
-var UsersGroupsContainer = require('./UsersGroupsContainer.jsx');
+import React from 'react';
+import UsersGroupsContainer from './UsersGroupsContainer.jsx';
 
 const UsersGroupsBox = () => (
 	<div className="userBox">

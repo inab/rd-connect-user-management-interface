@@ -1,6 +1,6 @@
-var React = require('react');
+import React from 'react';
 import { Checkbox, Row, Col, Panel, Table } from 'react-bootstrap';
-var Underscore = require('underscore');
+import Underscore from 'underscore';
 import { Link } from 'react-router';
 
 

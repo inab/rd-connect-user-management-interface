@@ -1,8 +1,8 @@
-var React = require('react');
+import React from 'react';
 
-//var Navigation = require('./navigation.jsx');
+//import Navigation from './navigation.jsx';
 
-var UserNew = React.createClass({
+const UserNew = React.createClass({
 
     render: function () {
         return (

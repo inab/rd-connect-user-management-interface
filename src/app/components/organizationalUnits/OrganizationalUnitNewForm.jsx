@@ -4,7 +4,7 @@ import Form from 'react-jsonschema-form';
 import { Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
-import imageNotFoundSrc from '../users/defaultNoImageFound.js';
+import imageNotFoundSrc from '../users/defaultNoImageFound.jsx';
 
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';

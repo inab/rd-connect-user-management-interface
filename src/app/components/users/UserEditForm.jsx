@@ -3,7 +3,7 @@ import { Modal, Button, Row, Col } from 'react-bootstrap';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import Dropzone from 'react-dropzone';
-import imageNotFoundSrc from './defaultNoImageFound.js';
+import imageNotFoundSrc from './defaultNoImageFound.jsx';
 import { Link, hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';

@@ -5,13 +5,13 @@ import Form from 'react-jsonschema-form';
 import { Modal, Row, Col, Button } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
-import imageNotFoundSrc from './defaultNoImageFound.js';
+import imageNotFoundSrc from './defaultNoImageFound.jsx';
 import MultiselectField from './Multiselect.jsx';
 
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
-//var ModalError = require('./ModalError.jsx');
+//import ModalError from './ModalError.jsx';
 
 function userValidation(formData,errors) {
 	if (formData.userPassword !== formData.userPassword2) {

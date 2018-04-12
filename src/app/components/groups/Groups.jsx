@@ -1,8 +1,8 @@
-var React = require('react');
+import React from 'react';
 
 import { Row, Col, Panel, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
-var Underscore = require('underscore');
+import Underscore from 'underscore';
 
 const Groups = ({data}) => {
   //console.log("Data so far is: ", data);

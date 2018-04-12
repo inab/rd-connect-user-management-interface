@@ -1,10 +1,10 @@
-var React = require('react');
+import React from 'react';
 import { Row, Col, Checkbox, Panel, Table } from 'react-bootstrap';
-var Underscore = require('underscore');
+import Underscore from 'underscore';
 import { Link } from 'react-router';
 
 
-var UsersGroups = ({data}) => {
+const UsersGroups = ({data}) => {
     //console.log("Data so far is: ", data);
     var groupData = Underscore
       .chain(data)

@@ -1,9 +1,9 @@
-var React = require('react');
+import React from 'react';
 import { Modal, Row, Col, Button, Jumbotron, Panel } from 'react-bootstrap';
 import { Link } from 'react-router';
-//var ModalError = require('./ModalError.jsx');
+//import ModalError from './ModalError.jsx';
 import { hashHistory } from 'react-router';
-var imageNotFoundSrc = require('./defaultNoImageFound.js');
+import imageNotFoundSrc from './defaultNoImageFound.jsx';
 
 
 var UserViewForm = React.createClass({

@@ -1,7 +1,7 @@
 import React from 'react';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Modal, Button, Row, Col } from 'react-bootstrap';
+import { Glyphicon, Modal, Button, Row, Col } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from '../users/defaultNoImageFound.jsx';
 import { hashHistory } from 'react-router';
@@ -194,7 +194,7 @@ var OrganizationalUnitEditForm = React.createClass({
 							liveValidate
 							>
 								<div className="button-submit">
-									<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
+									<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 									<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit</Button>
 								</div>
 							</Form>

@@ -1,6 +1,6 @@
 import React from 'react';
 import jQuery from 'jquery';
-import { Modal, Button, Row, Col, Panel, Table, ListGroup, ListGroupItem, Collapse } from 'react-bootstrap';
+import { Glyphicon, Modal, Button, Row, Col, Panel, Table, ListGroup, ListGroupItem, Collapse } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
 import confirm from 'react-confirm2';
@@ -153,7 +153,7 @@ const DocumentsUser = React.createClass({
               );
             },this)}
             <div className="button-submit">
-              <Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons">Cancel</Button>
+              <Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons"><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
             </div>
 
           </Col>

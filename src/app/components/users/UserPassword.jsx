@@ -1,13 +1,13 @@
 import React from 'react';
 import jQuery from 'jquery';
-import { Modal, Grid, Row, Col, Button, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
+import { Glyphicon, Modal, Grid, Row, Col, Button, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 import zxcvbn from 'zxcvbn';
 import ReactMustache from 'react-mustache'
 
-var userPassword = React.createClass({
+const userPassword = React.createClass({
 	propTypes:{
 		data: React.PropTypes.object.isRequired,
 	},
@@ -178,6 +178,7 @@ var userPassword = React.createClass({
 		const onSubmit = () => this.changePassword();
 		return (
 			<div>
+				<h3>Password change for user {this.props.data.username}</h3>
 				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>
@@ -226,8 +227,8 @@ var userPassword = React.createClass({
 						</Row>
 					</Grid>
 					<div className="button-submit">
-						<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
-						<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Change password</Button>
+						<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
+						<Button bsStyle="danger" type="submit" className="submitCancelButtons" >Change password&nbsp;<Glyphicon glyph="pencil" /></Button>
 					</div>
 				</form>
 				<ReactMustache template={this.state.template} data={this.state.zxcvbnObject1} />

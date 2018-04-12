@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Row, Col, Panel, Table } from 'react-bootstrap';
+import { Glyphicon, Checkbox, Row, Col, Panel, Table } from 'react-bootstrap';
 import Underscore from 'underscore';
 import { Link } from 'react-router';
 //import User from './User.jsx';
@@ -17,13 +17,12 @@ const UserTable = ({users}) => {
                           <th>Category</th>
                           <th>Enabled</th>
                           <th>Groups</th>
-                          <th colSpan="3" >User Actions</th>
+                          <th>User Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                     {users.map(function(user,j){
                       console.log(user);
-                      var isChecked = user.enabled;
                       var userGroups = [];
                       if(user.groups !== undefined)  userGroups = user.groups;
                       return (
@@ -36,7 +35,7 @@ const UserTable = ({users}) => {
 									}) : <i>(none)</i>
 								}</td>
                             <td>{user.userCategory}</td>
-                            <td><Checkbox checked={isChecked} readOnly /></td>
+                            <td><Glyphicon glyph={user.enabled ? 'check':'unchecked'} /></td>
                             <td>
 							{
 								user.groups instanceof Array ? user.groups.map((group,pos) => {
@@ -50,18 +49,18 @@ const UserTable = ({users}) => {
 							}
                             </td>
                             <td className="border4colspan">
-                              <Link className="btn btn-primary editViewButton" role="button" to={'/users/view/' + encodeURIComponent(`${user.username}`)}>
-                                View
+                              <Link className="btn btn-success btn-xs editViewButton" role="button" to={'/users/view/' + encodeURIComponent(`${user.username}`)}>
+                                View&nbsp;
+								<Glyphicon glyph="user" />
                               </Link>
-                            </td>
-                            <td className="border4colspan">
-                              <Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>
-                                Edit
+                              <Link className="btn btn-primary btn-xs editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>
+                                Edit&nbsp;
+								<Glyphicon glyph="edit" />
                               </Link>
-                            </td>
-                            <td className="border4colspan">
-								<Link className="btn btn-primary changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(`${user.username}`)}>
-									Change Password
+                              <br/>
+								<Link className="btn btn-danger btn-xs changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(`${user.username}`)}>
+									Change Password&nbsp;
+								<Glyphicon glyph="pencil" />
 								</Link>
                             </td>
                           </tr>

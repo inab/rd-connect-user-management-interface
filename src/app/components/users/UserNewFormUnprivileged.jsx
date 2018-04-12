@@ -2,7 +2,7 @@ import React from 'react';
 import jQuery from 'jquery';
 import request from 'superagent';
 import Form from 'react-jsonschema-form';
-import { Modal, Row, Col, Button } from 'react-bootstrap';
+import { Glyphicon, Modal, Row, Col, Button } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.jsx';
@@ -268,7 +268,7 @@ var UserNewFormUnprivileged = React.createClass({
 							>
 								<MultiselectField label="Applicate to these groups" options={options} initialSelected={initialGroupsSelected} onChangeSelected={this.handleChangeSelected} />
 								<div className="button-submit">
-									<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
+									<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 									<Button bsStyle="primary" type="submit" className="submitCancelButtons">Create User</Button>
 								</div>
 							</Form>

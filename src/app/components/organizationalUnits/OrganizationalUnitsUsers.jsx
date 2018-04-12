@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Panel, Table, Checkbox } from 'react-bootstrap';
 import Underscore from 'underscore';
-
+import UserTable from '../users/UserTable.jsx';
 
 
 const OrganizationalUnitsUsers = ({data}) => {
@@ -22,44 +22,7 @@ const OrganizationalUnitsUsers = ({data}) => {
         var headerText = organizationalUnit;
         return (
           <Panel header={headerText} key={i} eventKey={i}>
-            <Table responsive striped bordered condensed hover>
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>User Name</th>
-                  <th>Full Name</th>
-                  <th>User Category</th>
-                  <th>Enabled</th>
-                  <th>Email</th>
-                </tr>
-              </thead>
-              <tbody>
-              {ou.map(function(user,j){
-                var isChecked = user.enabled;
-                return (
-                  <tr key={j}>
-                    <td>{j + 1}</td>
-                    <td>{user.username}</td>
-					<td><Link to={'/users/view/' + encodeURIComponent(`${user.username}`)}>{user.username}</Link></td>
-                    <td>{user.userCategory}</td>
-                    <td><Checkbox checked={isChecked} readOnly /></td>
-					<td>{
-						user.email instanceof Array ? user.email.map((email,i) => {
-							return [ <a href={"mailto:"+email} target="_blank">{email}</a> , <br /> ];
-						}) : <i>(none)</i>
-					}</td>
-                  </tr>
-                );
-              })}
-              <tr>
-                {/*<td colSpan="6">
-                   <Link className="btn btn-primary" role="button" to={route} params={{organizationalUnit: "cnio"}}>
-                    Manage {organizationalUnit}'s users
-                   </Link>
-                </td>*/}
-              </tr>
-              </tbody>
-            </Table>
+            <UserTable users={ou} />
           </Panel>
         );
         })}

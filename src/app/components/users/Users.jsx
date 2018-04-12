@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Row, Col, Panel, Table } from 'react-bootstrap';
+import { Glyphicon, Checkbox, Row, Col, Panel, Table } from 'react-bootstrap';
 import Underscore from 'underscore';
 import { Link } from 'react-router';
 //import User from './User.jsx';
@@ -19,7 +19,7 @@ const Users = ({data}) => {
      <div>
       <h3 style={{float:'left'}}> List of Users</h3>
       <div className="right">
-        <Link className="btn btn-primary" role="button" to={'/users/new/'}>Add New User</Link>
+        <Link className="btn btn-primary" role="button" to={'/users/new/'}>Add New User&nbsp;<Glyphicon glyph="plus" /></Link>
       </div>
       <div className="clear-both" />
       <Row className="show-grid">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Row, Col, Panel, Table } from 'react-bootstrap';
+import { Glyphicon, Button, Row, Col, Panel, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
 
@@ -49,7 +49,7 @@ const DocumentsUser = ({data, groupName}) => {
             );
           })}
             <div className="button-submit">
-              <Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons">Cancel</Button>
+              <Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons"><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
             </div>
         </Col>
       </Row>

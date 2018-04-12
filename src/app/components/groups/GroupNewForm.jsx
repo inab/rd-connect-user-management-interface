@@ -1,7 +1,7 @@
 import React from 'react';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
+import { Glyphicon, Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
 
 import config from 'config.jsx';
@@ -123,7 +123,7 @@ var GroupNewForm = React.createClass({
 								liveValidate= {false}
 							>
 								<div className="button-submit">
-									<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons">Cancel</Button>
+									<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons"><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 									<Button bsStyle="primary" type="submit" className="submitCancelButtons">Submit</Button>
 								</div>
 							</Form>

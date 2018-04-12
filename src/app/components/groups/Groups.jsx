@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Row, Col, Panel, Table } from 'react-bootstrap';
+import { Glyphicon, Row, Col, Panel, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import Underscore from 'underscore';
 
@@ -15,7 +15,7 @@ const Groups = ({data}) => {
     <div>
       <h3 style={{float:'left'}}> List of Groups </h3>
       <div className="right">
-        <Link className="btn btn-primary" role="button" to={'/groups/new/'}>Add New Group</Link>
+        <Link className="btn btn-primary" role="button" to={'/groups/new/'}>Add New Group&nbsp;<Glyphicon glyph="plus" /></Link>
       </div>
       <div className="clear-both" />
       <Row className="show-grid">
@@ -61,7 +61,8 @@ const Groups = ({data}) => {
                       </td>
                       <td>
                         <Link className="btn btn-primary editViewButton" role="button" to={'/groups/edit/' + encodeURIComponent(`${group.cn}`)}>
-                          Edit
+                          Edit&nbsp;
+							<Glyphicon glyph="edit" />
                         </Link>
                       </td>
                     </tr>

@@ -1,7 +1,7 @@
 import React from 'react';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Modal, Row, Col, Button } from 'react-bootstrap';
+import { Glyphicon, Modal, Row, Col, Button } from 'react-bootstrap';
 import MultiselectField from './Multiselect.jsx';
 import { hashHistory } from 'react-router';
 import config from 'config.jsx';
@@ -375,7 +375,7 @@ var GroupEditForm = React.createClass({
 						>
 						<MultiselectField label="Members of this group" options={options} initialSelected={initialMembersSelected} onChangeSelected={this.handleChangeSelected}/>
 						<div className="button-submit">
-							<Button bsStyle="primary" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" >Cancel</Button>
+							<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 							<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit</Button>
 						</div>
 						</Form>

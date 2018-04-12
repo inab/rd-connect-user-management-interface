@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Panel, Table, Accordion, Checkbox } from 'react-bootstrap';
+import { Glyphicon, Panel, Table, Accordion, Checkbox } from 'react-bootstrap';
 import { Link } from 'react-router';
 import imageNotFoundSrc from '../users/defaultNoImageFound.jsx';
 import UserTable from '../users/UserTable.jsx';
@@ -18,7 +18,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
     return (
       <div>
         <h3 style={{float:'left'}}> List of Organizational Units</h3>
-        <div className="right"><Link className="btn btn-primary" role="button" to={'/organizationalUnits/new/'}>Add New Organization</Link></div>
+        <div className="right"><Link className="btn btn-primary" role="button" to={'/organizationalUnits/new/'}>Add New Organization&nbsp;<Glyphicon glyph="plus" /></Link></div>
         <div className="clear-both" />
         {Object.keys(organizationalUnits).map(function(key, i) {
             var objOrganizationalUnit = organizationalUnits[key];
@@ -59,7 +59,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                         </td>
                         <td style={{textAlign:'center'}}>
                           <Link className="btn btn-primary editViewButton" role="button" to={'/organizationalUnits/edit/' + encodeURIComponent(`${objOrganizationalUnit.organizationalUnit}`)}>
-                            Edit
+                            Edit&nbsp;<Glyphicon glyph="edit" />
                           </Link>
                       </td>
                       </tr>

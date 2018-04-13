@@ -31,7 +31,7 @@ var MultiSelectField = React.createClass({
 		};
 	},
 	handleSelectChange (value) {//onChange
-		console.log('You\'ve selected:', value);
+		//console.log('You\'ve selected:', value);
 		this.setState({ value: value });
         this.props.onChangeSelected(value);
 	},

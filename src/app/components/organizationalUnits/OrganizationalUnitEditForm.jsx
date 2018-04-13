@@ -57,7 +57,7 @@ var OrganizationalUnitEditForm = React.createClass({
       this.refs.dropzone.open();
     },
 	updateOrganizationalUnitData: function({formData}){
-		console.log('yay I\'m valid!');
+		//console.log('yay I\'m valid!');
 		//console.log('El formData contiene: ',formData);
 		var organizationalUnitData = Object.assign({},formData);
 		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
@@ -80,7 +80,7 @@ var OrganizationalUnitEditForm = React.createClass({
 					this.setState({ modalTitle: 'Success', error: 'Organizational Unit modified correctly!!', showModal: true});
 				}.bind(this))
 				.fail(function(jqXhr) {
-					console.log('Failed to Update Organizational Unit Information',jqXhr);
+					//console.log('Failed to Update Organizational Unit Information',jqXhr);
 					var responseText = '';
 					if (jqXhr.status === 0) {
 						responseText = 'Failed to Update Organizational Unit Information. Not connect: Verify Network.';
@@ -112,11 +112,11 @@ var OrganizationalUnitEditForm = React.createClass({
 					data: JSON.stringify(organizationalUnitData)
 			})
 			.done(function(data) {
-				console.log('Organizational Unit modified correctly!!');
+				//console.log('Organizational Unit modified correctly!!');
 				this.setState({modalTitle:'Success', error: 'Organizational Unit modified correctly!!', showModal: true});
 			}.bind(this))
 			.fail(function(jqXhr) {
-				console.log('Failed to Update Organization Information',jqXhr.responseText);
+				//console.log('Failed to Update Organization Information',jqXhr.responseText);
 				var responseText = '';
 				if (jqXhr.status === 0) {
 					responseText = 'Failed to Update Organization Information. Not connect: Verify Network.';

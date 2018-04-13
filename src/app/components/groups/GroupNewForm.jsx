@@ -42,8 +42,8 @@ var GroupNewForm = React.createClass({
       }, 3000);
     },
 	addGroupData: function({formData}){
-		console.log('yay I\'m valid!');
-		console.log('Formdata sent to server:', formData);
+		//console.log('yay I\'m valid!');
+		//console.log('Formdata sent to server:', formData);
 		var groupData = Object.assign({},formData);
 		jQuery.ajax({
 			type: 'PUT',
@@ -57,7 +57,7 @@ var GroupNewForm = React.createClass({
 			this.setState({ modalTitle: 'Success', error: 'Group created correctly!!', showModal: true});
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('Failed to add new group',jqXhr);
+			//console.log('Failed to add new group',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to add new group. Not connect: Verify Network.';
@@ -79,19 +79,19 @@ var GroupNewForm = React.createClass({
 	},
 	render: function() {
 		var schema = this.state.schema;
-		console.log('Schema: ', schema);
+		//console.log('Schema: ', schema);
 		delete schema.title;
-		console.log(schema);
+		//console.log(schema);
 		const formData = undefined;
-		console.log(schema);
+		//console.log(schema);
 		const uiSchema = {
 
 		};
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.addGroupData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
-		console.log('Error: ', this.state.error);
-		console.log('Show: ', this.state.showModal);
+		//console.log('Error: ', this.state.error);
+		//console.log('Show: ', this.state.showModal);
 		return (
 			<div>
 				<Modal show={this.state.showModal} onHide={this.close}>

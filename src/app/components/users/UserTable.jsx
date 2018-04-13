@@ -22,7 +22,7 @@ const UserTable = ({users}) => {
                       </thead>
                       <tbody>
                     {users.map(function(user,j){
-                      console.log(user);
+                      //console.log(user);
                       var userGroups = [];
                       if(user.groups !== undefined)  userGroups = user.groups;
                       return (

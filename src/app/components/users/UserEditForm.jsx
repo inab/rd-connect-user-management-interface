@@ -120,11 +120,11 @@ var UserEditForm = React.createClass({
 					data: JSON.stringify(userData)
 				})
 				.done(function(data) {
-					console.log('User modified correctly!!');
+					//console.log('User modified correctly!!');
 					this.setState({ modalTitle: 'Success', error: 'User modified correctly!!', showModal: true});
 				}.bind(this))
 				.fail(function(jqXhr) {
-					console.log('Failed to Update User Information',jqXhr.responseText);
+					//console.log('Failed to Update User Information',jqXhr.responseText);
 					var responseText = '';
 					if (jqXhr.status === 0) {
 						responseText = 'Failed to Update User Information. Not connect: Verify Network.';
@@ -156,12 +156,12 @@ var UserEditForm = React.createClass({
 					data: JSON.stringify(userData)
 				})
 				.done(function(data) {
-					console.log('User modified correctly!!');
+					//console.log('User modified correctly!!');
 					this.setState({modalTitle:'Success', error: 'User modified correctly!!', showModal: true});
 
 				}.bind(this))
 				.fail(function(jqXhr) {
-					console.log('Failed to Update User Information',jqXhr.responseText);
+					//console.log('Failed to Update User Information',jqXhr.responseText);
 					var responseText = '';
 					if (jqXhr.status === 0) {
 						responseText = 'Failed to Update User Information. Not connect: Verify Network.';
@@ -288,13 +288,13 @@ var UserEditForm = React.createClass({
 						>
 							<div className="button-submit">
 								<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
-								<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit</Button>
+								<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit&nbsp;<Glyphicon glyph="pencil" /></Button>
 							</div>
 						</Form>
 					</Col>
 					<Col xs={6} md={4} >
-						<Link className="btn btn-primary changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(`${data.username}`)}>
-							Change Password
+						<Link className="btn btn-danger changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(`${data.username}`)}>
+							Change Password&nbsp;<Glyphicon glyph="pencil" />
 						</Link>
 						<div>
 							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >

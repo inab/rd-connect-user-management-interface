@@ -7,6 +7,7 @@ import { hashHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.jsx';
 import Underscore from 'underscore';
+import zxcvbn from 'zxcvbn';
 
 //import ModalError from './ModalError.jsx';
 
@@ -35,6 +36,14 @@ var UserNewForm = React.createClass({
 		this.setState({picture: imageNotFoundSrc, schema: this.props.schema, data: this.props.data, users: this.props.users});
 	},
 	userValidation(formData,errors) {
+		if(formData.userPassword!==undefined && formData.userPassword!==null) {
+			let zxcv = zxcvbn(formData.userPassword);
+			const score = zxcv.score;
+			if (score <= 3) {
+				errors.userPassword.addError('Password too weak (score='+score+')');
+			}
+		}
+		
 		if (formData.userPassword !== formData.userPassword2) {
 			errors.userPassword2.addError('Passwords don\'t match');
 		}
@@ -100,12 +109,43 @@ var UserNewForm = React.createClass({
       this.refs.dropzone.open();
     },
 	addUserData: function({formData}){
-		console.log('yay I\'m valid!');
+		//console.log('yay I\'m valid!');
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
-		console.log('El userData contiene: ',userData);
+		//console.log('El userData contiene: ',userData);
 		//var userExists = this.testIfUserExists(userData);
 		var responseText = '';
+		
+		if(userData.userPassword===undefined || userData.userPassword===null || userData.userPassword==='') {
+			// Generating a random password, in case the password field is empty
+			function shuffleArray(array) {
+				for (let i = array.length - 1; i > 0; i--) {
+					let j = Math.floor(Math.random() * (i + 1));
+					let temp = array[i];
+					array[i] = array[j];
+					array[j] = temp;
+				}
+				return array;
+			}
+			function generatePassword(passwordLength) {
+				let numberChars = "0123456789";
+				let upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+				let lowerChars = "abcdefghiklmnopqrstuvwxyz";
+				let punctuation = ",.;:+-/&%$!\"'?"
+				let allChars = upperChars + punctuation + numberChars + lowerChars;
+				let randPasswordArray = Array(passwordLength);
+				
+				randPasswordArray[0] = upperChars;
+				randPasswordArray[1] =  punctuation;
+				randPasswordArray[2] =  numberChars;
+				randPasswordArray[3] =  lowerChars;
+				randPasswordArray.fill(allChars,4);
+				return shuffleArray(randPasswordArray.map(function(x) { return x[Math.floor(Math.random() * x.length)] })).join('');
+			}
+			
+			userData.userPassword = generatePassword(12);
+		}
+		
 		//Before submitting the editted data we add the information for the picture:
 		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
 		var reader = new window.FileReader();
@@ -128,7 +168,7 @@ var UserNewForm = React.createClass({
 					this.setState({ modalTitle: 'Success', error: 'User created correctly!!', showModal: true});
 				}.bind(this))
 				.fail(function(jqXhr) {
-					console.log('Failed to Create New User',jqXhr);
+					//console.log('Failed to Create New User',jqXhr);
 					if (jqXhr.status === 0) {
 						responseText = 'Failed to Create New User. Not connect: Verify Network.';
 					} else if (jqXhr.status === 404) {
@@ -157,12 +197,12 @@ var UserNewForm = React.createClass({
 					data: JSON.stringify(userData)
 				})
 				.done(function(data) {
-					console.log('User created correctly!!');
+					//console.log('User created correctly!!');
 					this.setState({modalTitle:'Success', error: 'User created correctly!!', showModal: true});
 
 				}.bind(this))
 				.fail(function(jqXhr) {
-					console.log('Failed to create new user',jqXhr.responseText);
+					//console.log('Failed to create new user',jqXhr.responseText);
 					var responseText = '';
 					if (jqXhr.status === 0) {
 						responseText = 'Failed to create new user. Not connect: Verify Network.';
@@ -221,7 +261,7 @@ var UserNewForm = React.createClass({
 
 		//var data = this.props.data;
 		//delete data.userPassword;
-		console.log(schema);
+		//console.log(schema);
 		const uiSchema = {
 			'ui:order': schemaOrdered,
 			'userPassword': {

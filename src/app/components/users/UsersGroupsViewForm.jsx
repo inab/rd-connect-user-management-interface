@@ -24,13 +24,13 @@ var UsersGroupsViewForm = React.createClass({
 	},
 	render: function() {
 		var originalSchema = this.props.schema;
-		console.log('ORIGINAL SCHEMA: ', originalSchema);
+		//console.log('ORIGINAL SCHEMA: ', originalSchema);
 		var newSchema = {};
 		newSchema.type = originalSchema.type;
 		newSchema.properties = {};
 		newSchema.properties.username = originalSchema.properties.username;
 		newSchema.properties.cn = originalSchema.properties.cn;
-		console.log('All Available Groups are: ', this.props.groups);
+		//console.log('All Available Groups are: ', this.props.groups);
 		//We generate an array with all the available groups
 		var arrayGroups = [];
 		for (var i = 0; i < this.props.groups.length; i++){
@@ -47,11 +47,11 @@ var UsersGroupsViewForm = React.createClass({
 			}
 		};
 		newSchema.properties.groups.items.enum = arrayGroups;
-		console.log('NEW SCHEMA: ', newSchema);
+		//console.log('NEW SCHEMA: ', newSchema);
 		var data = this.props.data;
-		console.log('DATA contains: ', data);
+		//console.log('DATA contains: ', data);
 		var username = data.username;
-		console.log(username);
+		//console.log(username);
 		const uiSchema = {
 			'username': {
 				'ui:readonly': true
@@ -67,8 +67,8 @@ var UsersGroupsViewForm = React.createClass({
 		const log = (type) => console.log.bind(console, type);
 		//const onSubmit = ({formData}) => this.updateUserData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
-		console.log('Error: ', this.state.error);
-		console.log('Show: ', this.state.showModal);
+		//console.log('Error: ', this.state.error);
+		//console.log('Show: ', this.state.showModal);
 		return (
 			<div>
 				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>

@@ -20,7 +20,7 @@ var GroupNewFormContainer = React.createClass({
 		this.setState({schema: schema});
 	}.bind(this))
 	.fail(function(jqXhr) {
-		console.log('Failed to retrieve Group Schema. ',jqXhr);
+		//console.log('Failed to retrieve Group Schema. ',jqXhr);
 		var responseText = '';
 		if (jqXhr.status === 0) {
 			responseText = 'Failed to retrieve Group Schema. Not connect: Verify Network.';

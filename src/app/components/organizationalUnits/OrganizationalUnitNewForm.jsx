@@ -66,7 +66,7 @@ var OrganizationalUnitNewForm = React.createClass({
       this.refs.dropzone.open();
     },
 	addOrganizationalUnitData: function({formData}){
-		console.log('yay I\'m valid!');
+		//console.log('yay I\'m valid!');
 		//console.log(formData);
 		var organizationalUnitData = Object.assign({},formData);
 		//delete userData.userPassword2;
@@ -93,7 +93,7 @@ var OrganizationalUnitNewForm = React.createClass({
 					this.setState({ modalTitle: 'Success', error: 'Organizational Unit created correctly!!', showModal: true});
 				}.bind(this))
 				.fail(function(jqXhr) {
-					console.log('Failed to Update Organizational Unit Information',jqXhr);
+					//console.log('Failed to Update Organizational Unit Information',jqXhr);
 					if (jqXhr.status === 0) {
 						responseText = 'Failed to Update Organizational Unit Information. Not connect: Verify Network.';
 					} else if (jqXhr.status === 404) {
@@ -123,12 +123,12 @@ var OrganizationalUnitNewForm = React.createClass({
 					data: JSON.stringify(organizationalUnitData)
 				})
 				.done(function(data) {
-					console.log('User created correctly!!');
+					//console.log('User created correctly!!');
 					this.setState({modalTitle:'Success', error: 'User created correctly!!', showModal: true});
 
 				}.bind(this))
 				.fail(function(jqXhr) {
-					console.log('Failed to create new user',jqXhr.responseText);
+					//console.log('Failed to create new user',jqXhr.responseText);
 					if (jqXhr.status === 0) {
 						responseText = 'Failed to create new user. Not connect: Verify Network.';
 					} else if (jqXhr.status === 404) {

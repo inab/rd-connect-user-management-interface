@@ -17,8 +17,8 @@ var GroupViewForm = React.createClass({
 	render: function() {
 		var schema = this.props.schema;
 		var data = this.props.data;
-		console.log('Schema contains: ',schema);
-		console.log('Data contains: ',data);
+		//console.log('Schema contains: ',schema);
+		//console.log('Data contains: ',data);
 		//const log = (type) => console.log.bind(console, type);
 		//const onSubmit = ({formData}) => this.updateUserData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');

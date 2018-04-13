@@ -14,6 +14,7 @@ import Main from 'components/main.jsx';
 import Box from 'components/Box.jsx';
 import UsersContainer from 'components/users/UsersContainer.jsx';
 import UserFormContainer from 'components/users/UserFormContainer.jsx';
+import PasswordContainer from 'components/users/PasswordContainer.jsx';
 import UserEditFormContainer from 'components/users/UserEditFormContainer.jsx';
 import UserNewFormContainer from 'components/users/UserNewFormContainer.jsx';
 import UsersGroupsContainer from 'components/users/UsersGroupsContainer.jsx';
@@ -316,7 +317,8 @@ render((
                     <Route path="edit/:username" name="Edit" staticName component={UserEditFormContainer} task={'edit'}/>
                     <Route path="view/:username" name="View" staticName component={UserFormContainer} task={'view'}/>
                     <Route path="enable-disable/:username" name="Enable-Disable" staticName component={UserFormContainer} task={'enable_disable'}/>
-                    <Route path="password/:username" name="Password" staticName component={UserFormContainer} task={'password'}/>
+                    <Route path="password/:username" name="Change Password" staticName component={PasswordContainer} task={'passwordChange'}/>
+                    <Route path="reset-password/:username" name="Reset Password" staticName component={PasswordContainer} task={'passwordReset'}/>
                     <Route path="new" name="New" component={UserNewFormContainer} task={'new_privileged'}/>
                     <Route path="new-unprivileged" name="New (unprivileged)" component={UserNewFormContainer} task={'new_unprivileged'} />
                     <Route path="groups" name="Users in groups" component={Box} >

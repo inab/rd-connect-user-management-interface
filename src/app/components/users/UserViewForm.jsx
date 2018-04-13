@@ -1,10 +1,10 @@
 import React from 'react';
-import { Modal, Row, Col, Button, Jumbotron, Panel } from 'react-bootstrap';
+import { Glyphicon, Modal, Row, Col, Button, Jumbotron, Panel } from 'react-bootstrap';
 import { Link } from 'react-router';
 //import ModalError from './ModalError.jsx';
 import { hashHistory } from 'react-router';
 import imageNotFoundSrc from './defaultNoImageFound.jsx';
-
+import { withRouter } from 'react-router';
 
 var UserViewForm = React.createClass({
 	propTypes:{
@@ -23,15 +23,15 @@ var UserViewForm = React.createClass({
 	render: function() {
 		var data = this.props.data;
 		delete data.userPassword;
-		console.log(data);
-		console.log('Error: ', this.state.error);
-		console.log('Show: ', this.state.showModal);
+		//console.log(data);
+		//console.log('Error: ', this.state.error);
+		//console.log('Show: ', this.state.showModal);
 		var isChecked = this.props.data.enabled;
 		var userImage = this.props.data.picture;
 		if (typeof userImage === 'undefined'){
 			userImage = imageNotFoundSrc.src;
 		}
-		console.log(userImage);
+		//console.log(userImage);
 		return (
 			<div>
 				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
@@ -46,10 +46,16 @@ var UserViewForm = React.createClass({
 					</Modal.Footer>
 				</Modal>
 				<div className="right">
-					<Button className="btn btn-primary editViewButton" onClick={()=>hashHistory.goBack()}>Back</Button>
-					<Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
-						Edit User Info
-					</Link>
+					<Button bsStyle="info" onClick={()=>hashHistory.goBack()}><Glyphicon glyph="step-backward" />&nbsp;Back</Button>
+							<Link className="btn btn-danger editViewButton" role="button" to={'/users/reset-password/' + encodeURIComponent(`${this.props.data.username}`)}>
+								Reset Password&nbsp;<Glyphicon glyph="alert" />
+							</Link>
+							<Link className="btn btn-danger editViewButton" role="button" to={'/users/password/' + encodeURIComponent(`${this.props.data.username}`)}>
+								Change Password&nbsp;<Glyphicon glyph="pencil" />
+							</Link>
+                            <Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
+								Edit User Info&nbsp;<Glyphicon glyph="edit" />
+                            </Link>
 				</div>
 				<Jumbotron>
 					<Row className="show-grid">
@@ -149,13 +155,16 @@ var UserViewForm = React.createClass({
 					</Row>
 				</Jumbotron>
 				<div className="right">
-					<Button className="btn btn-primary editViewButton" onClick={()=>hashHistory.goBack()}>Back</Button>
-					<Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
-						Edit User Info
-					</Link>
+					<Button bsStyle="info" onClick={()=>hashHistory.goBack()}><Glyphicon glyph="step-backward" />&nbsp;Back</Button>
+							<Link className="btn btn-danger editViewButton" role="button" to={'/users/reset-password/' + encodeURIComponent(`${this.props.data.username}`)}>
+								Reset Password&nbsp;<Glyphicon glyph="alert" />
+							</Link>
+                            <Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${this.props.data.username}`)}>
+								Edit User Info&nbsp;<Glyphicon glyph="edit" />
+                            </Link>
 				</div>
 			</div>
 		);
 	}
 });
-module.exports = UserViewForm;
+module.exports = withRouter(UserViewForm);

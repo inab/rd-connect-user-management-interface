@@ -10,7 +10,7 @@ import Underscore from 'underscore';
 
 
 function groupValidation(formData,errors) {
-	console.log('FormData inside groupValidation is: ', formData);
+	//console.log('FormData inside groupValidation is: ', formData);
 	//Check if there is at least one owner for the group
 	if (formData.owner.length === 0) {
 		errors.owner.addError('Please select at least one owner');
@@ -70,7 +70,7 @@ var GroupEditForm = React.createClass({
 
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('Failed modifying group features. ',jqXhr);
+			//console.log('Failed modifying group features. ',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed modifying group features. Not connect: Verify Network.';
@@ -102,7 +102,7 @@ var GroupEditForm = React.createClass({
 					this.modifyGroupFeatures(formData);
 			}.bind(this))
 			.fail(function(jqXhr) {
-				console.log('Failed to Update Owners Information',jqXhr);
+				//console.log('Failed to Update Owners Information',jqXhr);
 				var responseText = '';
 				if (jqXhr.status === 0) {
 					responseText = 'Failed to Update Owners Information. Not connect: Verify Network.';
@@ -148,7 +148,7 @@ var GroupEditForm = React.createClass({
 				}
 			}.bind(this))
 			.fail(function(jqXhr) {
-				console.log('Failed to add owners to Group ',jqXhr);
+				//console.log('Failed to add owners to Group ',jqXhr);
 				var responseText = '';
 				if (jqXhr.status === 0) {
 					responseText = 'Failed to add owners to Group. Not connect: Verify Network.';
@@ -189,7 +189,7 @@ var GroupEditForm = React.createClass({
 
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('Failed to add members to Group ',jqXhr);
+			//console.log('Failed to add members to Group ',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to add members to Group. Not connect: Verify Network.';
@@ -239,7 +239,7 @@ var GroupEditForm = React.createClass({
 				}
 			}.bind(this))
 			.fail(function(jqXhr) {
-				console.log('Failed to Update Group Information',jqXhr);
+				//console.log('Failed to Update Group Information',jqXhr);
 				var responseText = '';
 				if (jqXhr.status === 0) {
 					responseText = 'Failed to Update Group Information. Not connect: Verify Network.';
@@ -277,7 +277,7 @@ var GroupEditForm = React.createClass({
 			data.owner = value.split(',');
 		}
 		this.setState({data:data});
-		console.log('this.state inside handleChangeSelectedOwners contains: ', this.state);
+		//console.log('this.state inside handleChangeSelectedOwners contains: ', this.state);
 	},
 	handleChangeSelected:function(value){
 		//console.log(value);
@@ -289,12 +289,12 @@ var GroupEditForm = React.createClass({
 			data.members = value.split(',');
 		}
 		this.setState({data:data});
-		console.log('this.state inside handleChangeSelected contains: ', this.state);
+		//console.log('this.state inside handleChangeSelected contains: ', this.state);
 	},
 	render: function() {
-		console.log('Schema contains: ', this.state.schema);
+		//console.log('Schema contains: ', this.state.schema);
 		//console.log('Users contains: ', this.state.users);
-		console.log('Data contains: ', this.state.data);
+		//console.log('Data contains: ', this.state.data);
 		//We need to be sure that the new user added to this group is an existing user
 		var newSchema = Object.create(this.state.schema);
 		newSchema.type = this.state.schema.type;
@@ -308,9 +308,9 @@ var GroupEditForm = React.createClass({
 		//We don't add members nor owners to newSchema since this fields validations will be done by the Multiselect component
 		//We generate an array with all the available users that will be used as "options" input for Multiselect component
 		//allowCreate=false (default) so only users inside options array will be allowed inside component
-		console.log('users contains: ', this.state.users);
+		//console.log('users contains: ', this.state.users);
 		var arrayUsers = Object.create(this.state.users);
-		console.log('arrayUsers contains: ', arrayUsers);
+		//console.log('arrayUsers contains: ', arrayUsers);
 		var options = [];
 		this.state.users.map(function(user, i){
 			arrayUsers[user.username] = user.cn;
@@ -318,7 +318,7 @@ var GroupEditForm = React.createClass({
 		});
 		//Now we generate the initialSelected array. Which contains the users that already belongs to the group. This
 		//array will be passed as a prop to the MutiselectField component
-		console.log('ArrayUsers contiene: ', arrayUsers);
+		//console.log('ArrayUsers contiene: ', arrayUsers);
 		var initialMembersSelected = [];
 		var initialOwnersSelected = [];
 		this.state.data.members.map(function(memberUserName, k){

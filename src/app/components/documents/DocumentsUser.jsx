@@ -43,12 +43,12 @@ const DocumentsUser = React.createClass({
     }, 3000);
   },
   confirmDelete(file) {
-    console.log('data inside confirmDelete contains: ',this.state.data);
-    console.log('File inside confirmDelete contains: ',file);
+    //console.log('data inside confirmDelete contains: ',this.state.data);
+    //console.log('File inside confirmDelete contains: ',file);
     this.setState({fileToDelete: file});
     confirm('Are you sure?', {
       done: () => {
-        console.log('ok, lets delete it');//DELETE /users/:user_id/documents/:document_name:
+        //console.log('ok, lets delete it');//DELETE /users/:user_id/documents/:document_name:
         jQuery.ajax({
           type: 'DELETE',
           url: config.usersBaseUri + '/' + encodeURIComponent(file.owner) + '/documents/'+ encodeURIComponent(file.cn),
@@ -63,8 +63,8 @@ const DocumentsUser = React.createClass({
           });
         })
         .fail(function(jqXhr) {
-          console.log('Failed to Delete User File',jqXhr);
-          console.log('Change state',this.state);
+          //console.log('Failed to Delete User File',jqXhr);
+          //console.log('Change state',this.state);
           var responseText = '';
           if (jqXhr.status === 0) {
             responseText = 'Failed to Delete User File. Not connect: Verify Network.';

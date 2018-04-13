@@ -28,7 +28,7 @@ var OrganizationalUnitsUsersFormContainer = React.createClass({
 			this.setState({users: users});
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('failed to retrieve users',jqXhr);
+			//console.log('failed to retrieve users',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Not connect: Verify Network.';
@@ -50,7 +50,7 @@ var OrganizationalUnitsUsersFormContainer = React.createClass({
 },
 
 	render: function() {
-		console.log('Users: ', this.state.users);
+		//console.log('Users: ', this.state.users);
 		if (this.state.users) {
 			return (
 				<div>

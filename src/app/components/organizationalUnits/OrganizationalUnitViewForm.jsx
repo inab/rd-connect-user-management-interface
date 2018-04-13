@@ -29,7 +29,7 @@ var OrganizationalUnitViewForm = React.createClass({
 		this.setState({showModal: true});
 	},
 	updateOrganizationalUnitData: function({formData}){
-		console.log('yay I\'m valid!');
+		//console.log('yay I\'m valid!');
 		//console.log(formData);
 		var organizationalUnitData = Object.assign({},formData);
 		jQuery.ajax({
@@ -44,7 +44,7 @@ var OrganizationalUnitViewForm = React.createClass({
 			self.clearForm();
 		})
 		.fail(function(jqXhr) {
-			console.log('Failed to Update Organizational Unit Information',jqXhr);
+			//console.log('Failed to Update Organizational Unit Information',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to Update Organizational Unit Information. Not connect: Verify Network.';

@@ -51,7 +51,7 @@ var DocumentsGroupContainer = React.createClass({
 			this.setState({data: data});
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('Failed to retrieve Documents for this group',jqXhr);
+			//console.log('Failed to retrieve Documents for this group',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to retrieve Documents. Not connect: Verify Network.';

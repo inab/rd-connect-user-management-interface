@@ -4,7 +4,6 @@ import jQuery from 'jquery';
 import UserEditForm from './UserEditForm.jsx';
 import UserViewForm from './UserViewForm.jsx';
 import UserEnableDisableForm from './UserEnableDisableForm.jsx';
-import UserPassword from './UserPassword.jsx';
 
 import { hashHistory } from 'react-router';
 
@@ -28,7 +27,7 @@ var UserFormContainer = React.createClass({
 			task: null
 		};
 	},
-	componentWillMount: function() {
+	componentDidMount: function() {
 		this.setState({task: this.props.route.task});
 		this.loadUserData();
 	},
@@ -52,7 +51,7 @@ var UserFormContainer = React.createClass({
 			this.setState({schema: schema});
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('Failed to retrieve user Schema',jqXhr);
+			//console.log('Failed to retrieve user Schema',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to retrieve user Schema. Not connect: Verify Network.';
@@ -84,7 +83,7 @@ var UserFormContainer = React.createClass({
 			this.loadUserSchema();
 		}.bind(this))
 		.fail(function(jqXhr, textStatus, errorThrown) {
-			console.log('Failed to retrieve user Information',jqXhr);
+			//console.log('Failed to retrieve user Information',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to retrieve user Information. Not connect: Verify Network.';
@@ -106,53 +105,39 @@ var UserFormContainer = React.createClass({
 	},
 
   render: function() {
-	console.log('task: ', this.state.task);
+	//console.log('task: ', this.state.task);
 	//console.log('schema: ', this.state.schema);
 	//console.log('data: ', this.state.data);
 	//console.log('error: ', this.state.error);
 		if (this.state.schema && this.state.data) {
-			if (this.state.task === 'password'){
-				return (
-					<div>
-						<UserPassword schema={this.state.schema}  data={this.state.data} />
-					</div>
-				);
-			}
-			if (this.state.task === 'edit'){
-				return (
-					<div>
-						<UserEditForm schema={this.state.schema}  data={this.state.data}  />
-					</div>
-				);
-			} else if (this.state.task === 'view'){
-				return (
-					<div>
-						<UserViewForm schema={this.state.schema}  data={this.state.data}  />
-					</div>
-				);
-			} else if (this.state.task === 'enable_disable'){
-				return (
-					<div>
-						<UserEnableDisableForm schema={this.state.schema}  data={this.state.data}  />
-					</div>
-				);
+			switch(this.state.task) {
+				case 'edit':
+					return <UserEditForm schema={this.state.schema}  data={this.state.data}  />;
+					break;
+				case 'view':
+					return <UserViewForm schema={this.state.schema}  data={this.state.data}  />;
+					break;
+				case 'enable_disable':
+					return <UserEnableDisableForm schema={this.state.schema}  data={this.state.data}  />;
+					break;
+				default:
+					console.log("TODO: Unimplemented task: "+this.state.task);
+					break;
 			}
 		}
 		if (this.state.error) {
 			return (
-				<div>
-					<Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
-						<Modal.Header closeButton>
-							<Modal.Title>Error!</Modal.Title>
-						</Modal.Header>
-						<Modal.Body>
-							<h4>{this.state.error}</h4>
-						</Modal.Body>
-						<Modal.Footer>
-							<Button onClick={()=>hashHistory.goBack()}>Close</Button>
-						</Modal.Footer>
-					</Modal>
-				</div>
+				<Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
+					<Modal.Header closeButton>
+						<Modal.Title>Error!</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						<h4>{this.state.error}</h4>
+					</Modal.Body>
+					<Modal.Footer>
+						<Button onClick={()=>hashHistory.goBack()}>Close</Button>
+					</Modal.Footer>
+				</Modal>
 			);
 		}
 		return <div>Loading...</div>;

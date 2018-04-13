@@ -21,7 +21,7 @@ var OrganizationalUnitNewFormContainer = React.createClass({
 			this.setState({schema: schema});
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('failed to retrieve Organizational Unit Schema',jqXhr);
+			//console.log('failed to retrieve Organizational Unit Schema',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Not connect: Verify Network.';

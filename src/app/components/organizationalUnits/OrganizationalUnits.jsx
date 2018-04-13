@@ -74,7 +74,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
   };
 
 OrganizationalUnits.propTypes = {
-    data: React.PropTypes.array.isRequired,
+    data: React.PropTypes.objectOf(React.PropTypes.array),
     organizationalUnits: React.PropTypes.array.isRequired
 };
 module.exports = OrganizationalUnits;

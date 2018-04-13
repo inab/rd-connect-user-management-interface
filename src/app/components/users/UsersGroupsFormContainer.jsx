@@ -12,7 +12,7 @@ var UsersGroupsFormContainer = React.createClass({
 		params: React.PropTypes.array
 	},
 	getInitialState: function() {
-		console.log('TASK: ', this.props.route.task);
+		//console.log('TASK: ', this.props.route.task);
 		return {
 			schema: null,
 			data: null,
@@ -71,7 +71,7 @@ var UsersGroupsFormContainer = React.createClass({
 			this.loadGroupsFromServer();
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('failed to retrieve user Schema',jqXhr);
+			//console.log('failed to retrieve user Schema',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Not connect: Verify Network.';
@@ -93,10 +93,10 @@ var UsersGroupsFormContainer = React.createClass({
 	},
 
 	render: function() {
-		console.log('Schema: ', this.state.schema);
-		console.log('Data: ', this.state.data);
-		console.log('Groups: ', this.state.groups);
-		console.log('TASK: ', this.state.task);
+		//console.log('Schema: ', this.state.schema);
+		//console.log('Data: ', this.state.data);
+		//console.log('Groups: ', this.state.groups);
+		//console.log('TASK: ', this.state.task);
 		if ((this.state.schema) && (this.state.data) && (this.state.groups)) {
 			if (this.state.task === 'users_groups_view'){
 				return (

@@ -114,7 +114,7 @@ var UserNewFormContainer = React.createClass({
 			this.loadOrganizationalUnitsFromServer();
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('failed to retrieve user Schema',jqXhr);
+			//console.log('failed to retrieve user Schema',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Not connect: Verify Network.';

@@ -7,7 +7,7 @@ import auth from 'components/auth.jsx';
 import zxcvbn from 'zxcvbn';
 import ReactMustache from 'react-mustache'
 
-const userPassword = React.createClass({
+const UserPassword = React.createClass({
 	propTypes:{
 		data: React.PropTypes.object.isRequired,
 	},
@@ -112,12 +112,12 @@ const userPassword = React.createClass({
 				data: JSON.stringify({userPassword: this.state.valuePassword1})
 			})
 			.done(function(data) {
-				console.log('Password correctly updated!!');
+				//console.log('Password correctly updated!!');
 				this.setState({modalTitle:'Success', error: 'Password changed correctly!!', showModal: true});
 
 			}.bind(this))
 			.fail(function(jqXhr) {
-				console.log('Failed to change user password',jqXhr.responseText);
+				//console.log('Failed to change user password',jqXhr.responseText);
 				var responseText = '';
 				if (jqXhr.status === 0) {
 					responseText = 'Failed to change user password. Not connect: Verify Network.';
@@ -187,7 +187,7 @@ const userPassword = React.createClass({
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button onClick={this.close}>Close</Button>
+						<Button bsStyle="info" onClick={this.close}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
 					</Modal.Footer>
 				</Modal>
 				<form onSubmit={onSubmit}>
@@ -236,4 +236,4 @@ const userPassword = React.createClass({
 		);
 	}
 });
-module.exports = userPassword;
+module.exports = UserPassword;

@@ -49,7 +49,7 @@ var GroupFormContainer = React.createClass({
 			this.setState({users: sortedUsers});
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('Failed to retrieve Users',jqXhr);
+			//console.log('Failed to retrieve Users',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to retrieve Users. Not connect: Verify Network.';
@@ -79,7 +79,7 @@ var GroupFormContainer = React.createClass({
 			this.loadUsers();
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('Failed to retrieve group Schema',jqXhr);
+			//console.log('Failed to retrieve group Schema',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to retrieve group Schema. Not connect: Verify Network.';
@@ -110,7 +110,7 @@ var GroupFormContainer = React.createClass({
 			this.loadGroupSchema();
 		}.bind(this))
 		.fail(function(jqXhr, textStatus, errorThrown) {
-			console.log('Failed to retrieve group Information',jqXhr);
+			//console.log('Failed to retrieve group Information',jqXhr);
 
 			var responseText = '';
 			if (jqXhr.status === 0) {
@@ -133,9 +133,9 @@ var GroupFormContainer = React.createClass({
   },
    //This is to browse history back when group is not found after showing modal error
   render: function() {
-	console.log('this.state.schema is: ',this.state.schema);
-	console.log('this.state.data is: ',this.state.data);
-	console.log('this.state.users is: ',this.state.users);
+	//console.log('this.state.schema is: ',this.state.schema);
+	//console.log('this.state.data is: ',this.state.data);
+	//console.log('this.state.users is: ',this.state.users);
     if (this.state.schema && this.state.data && this.state.users) {
 		if ((this.state.task === 'edit') && (this.state.data) && (this.state.users)){
 			return (

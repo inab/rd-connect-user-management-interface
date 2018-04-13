@@ -69,7 +69,7 @@ const DocumentsGroupNew = React.createClass({
       }, 3000);
     },
     validateForm: function (values) {
-      console.log('Values inside validateForm contains: ', values);
+      //console.log('Values inside validateForm contains: ', values);
       var selectOptions = ['userAgreement', 'genericAgreement', 'otherAgreement','miscelaneous','mailTemplate','mailAttachment']; 
       //First we validate documentFile
       if (!values.documentFile){
@@ -172,7 +172,7 @@ const DocumentsGroupNew = React.createClass({
         this.setState({ modalTitle: 'Success', error: 'Group created correctly!!', showModal: true});
       }.bind(this))
       .fail(function(jqXhr) {
-        console.log('Failed to Create new groups\'s document',jqXhr);
+        //console.log('Failed to Create new groups\'s document',jqXhr);
         var responseText = '';
         if (jqXhr.status === 0) {
           responseText = 'Failed to Create new group\'s document. Not connect: Verify Network.';

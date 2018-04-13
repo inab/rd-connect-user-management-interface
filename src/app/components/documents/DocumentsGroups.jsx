@@ -10,7 +10,7 @@ const DocumentsGroups = ({data}) => {
     .chain(data)
     .sortBy(function(groupObjects){ return groupObjects.cn; })
     .value();
-  console.log('sortedData so far is: ', sortedData);
+  //console.log('sortedData so far is: ', sortedData);
   return (
       <div>
       <h3> Documents related to the Groups </h3>
@@ -29,7 +29,7 @@ const DocumentsGroups = ({data}) => {
                       <tbody>
                       {sortedData.map(function(group,i){
                         var listOwners = group.owner.sort();
-                        console.log('listOwners contains: ', listOwners);
+                        //console.log('listOwners contains: ', listOwners);
                          return (
                            <tr key={i}>
                               <td><strong>{group.cn}</strong></td>

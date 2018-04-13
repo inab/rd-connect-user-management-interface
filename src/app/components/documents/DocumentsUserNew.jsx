@@ -68,7 +68,7 @@ const DocumentsUserNew = React.createClass({
       }, 3000);
     },
     validateForm: function (values) {
-      console.log('Values inside validateForm contains: ', values);
+      //console.log('Values inside validateForm contains: ', values);
       var selectOptions = ['userAgreement', 'genericAgreement', 'otherAgreement','miscelaneous','mailTemplate','mailAttachment']; 
       //First we validate documentFile
       if (!values.documentFile){
@@ -172,7 +172,7 @@ const DocumentsUserNew = React.createClass({
         this.setState({ modalTitle: 'Success', error: 'User\'s document created correctly!!', showModal: true});
       }.bind(this))
       .fail(function(jqXhr) {
-        console.log('Failed to Create new group\'s document',jqXhr);
+        //console.log('Failed to Create new group\'s document',jqXhr);
         var responseText = '';
         if (jqXhr.status === 0) {
           responseText = 'Failed to Create new user\'s document. Not connect: Verify Network.';

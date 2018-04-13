@@ -70,10 +70,10 @@ var UserNewFormUnprivileged = React.createClass({
 			groupsSelected = value.split(',');
 		}
 		this.setState({groupsSelected:groupsSelected});
-		console.log('this.state.groupsSelected inside handleChangeSelected contains: ', groupsSelected);
+		//console.log('this.state.groupsSelected inside handleChangeSelected contains: ', groupsSelected);
 	},
 	dropHandler: function (files) {
-		console.log('Received files: ', files);
+		//console.log('Received files: ', files);
 		// TODO: Where the user is?
 		var username = '';
 		var req = request.put(config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username) + '/picture');
@@ -119,13 +119,13 @@ var UserNewFormUnprivileged = React.createClass({
       this.refs.dropzone.open();
     },
 	addUserData: function({formData}){
-		console.log('yay I\'m valid!');
-		console.log(formData);
+		//console.log('yay I\'m valid!');
+		//console.log(formData);
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
 		//now we have to insert groups inside userData.
 		userData.groups = this.state.groupsSelected;
-		console.log('El userData contiene: ',userData);
+		//console.log('El userData contiene: ',userData);
 		jQuery.ajax({
 			type: 'PUT',
 			url: config.usersBaseUri,
@@ -139,7 +139,7 @@ var UserNewFormUnprivileged = React.createClass({
 			self.clearForm();
 		})
 		.fail(function(jqXhr) {
-			console.log('Failed to Create New User',jqXhr);
+			//console.log('Failed to Create New User',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to Create New User. Not connect: Verify Network.';
@@ -170,7 +170,7 @@ var UserNewFormUnprivileged = React.createClass({
 		delete schema.properties.picture;
 		//We generate an array with all the available groups that will be used as "options" input for Multiselect component
 		//allowCreate=false (default) so only groups inside options array will be allowed inside component
-		console.log('groups contains: ', this.state.groups);
+		//console.log('groups contains: ', this.state.groups);
 		var arrayGroups = Object.create(this.state.groups);
 		var options = [];
 		this.state.groups.map(function(group, i){
@@ -179,9 +179,9 @@ var UserNewFormUnprivileged = React.createClass({
 		});
 		//Now we generate the initialSelected array. Which contains the groups that the user already belongs to. This
 		//array will be passed as a prop to the MutiselectField component
-		console.log('arrayGroups contiene: ', arrayGroups);
+		//console.log('arrayGroups contiene: ', arrayGroups);
 		var initialGroupsSelected = this.state.groupsSelected;
-		console.log('initialGroupsSelected contains: ', initialGroupsSelected);
+		//console.log('initialGroupsSelected contains: ', initialGroupsSelected);
 
 		//We generate the enums property for the Organizational Units extracting the info from data
 		var arrayOUobjects = this.props.data; var arrayOUstrings = [];
@@ -206,7 +206,7 @@ var UserNewFormUnprivileged = React.createClass({
 
 		//var data = this.props.data;
 		//delete data.userPassword;
-		console.log(schema);
+		//console.log(schema);
 		const uiSchema = {
 			'ui:order': schemaOrdered,
 			'userPassword': {
@@ -236,8 +236,8 @@ var UserNewFormUnprivileged = React.createClass({
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.addUserData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
-		console.log('Error: ', this.state.error);
-		console.log('Show: ', this.state.showModal);
+		//console.log('Error: ', this.state.error);
+		//console.log('Show: ', this.state.showModal);
 		var userImage = this.state.picture;
 		if (typeof userImage === 'undefined'){
 			userImage = imageNotFoundSrc;

@@ -25,7 +25,7 @@ var UserEnableDisableForm = React.createClass({
 		this.setState({showModal: true});
 	},
 	updateUserData: function({formData}){
-		console.log('yay I\'m valid!');
+		//console.log('yay I\'m valid!');
 		//console.log('formData contiene: ', formData);
 		var userData = Object.assign({},formData);
 		var enabled = formData.enabled;
@@ -44,7 +44,7 @@ var UserEnableDisableForm = React.createClass({
 			self.clearForm();
 		})
 		.fail(function(jqXhr) {
-			console.log('Failed to Update User Information',jqXhr);
+			//console.log('Failed to Update User Information',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to Update User Information. Not connect: Verify Network.';
@@ -87,7 +87,7 @@ var UserEnableDisableForm = React.createClass({
 			enabled: data.enabled
 		};
 		//console.log(schema);
-		console.log('ENABLE/DISABLE data: ',enableDisableData);
+		//console.log('ENABLE/DISABLE data: ',enableDisableData);
 		const uiSchema = {
 			'username': {
 				'ui:readonly': true,
@@ -96,8 +96,8 @@ var UserEnableDisableForm = React.createClass({
 		const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateUserData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
-		console.log('Error: ', this.state.error);
-		console.log('Show: ', this.state.showModal);
+		//console.log('Error: ', this.state.error);
+		//console.log('Show: ', this.state.showModal);
 
 		return (
 			<div>

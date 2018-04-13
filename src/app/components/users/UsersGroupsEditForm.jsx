@@ -41,7 +41,7 @@ var UsersGroupsEditForm = React.createClass({
 		this.setState({showModal: true});
 	},
 	updateUserData: function({formData}){
-		console.log('yay I\'m valid!');
+		//console.log('yay I\'m valid!');
 		//console.log('El formData contiene: ',formData);
 		var userData = Object.assign({},formData);
 		//console.log('El userData contiene: ',userData);
@@ -57,7 +57,7 @@ var UsersGroupsEditForm = React.createClass({
 			hashHistory.goBack();
 		})
 		.fail(function(jqXhr) {
-			console.log('Failed to Update User Information',jqXhr);
+			//console.log('Failed to Update User Information',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to Update User Information. Not connect: Verify Network.';
@@ -87,11 +87,11 @@ var UsersGroupsEditForm = React.createClass({
 			data.groups = value.split(',');
 		}
 		this.setState({data:data});
-		console.log('this.state inside handleChangeSelected contains: ', this.state);
+		//console.log('this.state inside handleChangeSelected contains: ', this.state);
 	},
 	render: function() {
 		var schema = this.props.schema;
-		console.log('ORIGINAL SCHEMA: ', schema);
+		//console.log('ORIGINAL SCHEMA: ', schema);
 		var newSchema =  {};
 		newSchema.type = schema.type;
 		newSchema.properties = {};
@@ -101,9 +101,9 @@ var UsersGroupsEditForm = React.createClass({
 		//We don't add groups to newSchema since this field validation will be done by the Multiselect component
 		//We generate an array with all the available groups that will be used as "options" input for Multiselect component
 		//allowCreate=false (default) so only groups inside options array will be allowed inside component
-		console.log('groups contains: ', this.state.groups);
+		//console.log('groups contains: ', this.state.groups);
 		var arrayGroups = Object.create(this.state.groups);
-		console.log('arrayGroups contains: ', arrayGroups);
+		//console.log('arrayGroups contains: ', arrayGroups);
 		var options = [];
 		this.state.groups.map(function(group, i){
 			arrayGroups[group.cn] = group.cn;
@@ -111,18 +111,18 @@ var UsersGroupsEditForm = React.createClass({
 		});
 		//Now we generate the initialSelected array. Which contains the groups that the user already belongs to. This
 		//array will be passed as a prop to the MutiselectField component
-		console.log('arrayGroups contiene: ', arrayGroups);
+		//console.log('arrayGroups contiene: ', arrayGroups);
 		var initialGroupsSelected = [];
 		this.state.data.groups.map(function(groupName, k){
 			initialGroupsSelected.push({'value':groupName, 'label': arrayGroups[groupName]});
 		});
-		console.log('New schema contains: ', newSchema);
+		//console.log('New schema contains: ', newSchema);
 		var newData = Object.create(this.state.data);
 
 		newData.cn = this.state.data.cn;
 		newData.username = this.state.data.username;
 
-		console.log('NEW DATA contains: ', newData);
+		//console.log('NEW DATA contains: ', newData);
 		const uiSchema = {
 			'username': {
 				'ui:readonly': true

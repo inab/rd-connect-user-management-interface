@@ -27,7 +27,7 @@ function sortObjOusWithUsers (objOusWithUsers){
 
 var OrganizationalUnitsContainer = React.createClass({
 	getInitialState: function() {
-		return {data: []};
+		return {organizationalUnits:[],data: {}};
 	},
 	componentWillMount: function() {
 		this.loadOrganizationalUnitsFromServer();
@@ -68,7 +68,7 @@ var OrganizationalUnitsContainer = React.createClass({
 			dataType: 'json',
 			cache: false,
 			success: function(data) {
-				console.log('success!');
+				//console.log('success!');
 				//console.log('organizationalUnits: ', this.state.organizationalUnits)
 				//console.log('data contains the users: ', data);
 				var objOusWithUsers = {};

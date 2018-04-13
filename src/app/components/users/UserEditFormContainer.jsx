@@ -11,7 +11,7 @@ import config from 'config.jsx';
 
 var UserEditFormContainer = React.createClass({
 	propTypes:{
-		route: React.PropTypes.array,
+		route: React.PropTypes.object,
 		params: React.PropTypes.object
 	},
 	//mixins: [ History ], //This is to browse history back when user is not found after showing modal error
@@ -51,7 +51,7 @@ var UserEditFormContainer = React.createClass({
 			this.setState({schema: schema});
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('Failed to retrieve user Schema',jqXhr);
+			//console.log('Failed to retrieve user Schema',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to retrieve user Schema. Not connect: Verify Network.';
@@ -83,7 +83,7 @@ var UserEditFormContainer = React.createClass({
 			this.loadUserSchema();
 		}.bind(this))
 		.fail(function(jqXhr, textStatus, errorThrown) {
-			console.log('Failed to retrieve user Information',jqXhr);
+			//console.log('Failed to retrieve user Information',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to retrieve user Information. Not connect: Verify Network.';
@@ -105,7 +105,7 @@ var UserEditFormContainer = React.createClass({
 	},
 
   render: function() {
-	console.log('task: ', this.state.task);
+	//console.log('task: ', this.state.task);
 	//console.log('schema: ', this.state.schema);
 	//console.log('data: ', this.state.data);
 	//console.log('error: ', this.state.error);

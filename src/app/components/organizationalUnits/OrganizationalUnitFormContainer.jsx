@@ -46,7 +46,7 @@ var OrganizationalUnitFormContainer = React.createClass({
 			this.setState({schema: schema});
 		}.bind(this))
 		.fail(function(jqXhr) {
-			console.log('Failed to retrieve Organizationa Unit Schema',jqXhr);
+			//console.log('Failed to retrieve Organizationa Unit Schema',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to retrieve Organizationa Unit Schema. Not connect: Verify Network.';
@@ -77,7 +77,7 @@ var OrganizationalUnitFormContainer = React.createClass({
 			this.loadOrganizationalUnitSchema();
 		}.bind(this))
 		.fail(function(jqXhr, textStatus, errorThrown) {
-			console.log('Failed to retrieve Organizational Unit Information',jqXhr);
+			//console.log('Failed to retrieve Organizational Unit Information',jqXhr);
 			var responseText = '';
 			if (jqXhr.status === 0) {
 				responseText = 'Failed to retrieve Organizational Unit Information. Not connect: Verify Network.';

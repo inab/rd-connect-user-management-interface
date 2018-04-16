@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { hashHistory, Router, Route, Link, withRouter, IndexRoute } from 'react-router';
+import ReactDOM from 'react-dom';
+import { hashHistory, Redirect, Router, Route, Link, withRouter, IndexRoute } from 'react-router';
 //import withExampleBasename from 'components/withExampleBasename.js';
 import { Modal, Button, Col } from 'react-bootstrap';
 import Raven from 'raven-js';
@@ -51,10 +51,14 @@ Raven.config(sentryURL, {
   }
 }).install();
 */
+
+const history = hashHistory;
+
 const App = React.createClass({
   getInitialState() {
     return {
       loggedIn: auth.loggedIn(),
+      loginData: {},
       canSubmit: false,
       validationErrors: {}
     };
@@ -63,12 +67,25 @@ const App = React.createClass({
     auth.onChange = this.updateAuth;
     //auth.login();
   },
-  updateAuth(loggedIn) {
-      this.setState({
-          loggedIn
-      });
-  },
+	updateAuth(loggedIn) {
+		this.setState({loggedIn: !!loggedIn,loginData: loggedIn ? loggedIn : {}});
+		//auth.getLoginData((loginData) => {
+		//	this.setState({
+		//		loginData: loginData
+		//	});
+		//});
+	},
+	scheduleUserViewRedirect: function() {
+		auth.getLoginData((loginData) => {
+			history.push('/users/view/'+encodeURIComponent(loginData.username));
+		});
+	},
   render() {
+	if(!this.props.children) {
+		if(this.state.loggedIn) {
+			this.scheduleUserViewRedirect();
+		}
+	}
     return (
         <div>
             <div>
@@ -90,7 +107,8 @@ const App = React.createClass({
                         routes={this.props.routes}
                         params={this.props.params}
                     />
-                    {this.props.children ||
+                    {
+						this.props.children ||
                         <div>
                             <p>You are {!this.state.loggedIn && 'not'} logged in.</p>
                             {this.state.loggedIn ? (
@@ -108,10 +126,21 @@ const App = React.createClass({
 });
 
 const UserProfile = React.createClass({
+	getInitialState: function() {
+		return {
+			loginData: null
+		};
+	},
+	componentDidMount: function() {
+		auth.getLoginData((loginData) => {
+			this.setState({loginData: loginData });
+			history.push('/users/view/'+encodeURIComponent(loginData.username));
+		});
+	},
   render() {
-    const loginData = auth.getLoginData();
+    const loginData = this.state.loginData;
 
-    return (
+    return loginData ? (
       <div>
         <h1>User's Profile</h1>
         <p>Username: {loginData.username}</p>
@@ -119,7 +148,7 @@ const UserProfile = React.createClass({
         <p>e-mail: {loginData.email}</p>
         <p>Category: {loginData.userCategory}</p>
       </div>
-    );
+    ) : (<div></div>);
   }
 });
 
@@ -192,7 +221,7 @@ const Login = withRouter(React.createClass({
         if (location.state && location.state.nextPathname) {
           this.props.router.replace(location.state.nextPathname);
         } else {
-          this.props.router.replace('/');
+          this.props.router.replace('/users/view/'+encodeURIComponent(username));
         }
       });
     },
@@ -203,7 +232,7 @@ const Login = withRouter(React.createClass({
           <Modal show={this.state.showModal} error={this.state.error} className="login">
             <Modal.Header className="login">
               <Modal.Title>RD-Connect UMI Login</Modal.Title>
-              </Modal.Header>
+            </Modal.Header>
             <Modal.Body className="login">
               <Formsy.Form
                 onValidSubmit={this.handleSubmit}
@@ -274,7 +303,7 @@ const Login = withRouter(React.createClass({
                       )}
             </Modal.Footer>
           </Modal>
-          </div>
+        </div>
       );
     }
   })
@@ -304,15 +333,15 @@ function requireAuth(nextState, replace) {
 //https://github.com/zilverline/react-tap-event-plugin
 injectTapEventPlugin();
 
-render((
-    <Router history={hashHistory}>
+ReactDOM.render((
+    <Router history={history}>
             <Route path="/" component={App} name="Home">
                 {/* add it here, as a child of `/` */}
-                <Route path="login" component={Login} name="Login"/>
-                <Route path="logout" component={Logout} name="Logout"/>
-                <Route path="userProfile" component={UserProfile} onEnter={requireAuth} name="User's Profile"/>
-                <Route path="/users" name="Users" component={Box} onEnter={requireAuth}>
-                    <IndexRoute component={UsersContainer}/>
+                <Route path="login" component={Login} name="Login" />
+                <Route path="logout" component={Logout} name="Logout" />
+                <Route path="userProfile" component={UserProfile} onEnter={requireAuth} name="User's Profile" />
+                <Route path="users" name="Users" component={Box} onEnter={requireAuth}>
+                    <IndexRoute component={UsersContainer} />
                     <Route path="list" name="List" component={UsersContainer} task={'list'} />
                     <Route path="edit/:username" name="Edit" staticName component={UserEditFormContainer} task={'edit'}/>
                     <Route path="view/:username" name="View" staticName component={UserFormContainer} task={'view'}/>
@@ -324,11 +353,11 @@ render((
                     <Route path="groups" name="Users in groups" component={Box} >
                         <IndexRoute component={UsersGroupsContainer}/>
                         <Route path="list" name="View Users in group" staticName component={UsersGroupsContainer} task={'list'}/>
-                        <Route path="view/:username" name="View Users in group" staticName component={UsersGroupsFormContainer} task={'users_groups_view'}/>
-                        <Route path="edit/:username" name="Edit Users in group" staticName component={UsersGroupsFormContainer} task={'users_groups_edit'}/>
+                        <Route path="view/:username" name="View Users in group" staticName component={UsersGroupsFormContainer} task={'users_groups_view'} />
+                        <Route path="edit/:username" name="Edit Users in group" staticName component={UsersGroupsFormContainer} task={'users_groups_edit'} />
                     </Route>
                 </Route>
-                <Route path="/organizationalUnits" name="Organizational Units" component={Box} onEnter={requireAuth}>
+                <Route path="organizationalUnits" name="Organizational Units" component={Box} onEnter={requireAuth}>
                     <IndexRoute component={OrganizationalUnitsContainer}/>
                     <Route path="list" name="List Organizational Units" component={OrganizationalUnitsContainer} />
                     <Route path="edit/:organizationalUnit" name="Edit" staticName component={OrganizationalUnitFormContainer} task={'edit'} />
@@ -336,15 +365,15 @@ render((
                     <Route path="new" name="New" component={OrganizationalUnitNewFormContainer} />
                     <Route path="users" name="Users in Organizational Units" component={OrganizationalUnitsUsersContainer} />
                 </Route>
-                <Route path="/groups" name="Groups" component={Box} onEnter={requireAuth}>
-                    <IndexRoute component={GroupsContainer}/>
+                <Route path="groups" name="Groups" component={Box} onEnter={requireAuth}>
+                    <IndexRoute component={GroupsContainer} />
                     <Route path="list" name="List" component={GroupsContainer} />
                     <Route path="edit/:groupName" name="Edit" staticName component={GroupFormContainer} task={'edit'} />
                     <Route path="view/:groupName" name="View" staticName component={GroupFormContainer} task={'view'} />
                     <Route path="new" name="New" component={GroupNewFormContainer} />
                 </Route>
-                <Route path="/documents" name="Documents" component={Box} onEnter={requireAuth}>
-                    <IndexRoute component={DocumentsUsersContainer}/>
+                <Route path="documents" name="Documents" component={Box} onEnter={requireAuth}>
+                    <IndexRoute component={DocumentsUsersContainer} />
                     <Route path="users" name="Users" component={DocumentsUsersContainer} />
                     <Route path="users/:username" name="List User Documents" component={DocumentsUserContainer} />
                     <Route path="users/:username/new" name="New User Document" component={DocumentsUserNew} />

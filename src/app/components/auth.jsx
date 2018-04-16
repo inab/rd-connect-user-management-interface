@@ -12,9 +12,10 @@ class Auth {
 		this.userProps = null;
 		
 		// Forcing to get the login information
-		this.getLoginData();
-		
-		this.initialized = true;
+		let auth = this;
+		this.getLoginData(() => {
+			auth.initialized = true;
+		});
 	}
 	
 	getAuthHeaders() {
@@ -47,13 +48,12 @@ class Auth {
 	}
 	
 	// This is an informational method
-	getLoginData() {
+	getLoginData(cb,ecb) {
 		if(this.userProps === null) {
 			if(this.token !== null) {
 				var parthis = this;
 				// Let's validate the session status, in a synchronous way
 				jQuery.ajax({
-					async: false,
 					type: 'GET',
 					url: config.apiBaseUri + '/login',
 					dataType: 'json',
@@ -64,11 +64,17 @@ class Auth {
 				.done((newUserProps) => {
 					// Setting new data
 					this.setLoginData(newUserProps);
+					if(cb !== undefined) {
+						cb(this.userProps);
+					}
 				})
 				.fail((xhr, status, err) => {
 					// As we cannot fetch the user information, remove
 					// all the session traces
 					this.invalidateSession();
+					if(ecb!==undefined) {
+						ecb(xhr, status, err);
+					}
 				});
 			}
 		}
@@ -77,10 +83,18 @@ class Auth {
 		return this.userProps;
 	}
 	
-	getLoginToken() {
+	getLoginToken(cb) {
 		// We validate the session here
-		var userProps = this.getLoginData();
-		return userProps !== null ? this.token : null;
+		var userProps = this.getLoginData(() => {
+				if(cb!==undefined) {
+					cb(this.token);
+				}
+			}, () => {
+				if(cb!==undefined) {
+					cb(null);
+				}
+			}
+		);
 	}
 	
 	login(username, password, cb) {
@@ -93,8 +107,8 @@ class Auth {
 		pretendRequest(username, password, (res) => {
 			if (res.authenticated) {
 				this.setLoginData(res.userProps);
-				if (cb) cb(true,null,null);
-				this.onChange(true);
+				if (cb) cb(res.userProps,null,null);
+				this.onChange(res.userProps);
 			} else {
 				if (cb) cb(false,res.status,res.errorMsg);
 				this.onChange(false);
@@ -130,7 +144,7 @@ class Auth {
 	}
 	
 	loggedIn() {
-		return !!this.getLoginToken();
+		return !!this.token;
 	}
 
 	onChange() {}

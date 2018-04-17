@@ -114,21 +114,25 @@ td.border4colspan {
 .loginBox ul {
 	list-style: none;
 }
+
+@login-title-color: #337ab7;
+
 p.badLoginInformation {
 	color: red;
 }
 .login.modal-header {
-    min-height: 16.43px;
+    min-height: 1em;
     padding: 15px;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 0.2em solid @login-title-color;
 }
 .login h4.modal-title  {
-	min-height: 16.43px;
+	min-height: 1em;
 	text-align: center;
-	font-size: 4em;
+	font-size: 3em;
+	color: @login-title-color;
 }
 .modal-body.login {
-	min-height: 16.43px;
+	min-height: 1em;
 	padding: 1em;
 }
 .modal-footer.login {
@@ -136,5 +140,5 @@ p.badLoginInformation {
     border-top: 0;
 }
 .documentsForm.login {
-	margin-top: 2em;
+	margin-top: 1em;
 }

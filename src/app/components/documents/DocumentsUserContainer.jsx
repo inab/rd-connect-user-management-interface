@@ -8,9 +8,9 @@ import auth from 'components/auth.jsx';
 import { hashHistory } from 'react-router';
 
 //This container should retrieve information about documents related to a given user
-var DocumentsUserContainer = React.createClass({
+const DocumentsUserContainer = React.createClass({
 	propTypes:{
-		route: React.PropTypes.array,
+		route: React.PropTypes.object,
 		params: React.PropTypes.object
 	},
 	contextTypes: {

@@ -15,23 +15,30 @@ import Box from 'components/Box.jsx';
 import UsersContainer from 'components/users/UsersContainer.jsx';
 import UserFormContainer from 'components/users/UserFormContainer.jsx';
 import PasswordContainer from 'components/users/PasswordContainer.jsx';
+
 import UserEditFormContainer from 'components/users/UserEditFormContainer.jsx';
 import UserNewFormContainer from 'components/users/UserNewFormContainer.jsx';
 import UsersGroupsContainer from 'components/users/UsersGroupsContainer.jsx';
 import UsersGroupsFormContainer from 'components/users/UsersGroupsFormContainer.jsx';
+
 import OrganizationalUnitsContainer from 'components/organizationalUnits/OrganizationalUnitsContainer.jsx';
 import OrganizationalUnitFormContainer from 'components/organizationalUnits/OrganizationalUnitFormContainer.jsx';
 import OrganizationalUnitNewFormContainer from 'components/organizationalUnits/OrganizationalUnitNewFormContainer.jsx';
 import OrganizationalUnitsUsersContainer from 'components/organizationalUnits/OrganizationalUnitsUsersContainer.jsx';
+
 import GroupsContainer from 'components/groups/GroupsContainer.jsx';
 import GroupFormContainer from 'components/groups/GroupFormContainer.jsx';
 import GroupNewFormContainer from 'components/groups/GroupNewFormContainer.jsx';
+
 import DocumentsUsersContainer from 'components/documents/DocumentsUsersContainer.jsx';
 import DocumentsUserContainer from 'components/documents/DocumentsUserContainer.jsx';
 import DocumentsUserNew from 'components/documents/DocumentsUserNew.jsx';
 import DocumentsGroupsContainer from 'components/documents/DocumentsGroupsContainer.jsx';
 import DocumentsGroupContainer from 'components/documents/DocumentsGroupContainer.jsx';
 import DocumentsGroupNew from 'components/documents/DocumentsGroupNew.jsx';
+
+import MailingContainer from 'components/mailing/MailingContainer.jsx';
+import NewUserMailTemplatesContainer from 'components/mailing/NewUserMailTemplatesContainer.jsx';
 
 import Formsy from 'formsy-react';
 import FRC from 'formsy-react-components';
@@ -380,6 +387,11 @@ ReactDOM.render((
                     <Route path="groups" name="Groups" component={DocumentsGroupsContainer} />
                     <Route path="groups/:groupName" name="List Group Documents" component={DocumentsGroupContainer} />
                     <Route path="groups/:groupName/new" name="New Group Document" component={DocumentsGroupNew} />
+                </Route>
+                <Route path="mail" name="Mail tasks" component={Box} onEnter={requireAuth}>
+					<IndexRoute component={MailingContainer} />
+					<Route path="platformMailing" name="Send massive e-mail" component={MailingContainer} />
+					<Route path="newUserTemplatesManagement" name="New User Template Management" component={NewUserMailTemplatesContainer} />
                 </Route>
             </Route>
         </Router>

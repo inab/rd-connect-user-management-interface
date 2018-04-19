@@ -1,21 +1,24 @@
 import React from 'react';
 import jQuery from 'jquery';
 import OrganizationalUnits from './OrganizationalUnits.jsx';
-import Underscore from 'underscore';
 
 import config from 'config.jsx';
+
 function compare(a,b) {
-  if (a.surname[0] < b.surname[0])
-    return -1;
-  if (a.surname[0] > b.surname[0])
-    return 1;
-  return 0;
-}	
-function sortObjOusWithUsers (objOusWithUsers){
+	if(a.surname[0] < b.surname[0]) {
+		return -1;
+	}
+	if(a.surname[0] > b.surname[0]) {
+		return 1;
+	}
+	return 0;
+}
+
+function sortObjOusWithUsers(objOusWithUsers){
 	//console.log(ousWithUsers);
-	for (var organizationalUnitName in objOusWithUsers){
+	for(var organizationalUnitName in objOusWithUsers){
 		// skip loop if the property is from prototype
-		if (!objOusWithUsers.hasOwnProperty(organizationalUnitName)){
+		if(!objOusWithUsers.hasOwnProperty(organizationalUnitName)){
 			continue;
 		}
 		var arrayUsers = objOusWithUsers[organizationalUnitName];
@@ -45,7 +48,9 @@ var OrganizationalUnitsContainer = React.createClass({
 			success: function(organizationalUnits) {
 				//console.log("success!");
 				//we sort the array of objects based on the organizationalUnit name
-				organizationalUnits.sort(function(a,b) {return (a.organizationalUnit > b.organizationalUnit) ? 1 : ((b.organizationalUnit > a.organizationalUnit) ? -1 : 0);} ); 
+				organizationalUnits.sort(function(a,b) {
+					return (a.organizationalUnit > b.organizationalUnit) ? 1 : ((b.organizationalUnit > a.organizationalUnit) ? -1 : 0);}
+				);
 				this.setState({organizationalUnits: organizationalUnits});
 				this.loadUsersFromServer();
 			}.bind(this),
@@ -83,7 +88,7 @@ var OrganizationalUnitsContainer = React.createClass({
 				data.forEach(function(user) {
 					var organizationalUnitName = user.organizationalUnit;
 					//We have the user and its organizationalUnit. We can load the user in its place inside arrayOusWithUsers
-					if (objOusWithUsers[organizationalUnitName] !== undefined){
+					if(objOusWithUsers[organizationalUnitName] !== undefined){
 						var tmpArrayUsers = objOusWithUsers[organizationalUnitName];
 						tmpArrayUsers.push(user);
 						objOusWithUsers[organizationalUnitName] = tmpArrayUsers;
@@ -105,12 +110,12 @@ var OrganizationalUnitsContainer = React.createClass({
 	render: function() {
 		//console.log('Data contains so far: ', this.state.data);
 		//console.log('OrganizationalUnits contain ', this.state.organizationalUnits );
-		if (this.state.error) {
+		if(this.state.error) {
 			return (
 				<div>Error {this.state.error}</div>
 			);
 		}
-		if ((this.state.data) && (this.state.organizationalUnits)) {
+		if((this.state.data) && (this.state.organizationalUnits)) {
 			return (
 				<div>
 					<OrganizationalUnits data={this.state.data} organizationalUnits={this.state.organizationalUnits} />

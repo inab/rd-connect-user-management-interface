@@ -50,8 +50,7 @@ var MultiSelectField = React.createClass({
 			<div className="section">
 				<h3 className="section-heading">{this.props.label}</h3>
 				<Select multi simpleValue disabled={this.state.disabled} value={this.state.value} placeholder="Select the users that belong to this group)" options={this.state.options} onChange={this.handleSelectChange} />
-				<div className="checkbox-list">
-				</div>
+				<div className="checkbox-list" />
 			</div>
 		);
 	}

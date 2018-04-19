@@ -35,12 +35,12 @@ var UsersContainer = React.createClass({
 		}.bind(this));
 	},
 	render: function() {
-		if (this.state.error) {
+		if(this.state.error) {
 			return (
 				<div>Error {this.state.error}</div>
 			);
 		}
-		if (this.state.data) {
+		if(this.state.data) {
 			return (
 				<div>
 					<Users data={this.state.data}/>

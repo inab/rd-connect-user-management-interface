@@ -9,7 +9,6 @@ const User = React.createClass({
 	},
 	render: function() {
 		var isChecked = this.props.data.enabled;
-		const groups = this.props.data.groups;
 		//console.log('Groups that user ' + this.props.data.username + ' belongs to: ', groups);
 		return (
 			<Row className="show-grid" key={this.props.index}>

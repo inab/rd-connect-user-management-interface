@@ -9,14 +9,15 @@ import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
 function userValidation(formData,errors) {
-	if (formData.userPassword !== formData.userPassword2) {
+	if(formData.userPassword !== formData.userPassword2) {
 		errors.userPassword2.addError('Passwords don\'t match');
 	}
-		return errors;
+	return errors;
 }
+
 function validateImageInput(image,that) {
 	var responseText = null;
-	if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+	if(image.type !== 'image/jpeg' && image.type !== 'image/png') {
 		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
@@ -34,7 +35,7 @@ var UserEditForm = React.createClass({
 		this.setState({picture: this.props.data.picture});
 	},
 	close(){
-		if (this.state.modalTitle === 'Error'){
+		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
@@ -49,7 +50,7 @@ var UserEditForm = React.createClass({
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			//var pictureFromBlob= new File([file.preview], file.name);
-			if (!error){
+			if(!error){
 				this.setState({files: files});
 				this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
 				//console.log("Picture in the state after validation: ", file.preview);
@@ -104,11 +105,8 @@ var UserEditForm = React.createClass({
 		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
 		var reader = new window.FileReader();
 		//console.log('myBlob needs to be controlled, contains: ', myBlob);
-		var insertImage = false;
-		if (typeof myBlob !== 'undefined'){
-			insertImage = true;
-			reader.readAsDataURL(myBlob);
-			reader.onloadend = function() {
+		if(typeof myBlob !== 'undefined'){
+			reader.addEventListener('load', function() {
 				var stringBase64Image = reader.result;
 				userData.picture = stringBase64Image;
 				jQuery.ajax({
@@ -126,17 +124,17 @@ var UserEditForm = React.createClass({
 				.fail(function(jqXhr) {
 					//console.log('Failed to Update User Information',jqXhr.responseText);
 					var responseText = '';
-					if (jqXhr.status === 0) {
+					if(jqXhr.status === 0) {
 						responseText = 'Failed to Update User Information. Not connect: Verify Network.';
-					} else if (jqXhr.status === 404) {
+					} else if(jqXhr.status === 404) {
 						responseText = 'Failed to Update User Information. Not found [404]';
-					} else if (jqXhr.status === 500) {
+					} else if(jqXhr.status === 500) {
 						responseText = 'Failed to Update User Information. Internal Server Error [500].';
-					} else if (jqXhr.status === 'parsererror') {
+					} else if(jqXhr.status === 'parsererror') {
 						responseText = 'Failed to Update User Information. Sent JSON parse failed.';
-					} else if (jqXhr.status === 'timeout') {
+					} else if(jqXhr.status === 'timeout') {
 						responseText = 'Failed to Update User Information. Time out error.';
-					} else if (jqXhr.status === 'abort') {
+					} else if(jqXhr.status === 'abort') {
 						responseText = 'Ajax request aborted.';
 					} else {
 						responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -144,8 +142,9 @@ var UserEditForm = React.createClass({
 					this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
 				}.bind(this))
 				.always(() => {
-				});
-			}.bind(this);
+				})
+			}.bind(this));
+			reader.readAsDataURL(myBlob);
 		} else {
 			jQuery.ajax({
 					type: 'POST',
@@ -163,17 +162,17 @@ var UserEditForm = React.createClass({
 				.fail(function(jqXhr) {
 					//console.log('Failed to Update User Information',jqXhr.responseText);
 					var responseText = '';
-					if (jqXhr.status === 0) {
+					if(jqXhr.status === 0) {
 						responseText = 'Failed to Update User Information. Not connect: Verify Network.';
-					} else if (jqXhr.status === 404) {
+					} else if(jqXhr.status === 404) {
 						responseText = 'Failed to Update User Information. Not found [404]';
-					} else if (jqXhr.status === 500) {
+					} else if(jqXhr.status === 500) {
 						responseText = 'Failed to Update User Information. Internal Server Error [500].';
-					} else if (jqXhr.status === 'parsererror') {
+					} else if(jqXhr.status === 'parsererror') {
 						responseText = 'Failed to Update User Information. Sent JSON parse failed.';
-					} else if (jqXhr.status === 'timeout') {
+					} else if(jqXhr.status === 'timeout') {
 						responseText = 'Failed to Update User Information. Time out error.';
-					} else if (jqXhr.status === 'abort') {
+					} else if(jqXhr.status === 'abort') {
 						responseText = 'Ajax request aborted.';
 					} else {
 						responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -197,7 +196,7 @@ var UserEditForm = React.createClass({
 		var order = ['username','cn','givenName','surname'];
 
 		//We remove picture from the schema since this will be managed by react-dropzone component
-		var schemaPicture = schema.properties.picture;
+		//var schemaPicture = schema.properties.picture;
 		delete schema.properties.picture;
 
 		//We filter all the properties retrieving only the elements that are not in 'order' array
@@ -253,13 +252,13 @@ var UserEditForm = React.createClass({
 				'ui:widget': 'file'
 			}*/
 		};
-		const log = (type) => console.log.bind(console, type);
+		//const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateUserData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
 		var userImage = this.state.picture;
-		if (typeof userImage === 'undefined'){
+		if(typeof userImage === 'undefined') {
 			userImage = imageNotFoundSrc;
 		}
 		return (

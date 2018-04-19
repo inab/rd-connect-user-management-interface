@@ -2,8 +2,6 @@ import React from 'react';
 import { Modal , Button } from 'react-bootstrap';
 import jQuery from 'jquery';
 import UserEditForm from './UserEditForm.jsx';
-import UserViewForm from './UserViewForm.jsx';
-import UserEnableDisableForm from './UserEnableDisableForm.jsx';
 
 import { hashHistory } from 'react-router';
 
@@ -28,10 +26,10 @@ var UserEditFormContainer = React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		this.setState({task: this.props.route.task});
 		this.loadUserData();
 	},
 	componentWillUnmount: function(){
+		this.setState({task: this.props.route.task});
 		this.serverDataRequest.abort();
 		this.serverSchemaRequest.abort();
 	},
@@ -53,17 +51,17 @@ var UserEditFormContainer = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('Failed to retrieve user Schema',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Failed to retrieve user Schema. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Failed to retrieve user Schema. Validation Schema not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Failed to retrieve user Schema. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Failed to retrieve user Schema. Requested JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Failed to retrieve user Schema. Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Failed to retrieve user Schema. Ajax request aborted.';
 			} else {
 				responseText = 'Failed to retrieve user Schema. Uncaught Error: ' + jqXhr.responseText;
@@ -85,17 +83,17 @@ var UserEditFormContainer = React.createClass({
 		.fail(function(jqXhr, textStatus, errorThrown) {
 			//console.log('Failed to retrieve user Information',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Failed to retrieve user Information. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Failed to retrieve user Information. Requested User not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Failed to retrieve user Information. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Failed to retrieve user Information. Requested JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Failed to retrieve user Information. Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Failed to retrieve user Information. Ajax request aborted.';
 			} else {
 				responseText = 'Failed to retrieve user Information. Uncaught Error: ' + jqXhr.responseText;
@@ -109,14 +107,14 @@ var UserEditFormContainer = React.createClass({
 	//console.log('schema: ', this.state.schema);
 	//console.log('data: ', this.state.data);
 	//console.log('error: ', this.state.error);
-	if (this.state.schema && this.state.data) {
+	if(this.state.schema && this.state.data) {
 			return (
 				<div>
 					<UserEditForm schema={this.state.schema}  data={this.state.data}  />
 				</div>
 			);
 	}
-	if (this.state.error) {
+	if(this.state.error) {
 		return (
 			<div>
 				<Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>

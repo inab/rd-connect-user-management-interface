@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Panel, Table, Checkbox } from 'react-bootstrap';
+import { Panel } from 'react-bootstrap';
 import Underscore from 'underscore';
 import UserTable from '../users/UserTable.jsx';
 

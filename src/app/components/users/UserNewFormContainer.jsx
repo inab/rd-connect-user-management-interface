@@ -84,17 +84,17 @@ var UserNewFormContainer = React.createClass({
 				//console.error("json/OrganizationalUnitalUnits.json", status, err);
 				console.error(xhr.status);
 				var responseText = '';
-				if (xhr.status === 0) {
+				if(xhr.status === 0) {
 					responseText = 'Not connect: Verify Network.';
-				} else if (xhr.status === 404) {
+				} else if(xhr.status === 404) {
 					responseText = 'Validation Schema not found [404]';
-				} else if (xhr.status === 500) {
+				} else if(xhr.status === 500) {
 					responseText = 'Internal Server Error [500].';
-				} else if (xhr.status === 'parsererror') {
+				} else if(xhr.status === 'parsererror') {
 					responseText = 'Requested JSON parse failed.';
-				} else if (xhr.status === 'timeout') {
+				} else if(xhr.status === 'timeout') {
 					xhr = 'Time out error.';
-				} else if (xhr.status === 'abort') {
+				} else if(xhr.status === 'abort') {
 					responseText = 'Ajax request aborted.';
 				} else {
 					responseText = 'Uncaught Error: ' + xhr.responseText;
@@ -116,17 +116,17 @@ var UserNewFormContainer = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('failed to retrieve user Schema',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Validation Schema not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Requested JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Ajax request aborted.';
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -136,15 +136,15 @@ var UserNewFormContainer = React.createClass({
 	},
 
 	render: function() {
-		if ((this.state.schema) && (this.state.data) && (this.state.users)) {
-			if (this.state.task === 'new_privileged'){
+		if((this.state.schema) && (this.state.data) && (this.state.users)) {
+			if(this.state.task === 'new_privileged'){
 				return (
 					<div>
 						<UserNewForm   schema={this.state.schema} data={this.state.data} users={this.state.users}/>
 					</div>
 				);
-			} else if (this.state.task === 'new_unprivileged'){
-				if (this.state.groups){
+			} else if(this.state.task === 'new_unprivileged'){
+				if(this.state.groups){
 					return (
 						<div>
 							<UserNewFormUnprivileged   schema={this.state.schema} data={this.state.data} groups={this.state.groups} users={this.state.users} />
@@ -153,7 +153,7 @@ var UserNewFormContainer = React.createClass({
 				}
 			}
 		}
-		if (this.state.error) {
+		if(this.state.error) {
 			return (
 				<div>
 					<Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>

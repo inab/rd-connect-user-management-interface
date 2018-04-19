@@ -173,20 +173,28 @@ class MailingContainer extends AbstractFetchedDataContainer {
 					.fail(function(jqXhr) {
 						//console.log('Failed to change user password',jqXhr.responseText);
 						var responseText = '';
-						if (jqXhr.status === 0) {
-							responseText = 'Failed to send e-mail. Not connect: Verify Network.';
-						} else if (jqXhr.status === 404) {
-							responseText = 'Failed to send e-mail. Not found [404]';
-						} else if (jqXhr.status === 500) {
-							responseText = 'Failed to send e-mail. Internal Server Error [500].';
-						} else if (jqXhr.status === 'parsererror') {
-							responseText = 'Failed to send e-mail. Sent JSON parse failed.';
-						} else if (jqXhr.status === 'timeout') {
-							responseText = 'Failed to send e-mail. Time out error.';
-						} else if (jqXhr.status === 'abort') {
-							responseText = 'Ajax request aborted.';
-						} else {
-							responseText = 'Uncaught Error: ' + jqXhr.responseText;
+						switch(jqXhr.status) {
+							case 0:
+								responseText = 'Failed to send e-mail. Not connect: Verify Network.';
+								break;
+							case 404:
+								responseText = 'Failed to send e-mail. Not found [404]';
+								break;
+							case 500:
+								responseText = 'Failed to send e-mail. Internal Server Error [500].';
+								break;
+							case 'parsererror':
+								responseText = 'Failed to send e-mail. Sent JSON parse failed.';
+								break;
+							case 'timeout':
+								responseText = 'Failed to send e-mail. Time out error.';
+								break;
+							case 'abort':
+								responseText = 'Ajax request aborted.';
+								break;
+							default:
+								responseText = 'Uncaught Error: ' + jqXhr.responseText;
+								break;
 						}
 						this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
 					}.bind(this))
@@ -202,7 +210,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
-			hashHistory.goBack();
+			this.history.goBack();
 		}
 	}
 	

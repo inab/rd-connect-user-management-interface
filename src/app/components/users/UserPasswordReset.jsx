@@ -1,6 +1,6 @@
 import React from 'react';
 import jQuery from 'jquery';
-import { Glyphicon, Modal, Grid, Row, Col, Button, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
+import { Glyphicon, Modal, Button } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
@@ -23,7 +23,7 @@ const UserPasswordReset = React.createClass({
 		this.setState({user: this.props.user});
 	},
 	close(){
-		if (this.state.modalTitle === 'Error'){
+		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
@@ -49,17 +49,17 @@ const UserPasswordReset = React.createClass({
 			.fail(function(jqXhr) {
 				//console.log('Failed to reset password',jqXhr.responseText);
 				var responseText = '';
-				if (jqXhr.status === 0) {
+				if(jqXhr.status === 0) {
 					responseText = 'Failed to change user password. Not connect: Verify Network.';
-				} else if (jqXhr.status === 404) {
+				} else if(jqXhr.status === 404) {
 					responseText = 'Failed to change user password. Not found [404]';
-				} else if (jqXhr.status === 500) {
+				} else if(jqXhr.status === 500) {
 					responseText = 'Failed to change user password. Internal Server Error [500].';
-				} else if (jqXhr.status === 'parsererror') {
+				} else if(jqXhr.status === 'parsererror') {
 					responseText = 'Failed to create new user. Sent JSON parse failed.';
-				} else if (jqXhr.status === 'timeout') {
+				} else if(jqXhr.status === 'timeout') {
 					responseText = 'Failed to create new user. Time out error.';
-				} else if (jqXhr.status === 'abort') {
+				} else if(jqXhr.status === 'abort') {
 					responseText = 'Ajax request aborted.';
 				} else {
 					responseText = 'Uncaught Error: ' + jqXhr.responseText;

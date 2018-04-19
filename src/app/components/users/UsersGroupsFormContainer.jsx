@@ -4,7 +4,6 @@ import UsersGroupsEditForm from './UsersGroupsEditForm.jsx';
 import UsersGroupsViewForm from './UsersGroupsViewForm.jsx';
 
 import config from 'config.jsx';
-import auth from 'components/auth.jsx';
 
 var UsersGroupsFormContainer = React.createClass({
 	propTypes:{
@@ -62,7 +61,7 @@ var UsersGroupsFormContainer = React.createClass({
 	},
 	loadUserSchema: function() {
 		jQuery.ajax({
-			url: config.usersBaseUri+'?schema',
+			url: config.usersBaseUri + '?schema',
 			type: 'GET',
 			dataType: 'json',
 		})
@@ -73,17 +72,17 @@ var UsersGroupsFormContainer = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('failed to retrieve user Schema',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Validation Schema not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Requested JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Ajax request aborted.';
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -97,14 +96,14 @@ var UsersGroupsFormContainer = React.createClass({
 		//console.log('Data: ', this.state.data);
 		//console.log('Groups: ', this.state.groups);
 		//console.log('TASK: ', this.state.task);
-		if ((this.state.schema) && (this.state.data) && (this.state.groups)) {
-			if (this.state.task === 'users_groups_view'){
+		if((this.state.schema) && (this.state.data) && (this.state.groups)) {
+			if(this.state.task === 'users_groups_view'){
 				return (
 					<div>
 						<UsersGroupsViewForm schema={this.state.schema} data={this.state.data} groups={this.state.groups} />
 					</div>
 				);
-			} else if (this.state.task === 'users_groups_edit'){
+			} else if(this.state.task === 'users_groups_edit'){
 				return (
 					<div>
 						<UsersGroupsEditForm schema={this.state.schema} data={this.state.data} groups={this.state.groups} />
@@ -113,7 +112,7 @@ var UsersGroupsFormContainer = React.createClass({
 			}
 
 		}
-		if (this.state.error) {
+		if(this.state.error) {
 			return (
 				<div>
 					Error: {this.state.error}

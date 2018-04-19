@@ -30,10 +30,10 @@ var UserEnableDisableForm = React.createClass({
 		var userData = Object.assign({},formData);
 		var enabled = formData.enabled;
 		var urlEnabled = config.usersBaseUri + encodeURIComponent(this.props.data.username);
-		if (enabled){
-			 urlEnabled += '/disable';
+		if(enabled){
+			urlEnabled += '/disable';
 		} else {
-			 urlEnabled += '/enable';
+			urlEnabled += '/enable';
 		}
 		jQuery.ajax({
 			type: 'POST',
@@ -46,17 +46,17 @@ var UserEnableDisableForm = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('Failed to Update User Information',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Failed to Update User Information. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Failed to Update User Information. Not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Failed to Update User Information. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Failed to Update User Information. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Failed to Update User Information. Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Ajax request aborted.';
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -123,8 +123,6 @@ var UserEnableDisableForm = React.createClass({
 							validate={userValidation}
 							liveValidate
 							/>
-					</Col>
-					<Col xs={6} md={4}>
 					</Col>
 				</Row>
 			</div>

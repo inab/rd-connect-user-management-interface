@@ -1,7 +1,6 @@
 import React from 'react';
-import { Row, Col, Checkbox, Panel, Table } from 'react-bootstrap';
+import { Panel } from 'react-bootstrap';
 import Underscore from 'underscore';
-import { Link } from 'react-router';
 import UserTable from './UserTable.jsx';
 
 const UsersGroups = ({data}) => {
@@ -17,7 +16,6 @@ const UsersGroups = ({data}) => {
     <div>
       <h3> Lists of groups that a user is member of </h3>
           {groupData.map(function(ou,i){
-              let organizationalUnit = ou[0].organizationalUnit;
               let headerText = ou[0].organizationalUnit;
               //console.log('ou contains: ', ou);
               return (

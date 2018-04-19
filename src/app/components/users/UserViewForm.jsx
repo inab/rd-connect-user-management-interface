@@ -28,7 +28,7 @@ var UserViewForm = React.createClass({
 		//console.log('Show: ', this.state.showModal);
 		var isChecked = this.props.data.enabled;
 		var userImage = this.props.data.picture;
-		if (typeof userImage === 'undefined'){
+		if(typeof userImage === 'undefined'){
 			userImage = imageNotFoundSrc.src;
 		}
 		//console.log(userImage);
@@ -86,7 +86,7 @@ var UserViewForm = React.createClass({
 							<Panel header="Email Addresses">
 								{this.props.data.email.map(function(mail, k){
 									return (
-										<p key={k}><a href={"mailto:"+mail} target="_blank">{mail}</a></p>
+										<p key={k}><a href={'mailto:' + mail} target="_blank">{mail}</a></p>
 									);
 								})}
 							</Panel>
@@ -109,7 +109,7 @@ var UserViewForm = React.createClass({
 									</Panel>
 								: <Panel header="Contact Phone Number"/>
 							}
-							{typeof this.props.data.facsimileTelephoneNumber !== 'undefined' 
+							{typeof this.props.data.facsimileTelephoneNumber !== 'undefined'
 								? <Panel header="Fax Number">
 										{this.props.data.facsimileTelephoneNumber.map(function(fax, m){
 											return (
@@ -125,7 +125,7 @@ var UserViewForm = React.createClass({
 							<Panel header="Address to send traditional mail to the user">
 								<p>{this.props.data.postalAddress}</p>
 							</Panel>
-							{typeof this.props.data.links !== 'undefined' 
+							{typeof this.props.data.links !== 'undefined'
 								? <Panel header="Links related to the user">
 										{this.props.data.links.map(function(link, n){
 											return (
@@ -135,7 +135,7 @@ var UserViewForm = React.createClass({
 									</Panel>
 								: <Panel header="Links related to the user"/>
 							}
-							{typeof this.props.data.groups !== 'undefined' 
+							{typeof this.props.data.groups !== 'undefined'
 								? <Panel header="List of groups where the user is registered in">
 										{this.props.data.groups.map(function(group, o){
 											return (

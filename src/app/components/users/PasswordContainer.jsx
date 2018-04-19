@@ -1,5 +1,5 @@
 import React from 'react';
-import { Glyphicon, Modal , Button } from 'react-bootstrap';
+import { Modal , Button } from 'react-bootstrap';
 import UserFormContainer from './UserFormContainer.jsx';
 import { hashHistory } from 'react-router';
 
@@ -12,21 +12,21 @@ class PasswordContainer extends UserFormContainer {
 	//console.log('schema: ', this.state.schema);
 	//console.log('data: ', this.state.data);
 	//console.log('error: ', this.state.error);
-		if (this.state.schema && this.state.data) {
+		if(this.state.schema && this.state.data) {
 			switch(this.state.task) {
 				case 'passwordChange':
 					return <UserPassword schema={this.state.schema}  data={this.state.data} />;
-					break;
+					//break;
 				case 'passwordReset':
 					console.log(this.state.data);
 					return <UserPasswordReset user={this.state.data} />;
-					break;
+					//break;
 				default:
-					console.log("TODO: Unimplemented task: "+this.state.task);
+					console.log('TODO: Unimplemented task: ' + this.state.task);
 					break;
 			}
 		}
-		if (this.state.error) {
+		if(this.state.error) {
 			return (
 				<Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
 					<Modal.Header closeButton>

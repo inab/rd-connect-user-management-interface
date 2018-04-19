@@ -42,8 +42,7 @@
         "react/require-extension": 0,
         "react/self-closing-comp": 1,
         "react/sort-comp": 1,
-        //"react/wrap-multilines": 1,
-        "jsx-wrap-multilines": 1,
+        "react/jsx-wrap-multilines": 1,
         "no-cond-assign": 1,             // disallow assignment in conditional expressions
         "no-console": 0,                 // disallow use of console (off by default in the node environment)
         "no-constant-condition": 1,      // disallow use of constant expressions in conditions
@@ -179,7 +178,24 @@
          "space-in-brackets": 0,          // require or disallow spaces inside brackets (off by default)
          "space-in-parens": 0,            // require or disallow spaces inside parentheses (off by default)
          "space-infix-ops": 1,            // require spaces around operators
-         "keyword-spacing": 1,    // require a space after return, throw, and case
+         "keyword-spacing": [
+		"warn",{
+			"overrides": {
+				"if": {
+					"after": false
+				},
+				"for": {
+					"after": false
+				},
+				"switch": {
+					"after": false
+				},
+				"while": {
+					"after": false
+				}
+			}
+		}
+	],    // require a space after return, throw, and case
          "max-nested-callbacks": 0,       // specify the maximum depth callbacks can be nested (off by default)
          "one-var": 0,                    // allow just one var statement per function (off by default)
          "wrap-regex": 0,                 // require regex literals to be wrapped in parentheses (off by default)

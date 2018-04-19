@@ -1,5 +1,5 @@
 import React from 'react';
-import { Glyphicon, Checkbox, Row, Col, Panel, Table } from 'react-bootstrap';
+import { Glyphicon, Row, Panel } from 'react-bootstrap';
 import Underscore from 'underscore';
 import { Link } from 'react-router';
 //import User from './User.jsx';

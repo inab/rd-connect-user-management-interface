@@ -5,7 +5,7 @@ import { hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 import zxcvbn from 'zxcvbn';
-import ReactMustache from 'react-mustache'
+import ReactMustache from 'react-mustache';
 
 const UserPassword = React.createClass({
 	propTypes:{
@@ -30,7 +30,7 @@ const UserPassword = React.createClass({
 		this.setState({data: this.props.data, suggestionsMessage: 'Password strength estimator based on zxcvbn'});
 	},
 	close(){
-		if (this.state.modalTitle === 'Error'){
+		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
@@ -76,21 +76,21 @@ const UserPassword = React.createClass({
 		//this.state.mustachePassword1 = mustachePassword1;
 		//console.log(mustachePassword1);
 		const score = zxcv.score;
-		if (score > 3) {
+		if(score > 3) {
 			return 'success';
-		} else if (score > 2) {
+		} else if(score > 2) {
 			return 'warning';
-		} else if (score > 1) {
+		} else if(score > 1) {
 			return 'warning';
-		} else if (score > 0) {
+		} else if(score > 0) {
 			return 'error';
-		} else if (score === 0) {
+		} else if(score === 0) {
 			return 'error';
 		}
 
 	},
-	getValidationPassword2() {		
-		if(this.state.valuePassword1===this.state.valuePassword2) {
+	getValidationPassword2() {
+		if(this.state.valuePassword1 === this.state.valuePassword2) {
 			return this.getValidationPassword1();
 		} else {
 			return 'error';
@@ -119,17 +119,17 @@ const UserPassword = React.createClass({
 			.fail(function(jqXhr) {
 				//console.log('Failed to change user password',jqXhr.responseText);
 				var responseText = '';
-				if (jqXhr.status === 0) {
+				if(jqXhr.status === 0) {
 					responseText = 'Failed to change user password. Not connect: Verify Network.';
-				} else if (jqXhr.status === 404) {
+				} else if(jqXhr.status === 404) {
 					responseText = 'Failed to change user password. Not found [404]';
-				} else if (jqXhr.status === 500) {
+				} else if(jqXhr.status === 500) {
 					responseText = 'Failed to change user password. Internal Server Error [500].';
-				} else if (jqXhr.status === 'parsererror') {
+				} else if(jqXhr.status === 'parsererror') {
 					responseText = 'Failed to create new user. Sent JSON parse failed.';
-				} else if (jqXhr.status === 'timeout') {
+				} else if(jqXhr.status === 'timeout') {
 					responseText = 'Failed to create new user. Time out error.';
-				} else if (jqXhr.status === 'abort') {
+				} else if(jqXhr.status === 'abort') {
 					responseText = 'Ajax request aborted.';
 				} else {
 					responseText = 'Uncaught Error: ' + jqXhr.responseText;

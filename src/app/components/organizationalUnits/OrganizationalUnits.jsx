@@ -1,8 +1,7 @@
 import React from 'react';
 
-import { Glyphicon, Panel, Table, Accordion, Checkbox } from 'react-bootstrap';
+import { Glyphicon, Panel, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
-import imageNotFoundSrc from '../users/defaultNoImageFound.jsx';
 import UserTable from '../users/UserTable.jsx';
 
 const OrganizationalUnits = ({data, organizationalUnits}) => {
@@ -11,8 +10,8 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
     //console.log('organizationalUnits contains: ', organizationalUnits);//Array of OU(objects)
     //We create an structure to search for organizationalUnit info doing something like lookup[organizationalUnitName]
     var lookup = {};
-    for (var i = 0, len = organizationalUnits.length; i < len; i++) {
-        lookup[organizationalUnits[i].organizationalUnit] = organizationalUnits[i];
+    for(let i = 0, len = organizationalUnits.length; i < len; i++) {
+		lookup[organizationalUnits[i].organizationalUnit] = organizationalUnits[i];
     }
     //console.log('lookup object: ', lookup);
     return (
@@ -27,8 +26,7 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
             //console.log('listOfUsers: ', listOfUsers);
             var picture = objOrganizationalUnit.picture;
 
-             if(objOrganizationalUnit.links !== undefined) var links = objOrganizationalUnit.links;
-             else links = [];
+			var links = (objOrganizationalUnit.links !== undefined) ? objOrganizationalUnit.links : [];
              return (
               <Panel defaultExpanded collapsible header={objOrganizationalUnit.description} key={i} eventKey={i}>
                 <Table responsive striped bordered condensed hover className="table-list">
@@ -68,7 +66,8 @@ const OrganizationalUnits = ({data, organizationalUnits}) => {
                   <h4>Users inside {objOrganizationalUnit.organizationalUnit} OU:</h4>
                   <UserTable users={listOfUsers} />
                 </Panel>
-             )})}
+             );})
+             }
       </div>
     );
   };

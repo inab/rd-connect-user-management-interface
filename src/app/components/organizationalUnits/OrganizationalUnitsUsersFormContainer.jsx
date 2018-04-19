@@ -30,17 +30,17 @@ var OrganizationalUnitsUsersFormContainer = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('failed to retrieve users',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Validation Schema not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Requested JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Ajax request aborted.';
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -51,14 +51,14 @@ var OrganizationalUnitsUsersFormContainer = React.createClass({
 
 	render: function() {
 		//console.log('Users: ', this.state.users);
-		if (this.state.users) {
+		if(this.state.users) {
 			return (
 				<div>
 					<OrganizationalUnitsUsersEditForm users={this.state.users} />
 				</div>
 			);
 		}
-		if (this.state.error) {
+		if(this.state.error) {
 			return (
 				<div>
 					Error: {this.state.error}

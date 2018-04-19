@@ -9,10 +9,6 @@ class AbstractFetchedDataContainer extends React.Component {
 		this.onChange = this.onChange.bind(this);
 	}
 
-	onChange(e) {
-		this.setState(e);
-	}
-	
 	componentWillMount() {
 		this.setState({
 			users: [],
@@ -23,7 +19,11 @@ class AbstractFetchedDataContainer extends React.Component {
 			selectableGroups: [],
 		});
 	}
-	
+
+	onChange(e) {
+		this.setState(e);
+	}
+
 	loadUsers(cb) {
 		cache.getData(config.usersBaseUri,(users) => {
 			this.onChange({users: users});
@@ -32,7 +32,7 @@ class AbstractFetchedDataContainer extends React.Component {
 			}
 		});
 	}
-	
+
 	loadOrganizationalUnits(cb) {
 		cache.getData(config.ouBaseUri,(organizationalUnits) => {
 			this.onChange({organizationalUnits: organizationalUnits});
@@ -41,7 +41,7 @@ class AbstractFetchedDataContainer extends React.Component {
 			}
 		});
 	}
-	
+
 	loadGroups(cb) {
 		cache.getData(config.groupsBaseUri,(groups) => {
 			this.onChange({groups: groups});
@@ -50,39 +50,39 @@ class AbstractFetchedDataContainer extends React.Component {
 			}
 		});
 	}
-	
+
 	loadSelectableUsers() {
 		this.loadUsers((users) => {
 			this.onChange({
 				selectableUsers: users.map((user) => {
 					return {
-						label: user.cn + ' ('+user.organizationalUnit+')',
+						label: user.cn + ' (' + user.organizationalUnit + ')',
 						value: user.username
 					};
 				})
 			});
 		});
 	}
-	
+
 	loadSelectableOrganizationalUnits() {
 		this.loadOrganizationalUnits((organizationalUnits) => {
 			this.onChange({
 				selectableOUs: organizationalUnits.map((ou) => {
 					return {
-						label: ou.description + ' (' + ou.organizationalUnit +')',
+						label: ou.description + ' (' + ou.organizationalUnit + ')',
 						value: ou.organizationalUnit
 					};
 				})
 			});
 		});
 	}
-	
+
 	loadSelectableGroups() {
 		this.loadGroups((groups) => {
 			this.onChange({
 				selectableGroups: groups.map((group) => {
 					return {
-						label: group.description + ' ('+ group.cn + ')',
+						label: group.description + ' (' + group.cn + ')',
 						value: group.cn
 					};
 				})

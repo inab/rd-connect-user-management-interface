@@ -59,17 +59,17 @@ var UsersGroupsEditForm = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('Failed to Update User Information',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Failed to Update User Information. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Failed to Update User Information. Not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Failed to Update User Information. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Failed to Update User Information. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Failed to Update User Information. Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Ajax request aborted.';
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -80,7 +80,7 @@ var UsersGroupsEditForm = React.createClass({
 	handleChangeSelected:function(value){
 		//console.log(value);
 		var data = this.state.data;
-		if (value === null){
+		if(value === null){
 			data.groups = [];
 		}
 		else {

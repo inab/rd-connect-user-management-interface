@@ -14,14 +14,14 @@ import auth from 'components/auth.jsx';
 //import ModalError from './ModalError.jsx';
 
 function userValidation(formData,errors) {
-	if (formData.userPassword !== formData.userPassword2) {
+	if(formData.userPassword !== formData.userPassword2) {
 		errors.userPassword2.addError('Passwords don\'t match');
 	}
 		return errors;
 }
 function validateImageInput(image,that) {
 	var responseText = null;
-	if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+	if(image.type !== 'image/jpeg' && image.type !== 'image/png') {
 		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
@@ -63,7 +63,7 @@ var UserNewFormUnprivileged = React.createClass({
 	handleChangeSelected:function(value){
 		//console.log(value);
 		var groupsSelected = this.state.groupsSelected;
-		if (value === null){
+		if(value === null){
 			groupsSelected = [];
 		}
 		else {
@@ -75,36 +75,34 @@ var UserNewFormUnprivileged = React.createClass({
 	dropHandler: function (files) {
 		//console.log('Received files: ', files);
 		// TODO: Where the user is?
-		var username = '';
 		var req = request.put(config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username) + '/picture');
         files.forEach((file)=> {
 			var error = validateImageInput(file);
-			if (!error){
+			if(!error){
 				req.attach(file.name, file);
 				req.end(function(err, res){
-					if (!err && res){
+					if(!err && res){
 						this.setState({files: files});
 						this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
 						//console.log("Picture in the state after validation: ", file.preview);
-					}
-					else {
+					} else {
 						var responseText = '';
-						if (err && err.status === 404) {
+						if(err && err.status === 404) {
 							responseText = 'Failed to Update User\'s image. Not found [404]';
 						}
-						else if (err && err.status === 500) {
+						else if(err && err.status === 500) {
 							responseText = 'Failed to Update User\'s image. Internal Server Error [500]';
 						}
-						else if (err && err.status === 'parsererror') {
+						else if(err && err.status === 'parsererror') {
 							responseText = 'Failed to Update User\'s image. Sent JSON parse failed';
 						}
-						else if (err && err.status === 'timeout') {
+						else if(err && err.status === 'timeout') {
 							responseText = 'Failed to Update User\'s image. Time out error';
 						}
-						else if (err && err.status === 'abort') {
+						else if(err && err.status === 'abort') {
 							responseText = ('Ajax request aborted');
 						}
-						else if (err) {
+						else if(err) {
 							responseText = 'Ajax generic error';
 						}
 						this.setState({error: responseText, showModal: true});
@@ -141,17 +139,17 @@ var UserNewFormUnprivileged = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('Failed to Create New User',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Failed to Create New User. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Failed to Create New User. Not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Failed to Create New User. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Failed to Create New User. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Failed to Create New User. Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Ajax request aborted.';
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -185,9 +183,9 @@ var UserNewFormUnprivileged = React.createClass({
 
 		//We generate the enums property for the Organizational Units extracting the info from data
 		var arrayOUobjects = this.props.data; var arrayOUstrings = [];
-		for (var i = 0; i < arrayOUobjects.length; i++) {
+		for(var i = 0; i < arrayOUobjects.length; i++) {
 			arrayOUstrings.push(arrayOUobjects[i].organizationalUnit);
-	}
+		}
 		arrayOUstrings.sort();
 
 		schema.properties.organizationalUnit.enum = arrayOUstrings;
@@ -234,12 +232,12 @@ var UserNewFormUnprivileged = React.createClass({
 			}
 		};
 		const log = (type) => console.log.bind(console, type);
-		const onSubmit = ({formData}) => this.addUserData({formData});
+		const onSubmit = ({theFormData}) => this.addUserData({theFormData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
 		var userImage = this.state.picture;
-		if (typeof userImage === 'undefined'){
+		if(typeof userImage === 'undefined'){
 			userImage = imageNotFoundSrc;
 		}
 		return (

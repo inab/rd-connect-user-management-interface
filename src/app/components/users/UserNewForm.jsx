@@ -1,12 +1,10 @@
 import React from 'react';
 import jQuery from 'jquery';
-import request from 'superagent';
 import Form from 'react-jsonschema-form';
 import { Glyphicon, Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { hashHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.jsx';
-import Underscore from 'underscore';
 import zxcvbn from 'zxcvbn';
 
 //import ModalError from './ModalError.jsx';
@@ -17,7 +15,7 @@ import auth from 'components/auth.jsx';
 
 function validateImageInput(image,that) {
 	var responseText = null;
-	if (image.type !== 'image/jpeg' && image.type !== 'image/png') {
+	if(image.type !== 'image/jpeg' && image.type !== 'image/png') {
 		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
@@ -36,22 +34,22 @@ var UserNewForm = React.createClass({
 		this.setState({picture: imageNotFoundSrc, schema: this.props.schema, data: this.props.data, users: this.props.users});
 	},
 	userValidation(formData,errors) {
-		if(formData.userPassword!==undefined && formData.userPassword!==null) {
+		if(formData.userPassword !== undefined && formData.userPassword !== null) {
 			let zxcv = zxcvbn(formData.userPassword);
 			const score = zxcv.score;
-			if (score <= 3) {
-				errors.userPassword.addError('Password too weak (score='+score+')');
+			if(score <= 3) {
+				errors.userPassword.addError('Password too weak (score=' + score + ')');
 			}
 		}
 		
-		if (formData.userPassword !== formData.userPassword2) {
+		if(formData.userPassword !== formData.userPassword2) {
 			errors.userPassword2.addError('Passwords don\'t match');
 		}
 		//Now we test if user exists...
 		var username = formData.username;
 		var arrayOfUsers = this.state.users;
 		var usersRepeated = jQuery.grep(arrayOfUsers, function(e){ return e.username === username; });
-		if (usersRepeated.length !== 0 ){
+		if(usersRepeated.length !== 0 ){
 			errors.username.addError('The username is in use. Please choose a different one');
 		}
 
@@ -59,13 +57,13 @@ var UserNewForm = React.createClass({
 		var email = formData.email;
 		var arrayOfUsers = this.state.users;
 		//console.log('arrayOfUsers contains: ', arrayOfUsers);
-		var emailRepeated = jQuery.grep(arrayOfUsers, function(e){
+		jQuery.grep(arrayOfUsers, function(e){
 			//console.log('e contains: ', e );
-			if (typeof email !== 'undefined'){
+			if(typeof email !== 'undefined'){
 				//e.email is an array of emails. We have to look inside each one
-				if (typeof e.email !== 'undefined'){
-					for (var x = 0; x < e.email.length; x++){
-						if (e.email[x] === email[x]) {
+				if(typeof e.email !== 'undefined'){
+					for(var x = 0; x < e.email.length; x++){
+						if(e.email[x] === email[x]) {
 							errors.email.addError('The email is in use. Please choose a different one');
 						}
 					}
@@ -74,25 +72,22 @@ var UserNewForm = React.createClass({
 		});
 		return errors;
 	},
-	close(){
-		if (this.state.modalTitle === 'Error'){
+	close() {
+		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
 			hashHistory.goBack();
 		}
 	},
-	open(){
+	open() {
 		this.setState({showModal: true, modalTitle: this.state.modalTitle});
 	},
 	toggle(){
       this.setState({ in: !this.state.in });
     },
     wait(){
-      var mythis = this;
-      setTimeout(function(){
-        mythis.toggle();
-      }, 3000);
+      setTimeout(() => this.toggle(), 3000);
     },
 	dropHandler: function (files) {
         files.forEach((file)=> {
@@ -152,8 +147,7 @@ var UserNewForm = React.createClass({
 		var insertImage = false;
 		if (typeof myBlob !== 'undefined'){
 			insertImage = true;
-			reader.readAsDataURL(myBlob);
-			reader.onloadend = function() {
+			reader.addEventListener("load",function() {
 				var stringBase64Image = reader.result;
 				userData.picture = stringBase64Image;
 				jQuery.ajax({
@@ -185,8 +179,9 @@ var UserNewForm = React.createClass({
 						responseText = 'Uncaught Error: ' + jqXhr.responseText;
 					}
 					this.setState({modaTitle: 'Error', error: responseText, showModal: true});
-				}.bind(this));
-		}.bind(this);
+				}.bind(this))
+			}.bind(this));
+			reader.readAsDataURL(myBlob);
 		} else {
 			jQuery.ajax({
 					type: 'PUT',

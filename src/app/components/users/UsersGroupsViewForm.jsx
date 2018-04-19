@@ -33,7 +33,7 @@ var UsersGroupsViewForm = React.createClass({
 		//console.log('All Available Groups are: ', this.props.groups);
 		//We generate an array with all the available groups
 		var arrayGroups = [];
-		for (var i = 0; i < this.props.groups.length; i++){
+		for(var i = 0; i < this.props.groups.length; i++) {
 			arrayGroups.push(this.props.groups[i].cn);
 		}
 		arrayGroups.sort();
@@ -50,7 +50,7 @@ var UsersGroupsViewForm = React.createClass({
 		//console.log('NEW SCHEMA: ', newSchema);
 		var data = this.props.data;
 		//console.log('DATA contains: ', data);
-		var username = data.username;
+		//var username = data.username;
 		//console.log(username);
 		const uiSchema = {
 			'username': {

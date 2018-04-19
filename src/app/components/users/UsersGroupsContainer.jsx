@@ -40,14 +40,14 @@ var UsersGroupsContainer = React.createClass({
 	//console.log("Schema: ", this.state.schema);
 	//console.log("Data: ", this.state.data);
 	//console.log("Groups: ", this.state.groups);
-		if (this.state.data) {
+		if(this.state.data) {
 			return (
 				<div>
 					<UsersGroups data={this.state.data} />
 				</div>
 			);
 		}
-		if (this.state.error) {
+		if(this.state.error) {
 			return (
 				<div>
 					Error: {this.state.error}

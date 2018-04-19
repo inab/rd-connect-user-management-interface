@@ -13,5 +13,6 @@ export default {
 	usersBaseUri: apiBaseUri + '/users',
 	groupsBaseUri: apiBaseUri + '/groups',
 	ouBaseUri: apiBaseUri + '/organizationalUnits',
+	mailingBaseUri: apiBaseUri + '/mail',
 	getService: getService,
 };

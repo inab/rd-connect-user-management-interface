@@ -49,6 +49,9 @@ module.exports = {
             outputName: 'beforeBody.js'
         }
         ]
+    },
+    eslint: {
+	src: [srcApp+'/**/*.js*','!node_modules/**']
     }
 };
 

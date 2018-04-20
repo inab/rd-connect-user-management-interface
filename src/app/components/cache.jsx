@@ -10,7 +10,7 @@ class UMCache {
 		this.cache = {};
 	}
 	
-	getData(url,cb = undefined,ecb = undefined,fresh = false,ttl = DEFAULT_TTL) {
+	getData(url,label,cb = undefined,ecb = undefined,fresh = false,ttl = DEFAULT_TTL) {
 		if(url in this.cache) {
 			// Clean cache entries whenever it is needed
 			let bestBefore = this.cache[url].bestBefore;
@@ -24,11 +24,11 @@ class UMCache {
 				cb(this.cache[url].value);
 			}
 		} else {
-			this.loadData(url,ttl,cb,ecb);
+			this.loadData(url,label,ttl,cb,ecb);
 		}
 	}
 	
-	loadData(url,ttl,cb,ecb) {
+	loadData(url,label,ttl,cb,ecb) {
 		let usersRequest = jQuery.ajax({
 			url: url,
 			type: 'GET',
@@ -51,24 +51,33 @@ class UMCache {
 		})
 		.fail((jqXhr, textStatus, errorThrown) => {
 			//console.log('Failed to retrieve user Information',jqXhr);
-			var responseText = '';
-			if (jqXhr.status === 0) {
-				responseText = 'Failed to retrieve user Information. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
-				responseText = 'Failed to retrieve user Information. Requested User not found [404]';
-			} else if (jqXhr.status === 500) {
-				responseText = 'Failed to retrieve user Information. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
-				responseText = 'Failed to retrieve user Information. Requested JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
-				responseText = 'Failed to retrieve user Information. Time out error.';
-			} else if (jqXhr.status === 'abort') {
-				responseText = 'Failed to retrieve user Information. Ajax request aborted.';
-			} else {
-				responseText = 'Failed to retrieve user Information. Uncaught Error: ' + jqXhr.responseText;
+			let responseText = '';
+			switch(jqXhr.status) {
+				case 0:
+					responseText = 'Failed to retrieve '+label+' Information. Not connect: Verify Network.';
+					break;
+				case 404:
+					responseText = 'Failed to retrieve '+label+' Information. Requested User not found [404]';
+					break;
+				case 500:
+					responseText = 'Failed to retrieve '+label+' Information. Internal Server Error [500].';
+					break;
+				case 'parsererror':
+					responseText = 'Failed to retrieve '+label+' Information. Requested JSON parse failed.';
+					break;
+				case 'timeout':
+					responseText = 'Failed to retrieve '+label+' Information. Time out error.';
+					break;
+				case 'abort':
+					responseText = 'Failed to retrieve '+label+' Information. Ajax request aborted.';
+					break;
+				default:
+					responseText = 'Failed to retrieve '+label+' Information. Uncaught Error: ' + jqXhr.responseText;
+					break;
 			}
+			console.error(responseText);
 			if(ecb) {
-				ecb({error: responseText, showModal: true});
+				ecb({label: label, error: responseText, status: jqXhr.status});
 			}
 		});
 	}

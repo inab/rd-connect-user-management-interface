@@ -2,7 +2,6 @@ import React from 'react';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import { Glyphicon, Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem } from 'react-bootstrap';
-import { hashHistory } from 'react-router';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.jsx';
 import zxcvbn from 'zxcvbn';
@@ -11,28 +10,40 @@ import zxcvbn from 'zxcvbn';
 
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
-
+import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
 
 function validateImageInput(image,that) {
-	var responseText = null;
+	let responseText = null;
 	if(image.type !== 'image/jpeg' && image.type !== 'image/png') {
 		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
 }
 
-var UserNewForm = React.createClass({
-	propTypes:{
-		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.array.isRequired,
-		users: React.PropTypes.array.isRequired
-	},
-	getInitialState: function() {
-		return { modalTitle: null, error: null, showModal: false, files: [], picture : null, in: false};
-	},
-	componentWillMount: function() {
-		this.setState({picture: imageNotFoundSrc, schema: this.props.schema, data: this.props.data, users: this.props.users});
-	},
+class UserNewForm extends AbstractFetchedDataContainer {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
+	componentWillMount() {
+		super.componentWillMount();
+		this.setState({
+			modalTitle: null,
+			error: null,
+			showModal: false,
+			files: [],
+			picture : null,
+			in: false
+		});
+		this.setState({
+			picture: imageNotFoundSrc,
+			schema: this.props.schema,
+			data: this.props.data,
+			users: this.props.users
+		});
+	}
+	
 	userValidation(formData,errors) {
 		if(formData.userPassword !== undefined && formData.userPassword !== null) {
 			let zxcv = zxcvbn(formData.userPassword);
@@ -71,25 +82,30 @@ var UserNewForm = React.createClass({
 			}
 		});
 		return errors;
-	},
+	}
+	
 	close() {
-		if(this.state.modalTitle === 'Error'){
+		if(this.state.modalTitle === 'Error') {
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
-			hashHistory.goBack();
+			this.history.goBack();
 		}
-	},
+	}
+	
 	open() {
 		this.setState({showModal: true, modalTitle: this.state.modalTitle});
-	},
-	toggle(){
+	}
+	
+	toggle() {
       this.setState({ in: !this.state.in });
-    },
-    wait(){
+    }
+    
+    wait() {
       setTimeout(() => this.toggle(), 3000);
-    },
-	dropHandler: function (files) {
+    }
+    
+	dropHandler(files) {
         files.forEach((file)=> {
 			var error = validateImageInput(file);
 			if (!error){
@@ -99,11 +115,13 @@ var UserNewForm = React.createClass({
 				this.setState({modalTitle: 'Error', error: error, showModal: true});
 			}
         });
-    },
-	onOpenClick: function () {
+    }
+    
+	onOpenClick() {
       this.refs.dropzone.open();
-    },
-	addUserData: function({formData}){
+    }
+    
+	addUserData({formData}){
 		//console.log('yay I\'m valid!');
 		var userData = Object.assign({},formData);
 		delete userData.userPassword2;
@@ -219,10 +237,11 @@ var UserNewForm = React.createClass({
 				.always(() => {
 				});
 		}
-	},
-	render: function() {
+	}
+	
+	render() {
 		const formData = {};
-		var schema = this.state.schema;
+		let schema = this.state.schema;
 
 		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
 		delete schema.properties.groups;
@@ -230,29 +249,29 @@ var UserNewForm = React.createClass({
 		//We remove picture from the schema since this will be managed by react-dropzone component
 		delete schema.properties.picture;
 		
-		var userImage = this.state.picture;
-		if (typeof userImage === 'undefined'){
+		let userImage = this.state.picture;
+		if(typeof userImage === 'undefined'){
 			userImage = imageNotFoundSrc;
 		}
 		//We generate the enums property for the Organizational Units extracting the info from data
-		var arrayOUobjects = this.state.data; var arrayOUstrings = [];
-		for (var i = 0; i < arrayOUobjects.length; i++) {
+		let arrayOUobjects = this.state.data; var arrayOUstrings = [];
+		for(let i = 0; i < arrayOUobjects.length; i++) {
 			arrayOUstrings.push(arrayOUobjects[i].organizationalUnit);
-	}
+		}
 		arrayOUstrings.sort();
-
+		
 		schema.properties.organizationalUnit.enum = arrayOUstrings;
 		//Replicating userPassword for schema validation and Ordering Schema for ui:order
 		//Adding a userPassword2 field to validate userPassword change
 		schema.properties.userPassword2 = schema.properties.userPassword;
 		//First we create an array with the fields with the desired order.
-		var order = ['username','cn','givenName','surname','userPassword','userPassword2','email'];
+		let order = ['username','cn','givenName','surname','userPassword','userPassword2','email'];
 		//We filter all the properties retrieving only the elements that are not in 'order' array
-		var userSchemaKeys = Object.keys(schema.properties).filter(function(elem) {
+		let userSchemaKeys = Object.keys(schema.properties).filter(function(elem) {
 			return order.indexOf(elem) === -1;
 		});
 		//We concatenate order with userSchemaKeys, retrieving the ordered schema as desired
-		var schemaOrdered = order.concat(userSchemaKeys);
+		let schemaOrdered = order.concat(userSchemaKeys);
 
 		//var data = this.props.data;
 		//delete data.userPassword;
@@ -289,9 +308,9 @@ var UserNewForm = React.createClass({
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
-		var userImage = this.state.picture;
+		let userImage = this.state.picture;
 		
-		if (typeof userImage === 'undefined'){
+		if(typeof userImage === 'undefined'){
 			userImage = imageNotFoundSrc;
 		}
 		return (
@@ -326,7 +345,7 @@ var UserNewForm = React.createClass({
 						showErrorList={false}
 						>
 							<div className="button-submit">
-								<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
+								<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 								<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit</Button>
 							</div>
 						</Form>
@@ -348,5 +367,12 @@ var UserNewForm = React.createClass({
 			</div>
 		);
 	}
-});
+}
+
+UserNewForm.propTypes = {
+	schema: React.PropTypes.object.isRequired,
+	data: React.PropTypes.array.isRequired,
+	users: React.PropTypes.array.isRequired
+};
+
 module.exports = UserNewForm;

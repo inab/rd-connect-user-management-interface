@@ -1,7 +1,7 @@
 import React from 'react';
 import RichTextEditor from 'react-rte';
 import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
-import { Button, Col, ControlLabel, FormControl, FormGroup, Glyphicon, Grid, HelpBlock, Modal, Row } from 'react-bootstrap';
+import { Button, Col, ControlLabel, FormControl, FormGroup, Glyphicon, Modal, Row } from 'react-bootstrap';
 import Select from 'react-select';
 import Dropzone from 'react-dropzone';
 
@@ -10,6 +10,7 @@ import auth from 'components/auth.jsx';
 import config from 'config.jsx';
 
 
+/*
 function dataURItoBlob(dataURI) {
 	// Split metadata from data
 	var splitted = dataURI.split(",");
@@ -42,25 +43,25 @@ function dataURItoBlob(dataURI) {
 	
 	return { blob: blob, name: name };
 }
+*/
 
-function String2DataURI(string,cb,mime='text/html') {
+function String2DataURI(string,cb,mime = 'text/html') {
 	// Fast hack to get the UTF-8 bytes of a string
 	let utf8string = unescape(encodeURIComponent(string));
 	let numBytes = utf8string.length;
 	let byteArray = new Uint8Array(numBytes);
-	for(let i=0;i<numBytes;i++) {
+	for(let i = 0; i < numBytes; i++) {
 		byteArray[i] = utf8string.charCodeAt(i);
 	}
 	let blobString = new Blob([byteArray],{type: mime});
 	
 	let reader = new FileReader();
-	reader.addEventListener("load",() => {
+	reader.addEventListener('load',() => {
 		if(cb) {
 			let iSemiColon = reader.result.indexOf(';');
-			let result = reader.result.substring(0,iSemiColon)+';charset=utf-8'+reader.result.substring(iSemiColon);
+			let result = reader.result.substring(0,iSemiColon) + ';charset=utf-8' + reader.result.substring(iSemiColon);
 			
 			cb(result);
-			
 		}
 	}, false);
 
@@ -112,13 +113,12 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	
 	getSubjectValidationState() {
 		const length = this.state.subject.length;
-		if (length > 0) return 'success';
-		else return 'warning';
+		return (length > 0) ? 'success' : 'warning';
 	}
 	
 	getRecipientsValidationState() {
 		// TO BE IMPLEMENTED
-		return (this.state.selectedUsers.length===0 && this.state.selectedOUs.length===0 && this.state.selectedGroups.length===0) ? 'error' : 'success';
+		return (this.state.selectedUsers.length === 0 && this.state.selectedOUs.length === 0 && this.state.selectedGroups.length === 0) ? 'error' : 'success';
 	}
 	
 	shouldComponentUpdate(nextProps, nextState) {
@@ -133,9 +133,9 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	attachmentsToDataURL(index,cb) {
 		if(index < this.state.attachments.length) {
 			let reader = new FileReader();
-			reader.addEventListener("load",() => {
+			reader.addEventListener('load',() => {
 				this.state.dataUrlAttachments[index] = reader.result;
-				this.attachmentsToDataURL(index+1,cb);
+				this.attachmentsToDataURL(index + 1,cb);
 			}, false);
 
 			reader.readAsDataURL(this.state.attachments[index]);
@@ -206,7 +206,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	}
 	
 	close() {
-		if (this.state.modalTitle === 'Error'){
+		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
@@ -215,7 +215,8 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	}
 	
 	render() {
-		return <div>
+		return (
+		<div>
 				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>
@@ -239,12 +240,12 @@ class MailingContainer extends AbstractFetchedDataContainer {
 								type="text"
 								value={this.state.subject}
 								placeholder="Subject"
-								onChange={(e) => { this.onChange({subject: e.target.value}) }}
+								onChange={(e) => { this.onChange({subject: e.target.value}); }}
 							/>
 							<br/>
 							<RichTextEditor
 								value={this.state.body}
-								onChange={(value) => { this.onChange({body: value}) }}
+								onChange={(value) => { this.onChange({body: value}); }}
 							/>
 							<br />
 							<ControlLabel>Attachments</ControlLabel>
@@ -272,7 +273,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 						>
 							<ControlLabel>Recipients</ControlLabel>
 							<Select
-								disabled={this.state.selectableUsers.length == 0}
+								disabled={this.state.selectableUsers.length === 0}
 								placeholder="Select the user(s)"
 								options={this.state.selectableUsers}
 								value={this.state.selectedUsers}
@@ -281,7 +282,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 							/>
 							<br/>
 							<Select
-								disabled={this.state.selectableOUs.length == 0}
+								disabled={this.state.selectableOUs.length === 0}
 								placeholder="Select the organizational unit(s)"
 								options={this.state.selectableOUs}
 								value={this.state.selectedOUs}
@@ -290,7 +291,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 							/>
 							<br/>
 							<Select
-								disabled={this.state.selectableGroups.length == 0}
+								disabled={this.state.selectableGroups.length === 0}
 								placeholder="Select the group(s)"
 								options={this.state.selectableGroups}
 								value={this.state.selectedGroups}
@@ -305,7 +306,8 @@ class MailingContainer extends AbstractFetchedDataContainer {
 					<Button bsStyle="danger" type="submit" className="submitCancelButtons" >Send e-mail&nbsp;<Glyphicon glyph="pencil" /></Button>
 				</div>
 			</form>
-		</div>;
+		</div>
+		);
 		// return <MyInput onChange={this.update} />
 	}
 }

@@ -142,7 +142,7 @@ var UserEditForm = React.createClass({
 					this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
 				}.bind(this))
 				.always(() => {
-				})
+				});
 			}.bind(this));
 			reader.readAsDataURL(myBlob);
 		} else {

@@ -22,7 +22,7 @@ var GroupNewForm = React.createClass({
 		this.setState({ schema: this.props.schema});
 	},
 	close(){
-		if (this.state.modalTitle === 'Error'){
+		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
@@ -36,9 +36,8 @@ var GroupNewForm = React.createClass({
       this.setState({ in: !this.state.in });
     },
     wait(){
-      var mythis = this;
-      setTimeout(function(){
-        mythis.toggle();
+      setTimeout(() => {
+        this.toggle();
       }, 3000);
     },
 	addGroupData: function({formData}){
@@ -59,17 +58,17 @@ var GroupNewForm = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('Failed to add new group',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Failed to add new group. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Failed to add new group. Not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Failed to add new group. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Failed to add new group. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Failed to add new group. Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Failed to add new group. Ajax request aborted.';
 			} else {
 				responseText = 'Failed to add new group. Uncaught Error: ' + jqXhr.responseText;
@@ -88,7 +87,7 @@ var GroupNewForm = React.createClass({
 
 		};
 		const log = (type) => console.log.bind(console, type);
-		const onSubmit = ({formData}) => this.addGroupData({formData});
+		const onSubmit = ({theFormData}) => this.addGroupData({theFormData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);

@@ -15,7 +15,7 @@ function organizationalUnitValidation(formData,errors) {
 
 function validateImageInput(image) {
 	var responseText = null;
-	if ((image.type !== 'image/jpeg') && (image.type !== 'image/png')) {
+	if((image.type !== 'image/jpeg') && (image.type !== 'image/png')) {
 		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
@@ -32,7 +32,7 @@ var OrganizationalUnitNewForm = React.createClass({
 		this.setState({picture: imageNotFoundSrc, schema: this.props.schema});
 	},
 	close(){
-		if (this.state.modalTitle === 'Error'){
+		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
@@ -46,15 +46,14 @@ var OrganizationalUnitNewForm = React.createClass({
       this.setState({ in: !this.state.in });
     },
     wait(){
-      var mythis = this;
-      setTimeout(function(){
-        mythis.toggle();
+      setTimeout(() => {
+        this.toggle();
       }, 3000);
     },
 	dropHandler: function (files) {
         files.forEach((file)=> {
 			var error = validateImageInput(file);
-			if (!error){
+			if(!error){
 				this.setState({files: files});
 				this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
 			} else {
@@ -75,7 +74,7 @@ var OrganizationalUnitNewForm = React.createClass({
 		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
 		var reader = new window.FileReader();
 		var insertImage = false;
-		if (typeof myBlob !== 'undefined'){
+		if(typeof myBlob !== 'undefined'){
 			insertImage = true;
 			reader.readAsDataURL(myBlob);
 			reader.onloadend = function() {
@@ -94,17 +93,17 @@ var OrganizationalUnitNewForm = React.createClass({
 				}.bind(this))
 				.fail(function(jqXhr) {
 					//console.log('Failed to Update Organizational Unit Information',jqXhr);
-					if (jqXhr.status === 0) {
+					if(jqXhr.status === 0) {
 						responseText = 'Failed to Update Organizational Unit Information. Not connect: Verify Network.';
-					} else if (jqXhr.status === 404) {
+					} else if(jqXhr.status === 404) {
 						responseText = 'Failed to Update Organizational Unit Information. Not found [404]';
-					} else if (jqXhr.status === 500) {
+					} else if(jqXhr.status === 500) {
 						responseText = 'Failed to Update Organizational Unit Information. Internal Server Error [500].';
-					} else if (jqXhr.status === 'parsererror') {
+					} else if(jqXhr.status === 'parsererror') {
 						responseText = 'Failed to Update Organizational Unit Information. Sent JSON parse failed.';
-					} else if (jqXhr.status === 'timeout') {
+					} else if(jqXhr.status === 'timeout') {
 						responseText = 'Failed to Update Organizational Unit Information. Time out error.';
-					} else if (jqXhr.status === 'abort') {
+					} else if(jqXhr.status === 'abort') {
 						responseText = 'Ajax request aborted.';
 					} else {
 						responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -129,17 +128,17 @@ var OrganizationalUnitNewForm = React.createClass({
 				}.bind(this))
 				.fail(function(jqXhr) {
 					//console.log('Failed to create new user',jqXhr.responseText);
-					if (jqXhr.status === 0) {
+					if(jqXhr.status === 0) {
 						responseText = 'Failed to create new user. Not connect: Verify Network.';
-					} else if (jqXhr.status === 404) {
+					} else if(jqXhr.status === 404) {
 						responseText = 'Failed to create new user. Not found [404]';
-					} else if (jqXhr.status === 500) {
+					} else if(jqXhr.status === 500) {
 						responseText = 'Failed to create new user. Internal Server Error [500].';
-					} else if (jqXhr.status === 'parsererror') {
+					} else if(jqXhr.status === 'parsererror') {
 						responseText = 'Failed to create new user. Sent JSON parse failed.';
-					} else if (jqXhr.status === 'timeout') {
+					} else if(jqXhr.status === 'timeout') {
 						responseText = 'Failed to create new user. Time out error.';
-					} else if (jqXhr.status === 'abort') {
+					} else if(jqXhr.status === 'abort') {
 						responseText = 'Ajax request aborted.';
 					} else {
 						responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -164,7 +163,7 @@ var OrganizationalUnitNewForm = React.createClass({
 		//console.log('Show: ', this.state.showModal);
 
 		var ouImage = this.state.picture;
-		if (typeof ouImage === 'undefined'){
+		if(typeof ouImage === 'undefined'){
 			ouImage = imageNotFoundSrc;
 		}
 		//console.log("ouImage: ",ouImage);

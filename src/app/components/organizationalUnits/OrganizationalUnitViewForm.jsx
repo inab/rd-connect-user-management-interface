@@ -1,7 +1,7 @@
 import React from 'react';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Modal, Row, Col, Button, LinkContainer} from 'react-bootstrap';
+import { Modal, Row, Col, Button } from 'react-bootstrap';
 //import ModalError from './ModalError.jsx';
 
 import config from 'config.jsx';
@@ -34,7 +34,7 @@ var OrganizationalUnitViewForm = React.createClass({
 		var organizationalUnitData = Object.assign({},formData);
 		jQuery.ajax({
 			type: 'POST',
-			url: config.ouBaseUri+'/'+encodeURIComponent(this.state.data.organizationalUnit),
+			url: config.ouBaseUri + '/' + encodeURIComponent(this.state.data.organizationalUnit),
 			headers: auth.getAuthHeaders(),
 			dataType: 'json',
 			contentType: 'application/json',
@@ -46,17 +46,17 @@ var OrganizationalUnitViewForm = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('Failed to Update Organizational Unit Information',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Failed to Update Organizational Unit Information. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Failed to Update Organizational Unit Information. Not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Failed to Update Organizational Unit Information. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Failed to Update Organizational Unit Information. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Failed to Update Organizational Unit Information. Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Failed to Update Organizational Unit Information. Ajax request aborted.';
 			} else {
 				responseText = 'Failed to Update Organizational Unit Information. Uncaught Error: ' + jqXhr.responseText;

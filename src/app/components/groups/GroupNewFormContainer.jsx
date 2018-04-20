@@ -22,17 +22,17 @@ var GroupNewFormContainer = React.createClass({
 	.fail(function(jqXhr) {
 		//console.log('Failed to retrieve Group Schema. ',jqXhr);
 		var responseText = '';
-		if (jqXhr.status === 0) {
+		if(jqXhr.status === 0) {
 			responseText = 'Failed to retrieve Group Schema. Not connect: Verify Network.';
-		} else if (jqXhr.status === 404) {
+		} else if(jqXhr.status === 404) {
 			responseText = 'Failed to retrieve Group Schema. Validation Schema not found [404]';
-		} else if (jqXhr.status === 500) {
+		} else if(jqXhr.status === 500) {
 			responseText = 'Failed to retrieve Group Schema. Internal Server Error [500].';
-		} else if (jqXhr.status === 'parsererror') {
+		} else if(jqXhr.status === 'parsererror') {
 			responseText = 'Failed to retrieve Group Schema. Requested JSON parse failed.';
-		} else if (jqXhr.status === 'timeout') {
+		} else if(jqXhr.status === 'timeout') {
 			responseText = 'Failed to retrieve Group Schema. Time out error.';
-		} else if (jqXhr.status === 'abort') {
+		} else if(jqXhr.status === 'abort') {
 			responseText = 'Failed to retrieve Group Schema. Ajax request aborted.';
 		} else {
 			responseText = 'Failed to retrieve Group Schema. Uncaught Error: ' + jqXhr.responseText;
@@ -41,14 +41,14 @@ var GroupNewFormContainer = React.createClass({
 	}.bind(this));
   },
   render: function() {
-    if (this.state.schema) {
+    if(this.state.schema) {
       return (
 		<div>
 			<GroupNewForm   schema={this.state.schema} />
 		</div>
       );
     }
-    if (this.state.error) {
+    if(this.state.error) {
       return (
 		<div>
 			Error: {this.state.error}

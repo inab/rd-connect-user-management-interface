@@ -12,10 +12,10 @@ import Underscore from 'underscore';
 function groupValidation(formData,errors) {
 	//console.log('FormData inside groupValidation is: ', formData);
 	//Check if there is at least one owner for the group
-	if (formData.owner.length === 0) {
+	if(formData.owner.length === 0) {
 		errors.owner.addError('Please select at least one owner');
 	}
-		return errors;
+	return errors;
 }
 
 var GroupEditForm = React.createClass({
@@ -46,7 +46,7 @@ var GroupEditForm = React.createClass({
 		});
 	},
 	close(){
-		if (this.state.modalTitle === 'Error'){
+		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
@@ -67,22 +67,21 @@ var GroupEditForm = React.createClass({
 		.done(function(data) {
 			//This is a two ajax call process. Once the members are deleted, we call to add the members in formData.members
 			this.setState({ modalTitle: 'Success', error: 'Group modified correctly!!', showModal: true});
-
 		}.bind(this))
 		.fail(function(jqXhr) {
 			//console.log('Failed modifying group features. ',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Failed modifying group features. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Failed modifying group features. Not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Failed modifying group features. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Failed modifying group features. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Failed modifying group features. Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Ajax request aborted.';
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -104,17 +103,17 @@ var GroupEditForm = React.createClass({
 			.fail(function(jqXhr) {
 				//console.log('Failed to Update Owners Information',jqXhr);
 				var responseText = '';
-				if (jqXhr.status === 0) {
+				if(jqXhr.status === 0) {
 					responseText = 'Failed to Update Owners Information. Not connect: Verify Network.';
-				} else if (jqXhr.status === 404) {
+				} else if(jqXhr.status === 404) {
 					responseText = 'Failed to Update Owners Information. Not found [404]';
-				} else if (jqXhr.status === 500) {
+				} else if(jqXhr.status === 500) {
 					responseText = 'Failed to Update Owners Information. Internal Server Error [500].';
-				} else if (jqXhr.status === 'parsererror') {
+				} else if(jqXhr.status === 'parsererror') {
 					responseText = 'Failed to Update Owners Information. Sent JSON parse failed.';
-				} else if (jqXhr.status === 'timeout') {
+				} else if(jqXhr.status === 'timeout') {
 					responseText = 'Failed to Update Owners Information. Time out error.';
-				} else if (jqXhr.status === 'abort') {
+				} else if(jqXhr.status === 'abort') {
 					responseText = 'Ajax request aborted.';
 				} else {
 					responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -131,7 +130,7 @@ var GroupEditForm = React.createClass({
 		//console.log('ownersToAdd contiene', ownersToAdd);
 		//console.log('ownersToDelete contiene', ownersToDelete);
 		//return false;
-		if (ownersToAdd.length > 0) {
+		if(ownersToAdd.length > 0) {
 			jQuery.ajax({
 				type: 'POST',
 				url: config.groupsBaseUri + '/' + encodeURIComponent(this.state.data.cn) + '/owners',
@@ -141,7 +140,7 @@ var GroupEditForm = React.createClass({
 			})
 			.done(function(data) {
 				//This is a two ajax call process. Once the members are deleted, we call to add the members in formData.members
-				if (ownersToDelete.length > 0) {
+				if(ownersToDelete.length > 0) {
 					this.deleteOwners(formData, ownersToDelete);
 				} else {
 					this.modifyGroupFeatures(formData);
@@ -150,24 +149,24 @@ var GroupEditForm = React.createClass({
 			.fail(function(jqXhr) {
 				//console.log('Failed to add owners to Group ',jqXhr);
 				var responseText = '';
-				if (jqXhr.status === 0) {
+				if(jqXhr.status === 0) {
 					responseText = 'Failed to add owners to Group. Not connect: Verify Network.';
-				} else if (jqXhr.status === 404) {
+				} else if(jqXhr.status === 404) {
 					responseText = 'Failed to add owners to Group. Not found [404]';
-				} else if (jqXhr.status === 500) {
+				} else if(jqXhr.status === 500) {
 					responseText = 'Failed to add owners to Group. Internal Server Error [500].';
-				} else if (jqXhr.status === 'parsererror') {
+				} else if(jqXhr.status === 'parsererror') {
 					responseText = 'Failed to add owners to Group. Sent JSON parse failed.';
-				} else if (jqXhr.status === 'timeout') {
+				} else if(jqXhr.status === 'timeout') {
 					responseText = 'Failed to add owners to Group. Time out error.';
-				} else if (jqXhr.status === 'abort') {
+				} else if(jqXhr.status === 'abort') {
 					responseText = 'Ajax request aborted.';
 				} else {
 					responseText = 'Uncaught Error: ' + jqXhr.responseText;
 				}
 				this.setState({modalTitle: 'Error', error: responseText, showModal: true});
 			}.bind(this));
-		} else if (ownersToDelete.length > 0) {
+		} else if(ownersToDelete.length > 0) {
 			this.deleteOwners(formData, ownersToDelete);
 		} else {
 			this.modifyGroupFeatures(formData);
@@ -191,17 +190,17 @@ var GroupEditForm = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('Failed to add members to Group ',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Failed to add members to Group. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Failed to add members to Group. Not found [404]';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Failed to add members to Group. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Failed to add members to Group. Sent JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Failed to add members to Group. Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Ajax request aborted.';
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -222,7 +221,7 @@ var GroupEditForm = React.createClass({
 		membersToDelete = Underscore.difference(membersToDelete,groupData.members);
 		var membersToAdd = Underscore.difference(groupData.members, this.state.startMembers);
 
-		if (membersToDelete.length > 0) {
+		if(membersToDelete.length > 0) {
 			jQuery.ajax({
 				type: 'DELETE',
 				url: config.groupsBaseUri + '/' + encodeURIComponent(this.state.data.cn) + '/members',
@@ -232,7 +231,7 @@ var GroupEditForm = React.createClass({
 			})
 			.done(function(data) {
 				//Once the members are deleted, we call to add the members in formData.members
-				if (membersToAdd.length > 0) {
+				if(membersToAdd.length > 0) {
 					this.addMembersToGroup(groupData, membersToAdd);
 				} else {
 					this.addOwnersToGroup(groupData);
@@ -241,17 +240,17 @@ var GroupEditForm = React.createClass({
 			.fail(function(jqXhr) {
 				//console.log('Failed to Update Group Information',jqXhr);
 				var responseText = '';
-				if (jqXhr.status === 0) {
+				if(jqXhr.status === 0) {
 					responseText = 'Failed to Update Group Information. Not connect: Verify Network.';
-				} else if (jqXhr.status === 404) {
+				} else if(jqXhr.status === 404) {
 					responseText = 'Failed to Update Group Information. Not found [404]';
-				} else if (jqXhr.status === 500) {
+				} else if(jqXhr.status === 500) {
 					responseText = 'Failed to Update Group Information. Internal Server Error [500].';
-				} else if (jqXhr.status === 'parsererror') {
+				} else if(jqXhr.status === 'parsererror') {
 					responseText = 'Failed to Update Group Information. Sent JSON parse failed.';
-				} else if (jqXhr.status === 'timeout') {
+				} else if(jqXhr.status === 'timeout') {
 					responseText = 'Failed to Update Group Information. Time out error.';
-				} else if (jqXhr.status === 'abort') {
+				} else if(jqXhr.status === 'abort') {
 					responseText = 'Ajax request aborted.';
 				} else {
 					responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -270,10 +269,9 @@ var GroupEditForm = React.createClass({
 	handleChangeSelectedOwners:function(value){
 		//console.log(value);
 		var data = this.state.data;
-		if (value === null){
+		if(value === null){
 			data.owner = [];
-		}
-		else {
+		} else {
 			data.owner = value.split(',');
 		}
 		this.setState({data:data});
@@ -282,10 +280,9 @@ var GroupEditForm = React.createClass({
 	handleChangeSelected:function(value){
 		//console.log(value);
 		var data = this.state.data;
-		if (value === null){
+		if(value === null){
 			data.members = [];
-		}
-		else {
+		} else {
 			data.members = value.split(',');
 		}
 		this.setState({data:data});
@@ -348,7 +345,7 @@ var GroupEditForm = React.createClass({
 		const onSubmit = ({formData}) => this.updateGroupData({formData});
 		//const onError = (errors) => console.log('I have Errors', errors, errors[0].message);
 		const onError = (errors) => this.setState({error: errors[0].property + ' ' + errors[0].message, showModal: true});
-		
+
 		return (
 			<div>
 				<Modal show={this.state.showModal} onHide={this.close}>

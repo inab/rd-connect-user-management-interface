@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Glyphicon, Row, Col, Panel, Table } from 'react-bootstrap';
+import { Glyphicon, Row, Panel, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import Underscore from 'underscore';
 
@@ -41,9 +41,9 @@ const Groups = ({data}) => {
                       <td>{group.groupPurpose}</td>
                       <td>
                         {listOwners.map(function(owner, j){
-							let retval = []
-							if(j>0) {
-								retval.push(", ");
+							let retval = [];
+							if(j > 0) {
+								retval.push(', ');
 							}
 							retval.push(<Link to={'/users/view/' + owner}>{owner}</Link>);
 							return retval;
@@ -51,9 +51,9 @@ const Groups = ({data}) => {
                       </td>
                       <td>
                         {groupMembers.map(function(member, k){
-							let retval = []
-							if(k>0) {
-								retval.push(", ");
+							let retval = [];
+							if(k > 0) {
+								retval.push(', ');
 							}
 							retval.push(<Link to={'/users/view/' + member}>{member}</Link>);
 							return retval;

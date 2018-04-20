@@ -27,7 +27,6 @@ var UserEnableDisableForm = React.createClass({
 	updateUserData: function({formData}){
 		//console.log('yay I\'m valid!');
 		//console.log('formData contiene: ', formData);
-		var userData = Object.assign({},formData);
 		var enabled = formData.enabled;
 		var urlEnabled = config.usersBaseUri + encodeURIComponent(this.props.data.username);
 		if(enabled){

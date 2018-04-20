@@ -13,7 +13,7 @@ function organizationalUnitValidation(formData,errors) {
 }
 function validateImageInput(image) {
 	var responseText = null;
-	if ((image.type !== 'image/jpeg') && (image.type !== 'image/png')) {
+	if((image.type !== 'image/jpeg') && (image.type !== 'image/png')) {
 		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
@@ -31,7 +31,7 @@ var OrganizationalUnitEditForm = React.createClass({
 		this.setState({picture: this.props.data.picture});
 	},
 	close(){
-		if (this.state.modalTitle === 'Error'){
+		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
@@ -45,7 +45,7 @@ var OrganizationalUnitEditForm = React.createClass({
 		//console.log('Received files: ', files);
         files.forEach((file)=> {
 			var error = validateImageInput(file);
-			if (!error){
+			if(!error){
 				this.setState({files: files});
 				this.setState({picture: file.preview});
 			} else {
@@ -63,7 +63,7 @@ var OrganizationalUnitEditForm = React.createClass({
 		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
 		var reader = new window.FileReader();
 		//console.log('myBlob needs to be controlled, contains: ', myBlob);
-		if (typeof myBlob !== 'undefined'){
+		if(typeof myBlob !== 'undefined'){
 			reader.readAsDataURL(myBlob);
 			reader.onloadend = function() {
 				var stringBase64Image = reader.result;
@@ -82,17 +82,17 @@ var OrganizationalUnitEditForm = React.createClass({
 				.fail(function(jqXhr) {
 					//console.log('Failed to Update Organizational Unit Information',jqXhr);
 					var responseText = '';
-					if (jqXhr.status === 0) {
+					if(jqXhr.status === 0) {
 						responseText = 'Failed to Update Organizational Unit Information. Not connect: Verify Network.';
-					} else if (jqXhr.status === 404) {
+					} else if(jqXhr.status === 404) {
 						responseText = 'Failed to Update Organizational Unit Information. Not found [404]';
-					} else if (jqXhr.status === 500) {
+					} else if(jqXhr.status === 500) {
 						responseText = 'Failed to Update Organizational Unit Information. Internal Server Error [500].';
-					} else if (jqXhr.status === 'parsererror') {
+					} else if(jqXhr.status === 'parsererror') {
 						responseText = 'Failed to Update Organizational Unit Information. Sent JSON parse failed.';
-					} else if (jqXhr.status === 'timeout') {
+					} else if(jqXhr.status === 'timeout') {
 						responseText = 'Failed to Update Organizational Unit Information. Time out error.';
-					} else if (jqXhr.status === 'abort') {
+					} else if(jqXhr.status === 'abort') {
 						responseText = 'Ajax request aborted.';
 					} else {
 						responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -118,17 +118,17 @@ var OrganizationalUnitEditForm = React.createClass({
 			.fail(function(jqXhr) {
 				//console.log('Failed to Update Organization Information',jqXhr.responseText);
 				var responseText = '';
-				if (jqXhr.status === 0) {
+				if(jqXhr.status === 0) {
 					responseText = 'Failed to Update Organization Information. Not connect: Verify Network.';
-				} else if (jqXhr.status === 404) {
+				} else if(jqXhr.status === 404) {
 					responseText = 'Failed to Update Organization Information. Not found [404]';
-				} else if (jqXhr.status === 500) {
+				} else if(jqXhr.status === 500) {
 					responseText = 'Failed to Update Organization Information. Internal Server Error [500].';
-				} else if (jqXhr.status === 'parsererror') {
+				} else if(jqXhr.status === 'parsererror') {
 					responseText = 'Failed to Update Organization Information. Sent JSON parse failed.';
-				} else if (jqXhr.status === 'timeout') {
+				} else if(jqXhr.status === 'timeout') {
 					responseText = 'Failed to Update Organization Information. Time out error.';
-				} else if (jqXhr.status === 'abort') {
+				} else if(jqXhr.status === 'abort') {
 					responseText = 'Ajax request aborted.';
 				} else {
 					responseText = 'Uncaught Error: ' + jqXhr.responseText;
@@ -166,7 +166,7 @@ var OrganizationalUnitEditForm = React.createClass({
 		//console.log('Show: ', this.state.showModal);
 
 		var ouImage = this.state.picture;
-		if (typeof ouImage === 'undefined'){
+		if(typeof ouImage === 'undefined'){
 			ouImage = imageNotFoundSrc;
 		}
 		return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, Row, Col, Panel, Table } from 'react-bootstrap';
+import { Row, Col, Panel, Table } from 'react-bootstrap';
 import Underscore from 'underscore';
 import { Link } from 'react-router';
 

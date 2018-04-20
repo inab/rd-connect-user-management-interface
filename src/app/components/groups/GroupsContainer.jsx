@@ -34,12 +34,12 @@ var GroupsContainer = React.createClass({
 		});
 	},
 	render: function() {
-		if (this.state.error) {
+		if(this.state.error) {
 			return (
 				<div>Error {this.state.error}</div>
 			);
 		}
-		if (this.state.data) {
+		if(this.state.data) {
 			return (
 				<div>
 					<Groups data={this.state.data} />

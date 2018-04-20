@@ -1,7 +1,6 @@
 import React from 'react';
 import Form from 'react-jsonschema-form';
 import { Row, Col, Button} from 'react-bootstrap';
-import { LinkContainer } from 'react-router';
 
 //import ModalError from './ModalError.jsx';
 
@@ -59,7 +58,7 @@ var GroupViewForm = React.createClass({
 						</Form>
 					</Col>
 					<Col xs={6} md={4}>
-						<code></code>
+						<code />
 					</Col>
 				</Row>
 			</div>

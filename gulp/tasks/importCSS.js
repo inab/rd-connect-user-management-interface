@@ -5,8 +5,9 @@
 */
 
 var gulp   = require('gulp'),
-	config = require('../config').importCSS,
-	importCss = require('gulp-import-css');
+	config = require('../config').importCSS;
+	// If needed, use gulp-cssimport instead of gulp-import-css
+	// importCss = require('gulp-import-css');
 
 gulp.task('importCSS', function () {
   gulp.src(config.src)

@@ -308,11 +308,7 @@ class UserNewForm extends AbstractFetchedDataContainer {
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
-		let userImage = this.state.picture;
 		
-		if(typeof userImage === 'undefined'){
-			userImage = imageNotFoundSrc;
-		}
 		return (
 			<div>
 				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>

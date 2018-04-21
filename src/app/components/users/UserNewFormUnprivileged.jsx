@@ -232,7 +232,7 @@ var UserNewFormUnprivileged = React.createClass({
 			}
 		};
 		const log = (type) => console.log.bind(console, type);
-		const onSubmit = ({theFormData}) => this.addUserData({theFormData});
+		const onSubmit = ({formData}) => this.addUserData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);

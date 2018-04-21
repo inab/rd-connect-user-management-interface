@@ -7,12 +7,12 @@ import UserPassword from './UserPassword.jsx';
 import UserPasswordReset from './UserPasswordReset.jsx';
 
 class PasswordContainer extends UserFormContainer {
-  render() {
-	//console.log('task: ', this.state.task);
-	//console.log('schema: ', this.state.schema);
-	//console.log('data: ', this.state.data);
-	//console.log('error: ', this.state.error);
-		if(this.state.schema && this.state.data) {
+	render() {
+		//console.log('task: ', this.state.task);
+		//console.log('schema: ', this.state.schema);
+		//console.log('data: ', this.state.data);
+		//console.log('error: ', this.state.error);
+		if(this.state.schema && this.state.u) {
 			switch(this.state.task) {
 				case 'passwordChange':
 					return <UserPassword schema={this.state.schema}  data={this.state.data} />;

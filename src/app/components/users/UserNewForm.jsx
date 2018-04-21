@@ -108,7 +108,7 @@ class UserNewForm extends AbstractFetchedDataContainer {
 	dropHandler(files) {
         files.forEach((file)=> {
 			var error = validateImageInput(file);
-			if (!error){
+			if(!error){
 				this.setState({files: files});
 				this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
 			} else {
@@ -129,10 +129,10 @@ class UserNewForm extends AbstractFetchedDataContainer {
 		//var userExists = this.testIfUserExists(userData);
 		var responseText = '';
 		
-		if(userData.userPassword===undefined || userData.userPassword===null || userData.userPassword==='') {
+		if(userData.userPassword === undefined || userData.userPassword === null || userData.userPassword === '') {
 			// Generating a random password, in case the password field is empty
 			function shuffleArray(array) {
-				for (let i = array.length - 1; i > 0; i--) {
+				for(let i = array.length - 1; i > 0; i--) {
 					let j = Math.floor(Math.random() * (i + 1));
 					let temp = array[i];
 					array[i] = array[j];
@@ -141,10 +141,10 @@ class UserNewForm extends AbstractFetchedDataContainer {
 				return array;
 			}
 			function generatePassword(passwordLength) {
-				let numberChars = "0123456789";
-				let upperChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-				let lowerChars = "abcdefghiklmnopqrstuvwxyz";
-				let punctuation = ",.;:+-/&%$!\"'?"
+				let numberChars = '0123456789';
+				let upperChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+				let lowerChars = 'abcdefghiklmnopqrstuvwxyz';
+				let punctuation = ',.;:+-/&%$!"\'?';
 				let allChars = upperChars + punctuation + numberChars + lowerChars;
 				let randPasswordArray = Array(passwordLength);
 				
@@ -153,7 +153,7 @@ class UserNewForm extends AbstractFetchedDataContainer {
 				randPasswordArray[2] =  numberChars;
 				randPasswordArray[3] =  lowerChars;
 				randPasswordArray.fill(allChars,4);
-				return shuffleArray(randPasswordArray.map(function(x) { return x[Math.floor(Math.random() * x.length)] })).join('');
+				return shuffleArray(randPasswordArray.map(function(x) { return x[Math.floor(Math.random() * x.length)]; })).join('');
 			}
 			
 			userData.userPassword = generatePassword(12);
@@ -162,10 +162,8 @@ class UserNewForm extends AbstractFetchedDataContainer {
 		//Before submitting the editted data we add the information for the picture:
 		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
 		var reader = new window.FileReader();
-		var insertImage = false;
-		if (typeof myBlob !== 'undefined'){
-			insertImage = true;
-			reader.addEventListener("load",function() {
+		if(typeof myBlob !== 'undefined'){
+			reader.addEventListener('load',function() {
 				var stringBase64Image = reader.result;
 				userData.picture = stringBase64Image;
 				jQuery.ajax({
@@ -181,23 +179,23 @@ class UserNewForm extends AbstractFetchedDataContainer {
 				}.bind(this))
 				.fail(function(jqXhr) {
 					//console.log('Failed to Create New User',jqXhr);
-					if (jqXhr.status === 0) {
+					if(jqXhr.status === 0) {
 						responseText = 'Failed to Create New User. Not connect: Verify Network.';
-					} else if (jqXhr.status === 404) {
+					} else if(jqXhr.status === 404) {
 						responseText = 'Failed to Create New User. Not found [404]';
-					} else if (jqXhr.status === 500) {
+					} else if(jqXhr.status === 500) {
 						responseText = 'Failed to Create New User. Internal Server Error [500].';
-					} else if (jqXhr.status === 'parsererror') {
+					} else if(jqXhr.status === 'parsererror') {
 						responseText = 'Failed to Create New User. Sent JSON parse failed.';
-					} else if (jqXhr.status === 'timeout') {
+					} else if(jqXhr.status === 'timeout') {
 						responseText = 'Failed to Create New User. Time out error.';
-					} else if (jqXhr.status === 'abort') {
+					} else if(jqXhr.status === 'abort') {
 						responseText = 'Ajax request aborted.';
 					} else {
 						responseText = 'Uncaught Error: ' + jqXhr.responseText;
 					}
 					this.setState({modaTitle: 'Error', error: responseText, showModal: true});
-				}.bind(this))
+				}.bind(this));
 			}.bind(this));
 			reader.readAsDataURL(myBlob);
 		} else {
@@ -216,23 +214,23 @@ class UserNewForm extends AbstractFetchedDataContainer {
 				}.bind(this))
 				.fail(function(jqXhr) {
 					//console.log('Failed to create new user',jqXhr.responseText);
-					var responseText = '';
-					if (jqXhr.status === 0) {
-						responseText = 'Failed to create new user. Not connect: Verify Network.';
-					} else if (jqXhr.status === 404) {
-						responseText = 'Failed to create new user. Not found [404]';
-					} else if (jqXhr.status === 500) {
-						responseText = 'Failed to create new user. Internal Server Error [500].';
-					} else if (jqXhr.status === 'parsererror') {
-						responseText = 'Failed to create new user. Sent JSON parse failed.';
-					} else if (jqXhr.status === 'timeout') {
-						responseText = 'Failed to create new user. Time out error.';
-					} else if (jqXhr.status === 'abort') {
-						responseText = 'Ajax request aborted.';
+					let responseTextUser = '';
+					if(jqXhr.status === 0) {
+						responseTextUser = 'Failed to create new user. Not connect: Verify Network.';
+					} else if(jqXhr.status === 404) {
+						responseTextUser = 'Failed to create new user. Not found [404]';
+					} else if(jqXhr.status === 500) {
+						responseTextUser = 'Failed to create new user. Internal Server Error [500].';
+					} else if(jqXhr.status === 'parsererror') {
+						responseTextUser = 'Failed to create new user. Sent JSON parse failed.';
+					} else if(jqXhr.status === 'timeout') {
+						responseTextUser = 'Failed to create new user. Time out error.';
+					} else if(jqXhr.status === 'abort') {
+						responseTextUser = 'Ajax request aborted.';
 					} else {
-						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+						responseTextUser = 'Uncaught Error: ' + jqXhr.responseText;
 					}
-					this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
+					this.setState({ modalTitle: 'Error', error: responseTextUser, showModal: true});
 				}.bind(this))
 				.always(() => {
 				});

@@ -1,9 +1,9 @@
 import jQuery from 'jquery';
-import config from 'config.jsx';
+//import config from 'config.jsx';
 //import auth from './auth.jsx';
 
 // Default TTL in milliseconds
-const DEFAULT_TTL = 60*1000;
+const DEFAULT_TTL = 60 * 1000;
 
 class UMCache {
 	constructor() {
@@ -14,22 +14,25 @@ class UMCache {
 		if(url in this.cache) {
 			// Clean cache entries whenever it is needed
 			let bestBefore = this.cache[url].bestBefore;
-			if(!!fresh || bestBefore<Date.now()) {
+			if(!!fresh || bestBefore < Date.now()) {
 				delete this.cache[url];
 			}
 		}
 		
 		if(url in this.cache) {
 			if(cb) {
-				cb(this.cache[url].value);
+				// Do now allow changes on the cached data
+				let data = this.cache[url].value;
+				cb((data instanceof Array) ? [...data] : {...data});
 			}
+			return null;
 		} else {
-			this.loadData(url,label,ttl,cb,ecb);
+			return this.loadData(url,label,ttl,cb,ecb);
 		}
 	}
 	
 	loadData(url,label,ttl,cb,ecb) {
-		let usersRequest = jQuery.ajax({
+		let request = jQuery.ajax({
 			url: url,
 			type: 'GET',
 			cache: false,
@@ -46,7 +49,8 @@ class UMCache {
 				this.cache[url] = cachedElem;
 			}
 			if(cb) {
-				cb(data);
+				// Do now allow changes on the cached data
+				cb((data instanceof Array) ? [...data] : {...data});
 			}
 		})
 		.fail((jqXhr, textStatus, errorThrown) => {
@@ -54,25 +58,25 @@ class UMCache {
 			let responseText = '';
 			switch(jqXhr.status) {
 				case 0:
-					responseText = 'Failed to retrieve '+label+' Information. Not connect: Verify Network.';
+					responseText = 'Failed to retrieve ' + label + ' Information. Not connect: Verify Network.';
 					break;
 				case 404:
-					responseText = 'Failed to retrieve '+label+' Information. Requested User not found [404]';
+					responseText = 'Failed to retrieve ' + label + ' Information. Requested User not found [404]';
 					break;
 				case 500:
-					responseText = 'Failed to retrieve '+label+' Information. Internal Server Error [500].';
+					responseText = 'Failed to retrieve ' + label + ' Information. Internal Server Error [500].';
 					break;
 				case 'parsererror':
-					responseText = 'Failed to retrieve '+label+' Information. Requested JSON parse failed.';
+					responseText = 'Failed to retrieve ' + label + ' Information. Requested JSON parse failed.';
 					break;
 				case 'timeout':
-					responseText = 'Failed to retrieve '+label+' Information. Time out error.';
+					responseText = 'Failed to retrieve ' + label + ' Information. Time out error.';
 					break;
 				case 'abort':
-					responseText = 'Failed to retrieve '+label+' Information. Ajax request aborted.';
+					responseText = 'Failed to retrieve ' + label + ' Information. Ajax request aborted.';
 					break;
 				default:
-					responseText = 'Failed to retrieve '+label+' Information. Uncaught Error: ' + jqXhr.responseText;
+					responseText = 'Failed to retrieve ' + label + ' Information. Uncaught Error: ' + jqXhr.responseText;
 					break;
 			}
 			console.error(responseText);
@@ -80,6 +84,7 @@ class UMCache {
 				ecb({label: label, error: responseText, status: jqXhr.status});
 			}
 		});
+		return request;
 	}
 }
 

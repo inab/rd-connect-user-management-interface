@@ -8,7 +8,7 @@ import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
 function organizationalUnitValidation(formData,errors) {
-	//if (formData.userPassword !== formData.userPassword2) {
+	//if(formData.userPassword !== formData.userPassword2) {
 	//    errors.userPassword2.addError('Passwords don't match');
 	//}
 		return errors;

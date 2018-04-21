@@ -13,7 +13,7 @@ function userValidation(formData,errors) {
 var UserEnableDisableForm = React.createClass({
 	propTypes:{
 		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.object.isRequired
+		user: React.PropTypes.object.isRequired
 	},
 	getInitialState: function() {
 		return { error: null, showModal:false};
@@ -28,7 +28,7 @@ var UserEnableDisableForm = React.createClass({
 		//console.log('yay I\'m valid!');
 		//console.log('formData contiene: ', formData);
 		var enabled = formData.enabled;
-		var urlEnabled = config.usersBaseUri + encodeURIComponent(this.props.data.username);
+		var urlEnabled = config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username);
 		if(enabled){
 			urlEnabled += '/disable';
 		} else {
@@ -78,7 +78,7 @@ var UserEnableDisableForm = React.createClass({
 				}
 			}
 		};
-		var data = this.props.data;
+		var data = this.props.user;
 		//We copy just the values related to enable/disable user operation from data (the whole user information data)
 		//This is the user's data to paint, then we manage the action
 		var enableDisableData = {

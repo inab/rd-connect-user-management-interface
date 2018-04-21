@@ -99,18 +99,18 @@ class Auth {
 	
 	login(username, password, cb) {
 		//cb = arguments[arguments.length - 1];
-		if (localStorage.token) {
-			if (cb) cb(true);
+		if(localStorage.token) {
+			if(cb) cb(true);
 			this.onChange(true);
 			return;
 		}
 		pretendRequest(username, password, (res) => {
-			if (res.authenticated) {
+			if(res.authenticated) {
 				this.setLoginData(res.userProps);
-				if (cb) cb(res.userProps,null,null);
+				if(cb) cb(res.userProps,null,null);
 				this.onChange(res.userProps);
 			} else {
-				if (cb) cb(false,res.status,res.errorMsg);
+				if(cb) cb(false,res.status,res.errorMsg);
 				this.onChange(false);
 			}
 		});
@@ -122,7 +122,7 @@ class Auth {
 			
 			function doInvalidate() {
 				parthis.invalidateSession();
-				if (cb) cb();
+				if(cb) cb();
 				parthis.onChange(false);
 			}
 			
@@ -176,7 +176,7 @@ function pretendRequest(username, password, cb) {
 	/*
   setTimeout(() => {
     //Ajax call to API REST login
-    if (username === 'acanada' && password === '123.qwe') {
+    if(username === 'acanada' && password === '123.qwe') {
       cb({
         authenticated: true,
         token: Math.random().toString(36).substring(7)

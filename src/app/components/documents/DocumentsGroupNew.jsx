@@ -49,7 +49,7 @@ const DocumentsGroupNew = React.createClass({
       });
     },
     close(){
-      if (this.state.modalTitle === 'Error'){
+      if(this.state.modalTitle === 'Error'){
         this.setState({showModal: false});
       } else {
         this.setState({showModal: false});
@@ -72,19 +72,19 @@ const DocumentsGroupNew = React.createClass({
       //console.log('Values inside validateForm contains: ', values);
       var selectOptions = ['userAgreement', 'genericAgreement', 'otherAgreement','miscelaneous','mailTemplate','mailAttachment']; 
       //First we validate documentFile
-      if (!values.documentFile){
+      if(!values.documentFile){
         this.setState({
           validationErrors: {
             documentFile: 'Please select a document to upload'
           }
         });
-      } else if (values.documentFile[0].size === 0){
+      } else if(values.documentFile[0].size === 0){
         this.setState({
           validationErrors: {
             documentFile: 'Document to upload cannot be empty (0 bytes)'
           }
         });
-      } else if (values.documentFile[0].size > MaxFileSize){
+      } else if(values.documentFile[0].size > MaxFileSize){
         this.setState({
           validationErrors: {
             documentFile: 'Document to upload cannot be bigger than '+MaxFileSizeInMB+'MB'
@@ -97,19 +97,19 @@ const DocumentsGroupNew = React.createClass({
         });
       }
       //Then we validate documentDescription
-      if (!values.documentDescription){
+      if(!values.documentDescription){
         this.setState({
           validationErrors: {
             documentDescription: 'Document Description has no value, please add it'
           }
         });
-      } else if (values.documentDescription.length < 20){
+      } else if(values.documentDescription.length < 20){
         this.setState({
           validationErrors: {
             documentDescription: 'Document Description min length is 20 characters'
           }
         });
-      } else if (values.documentDescription.length > 200){
+      } else if(values.documentDescription.length > 200){
         this.setState({
           validationErrors: {
             documentDescription: 'Document Description max length is 200 characters'
@@ -122,13 +122,13 @@ const DocumentsGroupNew = React.createClass({
         });
       }
       //Then we validate documentClass
-       if (!values.documentClass){
+       if(!values.documentClass){
         this.setState({
           validationErrors: {
             documentClass: 'Document Class has no value, please select one'
           }
         });
-      } else if (selectOptions.indexOf(values.documentClass) === -1){
+      } else if(selectOptions.indexOf(values.documentClass) === -1){
         this.setState({
           validationErrors: {
             documentClass: 'Document Class has to be one of this options: User Agreement, Generic Agreement, Other Agreement, Miscelaneous, mailTemplate or mailAttachment'
@@ -174,17 +174,17 @@ const DocumentsGroupNew = React.createClass({
       .fail(function(jqXhr) {
         //console.log('Failed to Create new groups\'s document',jqXhr);
         var responseText = '';
-        if (jqXhr.status === 0) {
+        if(jqXhr.status === 0) {
           responseText = 'Failed to Create new group\'s document. Not connect: Verify Network.';
-        } else if (jqXhr.status === 404) {
+        } else if(jqXhr.status === 404) {
           responseText = 'Failed to Create new group\'s document. Not found [404]';
-        } else if (jqXhr.status === 500) {
+        } else if(jqXhr.status === 500) {
           responseText = 'Failed to Create new group\'s document. Internal Server Error [500].';
-        } else if (jqXhr.status === 'parsererror') {
+        } else if(jqXhr.status === 'parsererror') {
           responseText = 'Failed to Create new group\'s document. Sent JSON parse failed.';
-        } else if (jqXhr.status === 'timeout') {
+        } else if(jqXhr.status === 'timeout') {
           responseText = 'Failed to Create new group\'s document. Time out error.';
-        } else if (jqXhr.status === 'abort') {
+        } else if(jqXhr.status === 'abort') {
           responseText = 'Ajax request aborted.';
         } else {
           responseText = 'Uncaught Error: ' + jqXhr.responseText;

@@ -4,7 +4,7 @@ import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.jsx';
-import { Link, hashHistory } from 'react-router';
+import { Link } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
@@ -23,67 +23,74 @@ function validateImageInput(image,that) {
 	return responseText;
 }
 
-var UserEditForm = React.createClass({
-	propTypes:{
-		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.object.isRequired
-	},
-	getInitialState: function() {
-		return { modalTitle: null, error: null, showModal: false, files: [], picture : null};
-	},
-	componentWillMount: function() {
-		this.setState({picture: this.props.data.picture});
-	},
-	close(){
+class UserEditForm extends React.Component {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
+	componentWillMount() {
+		this.setState({
+			modalTitle: null,
+			error: null,
+			showModal: false,
+			files: [],
+			picture: this.props.user.picture
+		});
+	}
+	
+	close() {
 		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
-			hashHistory.goBack();
+			this.history.goBack();
 		}
-	},
-	open(){
+	}
+	
+	open() {
 		this.setState({showModal: true, modalTitle: this.state.modalTitle});
-	},
-	dropHandler: function (files) {
+	}
+	
+	userImageDropHandler(files) {
 		//console.log('Received files: ', files);
-        files.forEach((file)=> {
-			var error = validateImageInput(file);
+        files.forEach((image)=> {
+			var error = validateImageInput(image);
 			//var pictureFromBlob= new File([file.preview], file.name);
 			if(!error){
 				this.setState({files: files});
-				this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
+				this.setState({picture: image.preview}); //So the user's image is only updated in UI if the PUT process succeed'
 				//console.log("Picture in the state after validation: ", file.preview);
 				/*
 				var req = request
-					.put(config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username) + '/picture')
+					.put(config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username) + '/picture')
 					.type(file.type)
 					.set(auth.getAuthHeaders())
 				req.attach(file.name, file);
 				req.end(function(err, res){
-					if (!err && res){
+					if(!err && res){
 						this.setState({files: files});
 						this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
 						//console.log("Picture in the state after validation: ", file.preview);
 					}
 					else {
 						var responseText = '';
-						if (err && err.status === 404) {
+						if(err && err.status === 404) {
 							responseText = 'Failed to Update User\'s image. Not found [404]';
 						}
-						else if (err && err.status === 500) {
+						else if(err && err.status === 500) {
 							responseText = 'Failed to Update User\'s image. Internal Server Error [500]';
 						}
-						else if (err && err.status === 'parsererror') {
+						else if(err && err.status === 'parsererror') {
 							responseText = 'Failed to Update User\'s image. Sent JSON parse failed';
 						}
-						else if (err && err.status === 'timeout') {
+						else if(err && err.status === 'timeout') {
 							responseText = 'Failed to Update User\'s image. Time out error';
 						}
-						else if (err && err.status === 'abort') {
+						else if(err && err.status === 'abort') {
 							responseText = ('Ajax request aborted');
 						}
-						else if (err) {
+						else if(err) {
 							responseText = 'Ajax generic error';
 						}
 						this.setState({error: responseText, showModal: true});
@@ -94,11 +101,13 @@ var UserEditForm = React.createClass({
 				this.setState({modalTitle: 'Error', error: error, showModal: true});
 			}
         });
-    },
-	onOpenClick: function () {
-      this.refs.dropzone.open();
-    },
-	updateUserData: function({formData}){
+    }
+    
+	onOpenClick() {
+      this.refs.userImageDropzone.open();
+    }
+    
+	updateUserData({formData}){
 		//console.log('yay I\'m valid!');
 		var userData = Object.assign({},formData);
 		//Before submitting the editted data we add the information for the picture:
@@ -111,7 +120,7 @@ var UserEditForm = React.createClass({
 				userData.picture = stringBase64Image;
 				jQuery.ajax({
 					type: 'POST',
-					url: config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username),
+					url: config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username),
 					contentType: 'application/json',
 					headers: auth.getAuthHeaders(),
 					dataType: 'json',
@@ -148,7 +157,7 @@ var UserEditForm = React.createClass({
 		} else {
 			jQuery.ajax({
 					type: 'POST',
-					url: config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username),
+					url: config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username),
 					contentType: 'application/json',
 					headers: auth.getAuthHeaders(),
 					dataType: 'json',
@@ -182,8 +191,9 @@ var UserEditForm = React.createClass({
 				.always(() => {
 				});
 		}
-	},
-	render: function() {
+	}
+	
+	render() {
 		var schema = this.props.schema;
 		// Replicating userPassword for schema validation and Ordering Schema for ui:order
 		//Adding a userPassword2 field to validate userPassword change
@@ -207,7 +217,7 @@ var UserEditForm = React.createClass({
 		//We concatenate order with userSchemaKeys, retrieving the ordered schema as desired
 		var schemaOrdered = order.concat(userSchemaKeys);
 
-		var data = this.props.data;
+		var data = this.props.user;
 		//console.log('Picture en el state contiene: ', this.state.picture);
 		//console.log('File en el state contiene: ', this.state.files);
 		//Once we already have picture value, we remove from data since we have removed it from schema.
@@ -263,7 +273,7 @@ var UserEditForm = React.createClass({
 		}
 		return (
 			<div>
-				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 					</Modal.Header>
@@ -271,7 +281,7 @@ var UserEditForm = React.createClass({
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button onClick={this.close}>Close</Button>
+						<Button onClick={() => this.close()}>Close</Button>
 					</Modal.Footer>
 				</Modal>
 				<Row className="show-grid">
@@ -286,23 +296,23 @@ var UserEditForm = React.createClass({
 							liveValidate
 						>
 							<div className="button-submit">
-								<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
+								<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 								<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit&nbsp;<Glyphicon glyph="pencil" /></Button>
 							</div>
 						</Form>
 					</Col>
 					<Col xs={6} md={4} >
-						<Link className="btn btn-danger changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(`${data.username}`)}>
+						<Link className="btn btn-danger changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(data.username)}>
 							Change Password&nbsp;<Glyphicon glyph="pencil" />
 						</Link>
 						<div>
-							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
+							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={(images) => this.userImageDropHandler(images)} ref="userImageDropzone" >
 								Click here or drop image for {data.username}
 							</Dropzone>
 							{this.state.files.length > 0 ? <div>
 							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} name="documentFile" width="100" alt="image_user" className="imagePreview" /> )}</div>
 							</div> : <div><img src={userImage} name="documentFile" width="100" alt="image_user" className="imagePreview" /></div>}
-							<Link className="btn btn-primary changeImageButton" role="button" onClick={this.onOpenClick}>
+							<Link className="btn btn-primary changeImageButton" role="button" onClick={() => this.onOpenClick()}>
 								Change Image
 							</Link>
 						</div>
@@ -311,5 +321,12 @@ var UserEditForm = React.createClass({
 			</div>
 		);
 	}
-});
+}
+
+UserEditForm.propTypes = {
+	schema: React.PropTypes.object.isRequired,
+	user: React.PropTypes.object.isRequired
+};
+
+
 module.exports = UserEditForm;

@@ -53,17 +53,17 @@ const DocumentsUserContainer = React.createClass({
 		.fail(function(jqXhr) {
 			//console.log('Failed to retrieve Documents for this user',jqXhr);
 			var responseText = '';
-			if (jqXhr.status === 0) {
+			if(jqXhr.status === 0) {
 				responseText = 'Failed to retrieve Documents. Not connect: Verify Network.';
-			} else if (jqXhr.status === 404) {
+			} else if(jqXhr.status === 404) {
 				responseText = 'Failed to retrieve Documents. User ' + this.props.params.username + ' has no documents yet';
-			} else if (jqXhr.status === 500) {
+			} else if(jqXhr.status === 500) {
 				responseText = 'Failed to retrieve Documents. Internal Server Error [500].';
-			} else if (jqXhr.status === 'parsererror') {
+			} else if(jqXhr.status === 'parsererror') {
 				responseText = 'Failed to retrieve Documents. Requested JSON parse failed.';
-			} else if (jqXhr.status === 'timeout') {
+			} else if(jqXhr.status === 'timeout') {
 				responseText = 'Failed to retrieve Documents. Time out error.';
-			} else if (jqXhr.status === 'abort') {
+			} else if(jqXhr.status === 'abort') {
 				responseText = 'Failed to retrieve Documents. Ajax request aborted.';
 			} else {
 				responseText = 'Failed to retrieve Documents. Uncaught Error: ' + jqXhr.responseText;
@@ -72,7 +72,7 @@ const DocumentsUserContainer = React.createClass({
 		}.bind(this));
 	},
 	render: function() {
-		if (this.state.error) {
+		if(this.state.error) {
 			return (
 				<div>
 					<Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
@@ -89,7 +89,7 @@ const DocumentsUserContainer = React.createClass({
 				</div>
 			);
 		}
-		if (this.state.data) {
+		if(this.state.data) {
 			return (
 				<div>
 					<DocumentsUser data={this.state.data}/>

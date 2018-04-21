@@ -66,17 +66,17 @@ const DocumentsUser = React.createClass({
           //console.log('Failed to Delete User File',jqXhr);
           //console.log('Change state',this.state);
           var responseText = '';
-          if (jqXhr.status === 0) {
+          if(jqXhr.status === 0) {
             responseText = 'Failed to Delete User File. Not connect: Verify Network.';
-          } else if (jqXhr.status === 404) {
+          } else if(jqXhr.status === 404) {
             responseText = 'Failed to Delete User File. Not found [404]';
-          } else if (jqXhr.status === 500) {
+          } else if(jqXhr.status === 500) {
             responseText = 'Failed to Delete User File. Internal Server Error [500].';
-          } else if (jqXhr.status === 'parsererror') {
+          } else if(jqXhr.status === 'parsererror') {
             responseText = 'Failed to Delete User File. Sent JSON parse failed.';
-          } else if (jqXhr.status === 'timeout') {
+          } else if(jqXhr.status === 'timeout') {
             responseText = 'Failed to Delete User File. Time out error.';
-          } else if (jqXhr.status === 'abort') {
+          } else if(jqXhr.status === 'abort') {
             responseText = 'Ajax request aborted.';
           } else {
             responseText = 'Uncaught Error: ' + jqXhr.responseText;

@@ -24,7 +24,7 @@ function dataURItoBlob(dataURI) {
 	});
 	// Look for the name and use unknown if no name property.
 	var name = void 0;
-	if (properties.length !== 1) {
+	if(properties.length !== 1) {
 		name = "unknown";
 	} else {
 		// Because we filtered out the other property,

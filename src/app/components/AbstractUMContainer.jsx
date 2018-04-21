@@ -9,6 +9,7 @@ const DEFAULT_SCHEMA_CACHE_TTL = 60*60*1000;
 class AbstractFetchedDataContainer extends React.Component {
 	constructor(props,context) {
 		super(props,context);
+		this.requests = [];
 		this.onChange = this.onChange.bind(this);
 	}
 
@@ -24,13 +25,26 @@ class AbstractFetchedDataContainer extends React.Component {
 		});
 	}
 	
+	componentWillUnmount() {
+		this.abortPendingRequests();
+	}
+	
 	onChange(e) {
 		this.setState(e);
 	}
 	
+	abortPendingRequests() {
+		this.requests.forEach(request => request.abort());
+	}
+	
+	registerRequest(request) {
+		this.requests.push(request);
+	}
+	
 	loadUsersSchema(cb,ecb = undefined) {
 		// https://stackoverflow.com/questions/34956479/how-do-i-setstate-for-nested-array
-		cache.getData(config.usersBaseUri + '?schema','users JSON schema',(usersSchema) => {
+		let request;
+		request = cache.getData(config.usersBaseUri + '?schema','users JSON schema',(usersSchema) => {
 			this.onChange((prevState) => {
 				return {
 					schemas: {
@@ -48,10 +62,12 @@ class AbstractFetchedDataContainer extends React.Component {
 				ecb(errMsg);
 			}
 		},false,DEFAULT_SCHEMA_CACHE_TTL);
+		this.registerRequest(request);
 	}
 	
 	loadUsers(cb,ecb = undefined) {
-		cache.getData(config.usersBaseUri,'users',(users) => {
+		let request;
+		request = cache.getData(config.usersBaseUri,'users',(users) => {
 			this.onChange({users: users});
 			if(cb) {
 				cb(users);
@@ -62,11 +78,28 @@ class AbstractFetchedDataContainer extends React.Component {
 				ecb(errMsg);
 			}
 		});
+		this.registerRequest(request);
+	}
+	
+	loadUser(username,cb,ecb = undefined) {
+		let request;
+		request = cache.getData(config.usersBaseUri + '/' + encodeURIComponent(username),'user ' + username,(user) => {
+			if(cb) {
+				cb(user);
+			}
+		},(errMsg) => {
+			console.error('Unable to load user ' + username);
+			if(ecb) {
+				ecb(errMsg);
+			}
+		});
+		this.registerRequest(request);
 	}
 	
 	loadOrganizationalUnitsSchema(cb,ecb = undefined) {
 		// https://stackoverflow.com/questions/34956479/how-do-i-setstate-for-nested-array
-		cache.getData(config.ouBaseUri + '?schema','organizational units schema',(ouSchema) => {
+		let request;
+		request = cache.getData(config.ouBaseUri + '?schema','organizational units schema',(ouSchema) => {
 			this.onChange((prevState) => {
 				return {
 					schemas: {
@@ -84,10 +117,12 @@ class AbstractFetchedDataContainer extends React.Component {
 				ecb(errMsg);
 			}
 		},false,DEFAULT_SCHEMA_CACHE_TTL);
+		this.registerRequest(request);
 	}
 	
 	loadOrganizationalUnits(cb,ecb = undefined) {
-		cache.getData(config.ouBaseUri,'organizational units',(organizationalUnits) => {
+		let request;
+		request = cache.getData(config.ouBaseUri,'organizational units',(organizationalUnits) => {
 			this.onChange({organizationalUnits: organizationalUnits});
 			if(cb) {
 				cb(organizationalUnits);
@@ -98,11 +133,28 @@ class AbstractFetchedDataContainer extends React.Component {
 				ecb(errMsg);
 			}
 		});
+		this.registerRequest(request);
+	}
+	
+	loadOrganizationalUnit(ou,cb,ecb = undefined) {
+		let request;
+		request = cache.getData(config.ouBaseUri + '/' + encodeURIComponent(ou),'organizational unit ' + ou,(organizationalUnit) => {
+			if(cb) {
+				cb(organizationalUnit);
+			}
+		},(errMsg) => {
+			console.error('Unable to load organization ' + ou);
+			if(ecb) {
+				ecb(errMsg);
+			}
+		});
+		this.registerRequest(request);
 	}
 	
 	loadGroupsSchema(cb,ecb = undefined) {
 		// https://stackoverflow.com/questions/34956479/how-do-i-setstate-for-nested-array
-		cache.getData(config.groupsBaseUri + '?schema','groups schema',(groupsSchema) => {
+		let request;
+		request = cache.getData(config.groupsBaseUri + '?schema','groups schema',(groupsSchema) => {
 			this.onChange((prevState) => {
 				return {
 					schemas: {
@@ -120,10 +172,12 @@ class AbstractFetchedDataContainer extends React.Component {
 				ecb(errMsg);
 			}
 		},false,DEFAULT_SCHEMA_CACHE_TTL);
+		this.registerRequest(request);
 	}
 	
 	loadGroups(cb,ecb = undefined) {
-		cache.getData(config.groupsBaseUri,'groups',(groups) => {
+		let request;
+		request = cache.getData(config.groupsBaseUri,'groups',(groups) => {
 			this.onChange({groups: groups});
 			if(cb) {
 				cb(groups);
@@ -134,6 +188,22 @@ class AbstractFetchedDataContainer extends React.Component {
 				ecb(errMsg);
 			}
 		});
+		this.registerRequest(request);
+	}
+	
+	loadGroup(groupname,cb,ecb = undefined) {
+		let request;
+		request = cache.getData(config.groupsBaseUri + '/' + groupname,'group ' + groupname,(group) => {
+			if(cb) {
+				cb(group);
+			}
+		},(errMsg) => {
+			console.error('Unable to load group ' + groupname);
+			if(ecb) {
+				ecb(errMsg);
+			}
+		});
+		this.registerRequest(request);
 	}
 	
 	loadSelectableUsers() {

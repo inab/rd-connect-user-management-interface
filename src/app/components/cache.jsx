@@ -55,28 +55,28 @@ class UMCache {
 		})
 		.fail((jqXhr, textStatus, errorThrown) => {
 			//console.log('Failed to retrieve user Information',jqXhr);
-			let responseText = '';
+			let responseText = 'Failed to retrieve ' + label + ' Information. ';
 			switch(jqXhr.status) {
 				case 0:
-					responseText = 'Failed to retrieve ' + label + ' Information. Not connect: Verify Network.';
+					responseText += 'Not connect: Verify Network.';
 					break;
 				case 404:
-					responseText = 'Failed to retrieve ' + label + ' Information. Requested User not found [404]';
+					responseText += 'Requested User not found [404]';
 					break;
 				case 500:
-					responseText = 'Failed to retrieve ' + label + ' Information. Internal Server Error [500].';
+					responseText += 'Internal Server Error [500].';
 					break;
 				case 'parsererror':
-					responseText = 'Failed to retrieve ' + label + ' Information. Requested JSON parse failed.';
+					responseText += 'Requested JSON parse failed.';
 					break;
 				case 'timeout':
-					responseText = 'Failed to retrieve ' + label + ' Information. Time out error.';
+					responseText += 'Time out error.';
 					break;
 				case 'abort':
-					responseText = 'Failed to retrieve ' + label + ' Information. Ajax request aborted.';
+					responseText += 'Ajax request aborted.';
 					break;
 				default:
-					responseText = 'Failed to retrieve ' + label + ' Information. Uncaught Error: ' + jqXhr.responseText;
+					responseText += 'Uncaught Error: ' + jqXhr.responseText;
 					break;
 			}
 			console.error(responseText);

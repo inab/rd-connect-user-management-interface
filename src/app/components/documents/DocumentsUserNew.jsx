@@ -10,7 +10,7 @@ import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
 function htmlspecialchars(str) {
-  return str.replace('&', '&amp;').replace('"', '&quot;').replace("'", '&#039;').replace('<', '&lt;').replace('>', '&gt;');
+	return str.replace('&', '&amp;').replace('"', '&quot;').replace('\'', '&#039;').replace('<', '&lt;').replace('>', '&gt;');
 }
 
 const MaxFileSizeInMB = 10;
@@ -62,9 +62,8 @@ const DocumentsUserNew = React.createClass({
       this.setState({ in: !this.state.in });
     },
     wait(){
-      var mythis = this;
-      setTimeout(function(){
-        mythis.toggle();
+      setTimeout(() => {
+        this.toggle();
       }, 3000);
     },
     validateForm: function (values) {
@@ -86,7 +85,7 @@ const DocumentsUserNew = React.createClass({
       } else if(values.documentFile[0].size > MaxFileSize){
         this.setState({
           validationErrors: {
-            documentFile: 'Document to upload cannot be bigger than '+MaxFileSizeInMB+'MB'
+            documentFile: 'Document to upload cannot be bigger than ' + MaxFileSizeInMB + 'MB'
           }
         });
       } else {

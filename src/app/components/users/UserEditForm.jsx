@@ -5,8 +5,9 @@ import Form from 'react-jsonschema-form';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.jsx';
 import { Link } from 'react-router';
-import config from 'config.jsx';
-import auth from 'components/auth.jsx';
+
+import UserManagement from '../UserManagement.jsx';
+import GroupManagement from '../GroupManagement.jsx';
 
 function userValidation(formData,errors) {
 	if(formData.userPassword !== formData.userPassword2) {
@@ -107,89 +108,48 @@ class UserEditForm extends React.Component {
       this.refs.userImageDropzone.open();
     }
     
-	updateUserData({formData}){
+	updateUserData(formData){
 		//console.log('yay I\'m valid!');
 		var userData = Object.assign({},formData);
 		//Before submitting the editted data we add the information for the picture:
 		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
 		var reader = new window.FileReader();
-		//console.log('myBlob needs to be controlled, contains: ', myBlob);
+
+		let um = new UserManagement();
+		let gm = new GroupManagement();
+		
+		//let groups = this.state.selectedGroups.map(group => group.value);
+		let groups = [];
+		
+		let errHandler = (err) => {
+			this.setState({
+				...err,
+				showModal: true
+			});
+		};
+		let groupCreationHandler = (iGroup,usernames) => {
+			if(iGroup < groups.length) {
+				gm.addMembersToGroup(groups[iGroup],usernames,() => groupCreationHandler(iGroup + 1,usernames),errHandler);
+			} else {
+				this.setState({ modalTitle: 'Success', error: 'User created correctly!!', showModal: true});
+			}
+		};
+		let userEditHandler = (username,userD) => {
+			um.modifyUser(username,userD,(data) => {
+				groupCreationHandler(0,[username]);
+			},errHandler);
+		};
+		
 		if(typeof myBlob !== 'undefined'){
-			reader.addEventListener('load', function() {
+			reader.addEventListener('load',function() {
 				var stringBase64Image = reader.result;
 				userData.picture = stringBase64Image;
-				jQuery.ajax({
-					type: 'POST',
-					url: config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username),
-					contentType: 'application/json',
-					headers: auth.getAuthHeaders(),
-					dataType: 'json',
-					data: JSON.stringify(userData)
-				})
-				.done(function(data) {
-					//console.log('User modified correctly!!');
-					this.setState({ modalTitle: 'Success', error: 'User modified correctly!!', showModal: true});
-				}.bind(this))
-				.fail(function(jqXhr) {
-					//console.log('Failed to Update User Information',jqXhr.responseText);
-					var responseText = '';
-					if(jqXhr.status === 0) {
-						responseText = 'Failed to Update User Information. Not connect: Verify Network.';
-					} else if(jqXhr.status === 404) {
-						responseText = 'Failed to Update User Information. Not found [404]';
-					} else if(jqXhr.status === 500) {
-						responseText = 'Failed to Update User Information. Internal Server Error [500].';
-					} else if(jqXhr.status === 'parsererror') {
-						responseText = 'Failed to Update User Information. Sent JSON parse failed.';
-					} else if(jqXhr.status === 'timeout') {
-						responseText = 'Failed to Update User Information. Time out error.';
-					} else if(jqXhr.status === 'abort') {
-						responseText = 'Ajax request aborted.';
-					} else {
-						responseText = 'Uncaught Error: ' + jqXhr.responseText;
-					}
-					this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
-				}.bind(this))
-				.always(() => {
-				});
+				
+				userEditHandler(this.props.user.username,userData);
 			}.bind(this));
 			reader.readAsDataURL(myBlob);
 		} else {
-			jQuery.ajax({
-					type: 'POST',
-					url: config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username),
-					contentType: 'application/json',
-					headers: auth.getAuthHeaders(),
-					dataType: 'json',
-					data: JSON.stringify(userData)
-				})
-				.done(function(data) {
-					//console.log('User modified correctly!!');
-					this.setState({modalTitle:'Success', error: 'User modified correctly!!', showModal: true});
-
-				}.bind(this))
-				.fail(function(jqXhr) {
-					//console.log('Failed to Update User Information',jqXhr.responseText);
-					var responseText = '';
-					if(jqXhr.status === 0) {
-						responseText = 'Failed to Update User Information. Not connect: Verify Network.';
-					} else if(jqXhr.status === 404) {
-						responseText = 'Failed to Update User Information. Not found [404]';
-					} else if(jqXhr.status === 500) {
-						responseText = 'Failed to Update User Information. Internal Server Error [500].';
-					} else if(jqXhr.status === 'parsererror') {
-						responseText = 'Failed to Update User Information. Sent JSON parse failed.';
-					} else if(jqXhr.status === 'timeout') {
-						responseText = 'Failed to Update User Information. Time out error.';
-					} else if(jqXhr.status === 'abort') {
-						responseText = 'Ajax request aborted.';
-					} else {
-						responseText = 'Uncaught Error: ' + jqXhr.responseText;
-					}
-					this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
-				}.bind(this))
-				.always(() => {
-				});
+			userEditHandler(this.props.user.username,userData);
 		}
 	}
 	
@@ -263,7 +223,7 @@ class UserEditForm extends React.Component {
 			}*/
 		};
 		//const log = (type) => console.log.bind(console, type);
-		const onSubmit = ({formData}) => this.updateUserData({formData});
+		const onSubmit = ({formData}) => this.updateUserData(formData);
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
@@ -289,7 +249,7 @@ class UserEditForm extends React.Component {
 						<Form schema={schema}
 							uiSchema={uiSchema}
 							formData={data}
-							//onChange={log('changed')}
+							//onChange={({formData}) => this.setState({formData})}
 							onSubmit={onSubmit}
 							onError={onError}
 							validate={userValidation}

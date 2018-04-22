@@ -37,9 +37,8 @@ const DocumentsUser = React.createClass({
     this.setState({ in: !this.state.in });
   },
   wait(){
-    var mythis = this;
-    setTimeout(function(){
-      mythis.toggle();
+    setTimeout(() => {
+      this.toggle();
     }, 3000);
   },
   confirmDelete(file) {
@@ -51,7 +50,7 @@ const DocumentsUser = React.createClass({
         //console.log('ok, lets delete it');//DELETE /users/:user_id/documents/:document_name:
         jQuery.ajax({
           type: 'DELETE',
-          url: config.usersBaseUri + '/' + encodeURIComponent(file.owner) + '/documents/'+ encodeURIComponent(file.cn),
+          url: config.usersBaseUri + '/' + encodeURIComponent(file.owner) + '/documents/' + encodeURIComponent(file.cn),
           headers: auth.getAuthHeaders()
         })
         .done(function() {
@@ -91,12 +90,11 @@ const DocumentsUser = React.createClass({
     var username = this.state.username;
     //We receive an array of objects. Each element of the array contains one document, from which we get the metadata and show them
     
-    var mythis = this;
-    function contextConfirmDelete(file) {
-        return function() {
-            mythis.confirmDelete(file);
+    let contextConfirmDelete = (file) => {
+        return () => {
+            this.confirmDelete(file);
         };
-    }
+    };
 
     return (
       <div>

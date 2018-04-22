@@ -3,14 +3,14 @@ import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import { Glyphicon, Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
-import imageNotFoundSrc from './defaultNoImageFound.jsx';
+import imageNotFound from './defaultNoImageFound.jsx';
 import zxcvbn from 'zxcvbn';
+import Select from 'react-select';
 
 //import ModalError from './ModalError.jsx';
 
-import config from 'config.jsx';
-import auth from 'components/auth.jsx';
-import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
+import UserManagement from '../UserManagement.jsx';
+import GroupManagement from '../GroupManagement.jsx';
 
 function validateImageInput(image,that) {
 	let responseText = null;
@@ -20,27 +20,26 @@ function validateImageInput(image,that) {
 	return responseText;
 }
 
-class UserNewForm extends AbstractFetchedDataContainer {
+class UserNewForm extends React.Component {
 	constructor(props,context) {
 		super(props,context);
 		this.history = props.history;
 	}
 	
 	componentWillMount() {
-		super.componentWillMount();
 		this.setState({
 			modalTitle: null,
 			error: null,
 			showModal: false,
 			files: [],
-			picture : null,
-			in: false
-		});
-		this.setState({
-			picture: imageNotFoundSrc,
+			in: false,
+			picture: imageNotFound.src,
 			schema: this.props.schema,
-			data: this.props.data,
-			users: this.props.users
+			selectableOUs: this.props.organizationalUnits,
+			users: this.props.users,
+			selectableGroups: this.props.groups,
+			selectedGroups: [],
+			formData: {}
 		});
 	}
 	
@@ -98,11 +97,11 @@ class UserNewForm extends AbstractFetchedDataContainer {
 	}
 	
 	toggle() {
-      this.setState({ in: !this.state.in });
+		this.setState({ in: !this.state.in });
     }
     
     wait() {
-      setTimeout(() => this.toggle(), 3000);
+		setTimeout(() => this.toggle(), 3000);
     }
     
 	dropHandler(files) {
@@ -118,16 +117,16 @@ class UserNewForm extends AbstractFetchedDataContainer {
     }
     
 	onOpenClick() {
-      this.refs.dropzone.open();
+		this.refs.dropzone.open();
     }
     
-	addUserData({formData}){
+	addUserData() {
 		//console.log('yay I\'m valid!');
-		var userData = Object.assign({},formData);
+		var userData = Object.assign({},this.state.formData);
 		delete userData.userPassword2;
+		
 		//console.log('El userData contiene: ',userData);
 		//var userExists = this.testIfUserExists(userData);
-		var responseText = '';
 		
 		if(userData.userPassword === undefined || userData.userPassword === null || userData.userPassword === '') {
 			// Generating a random password, in case the password field is empty
@@ -162,83 +161,44 @@ class UserNewForm extends AbstractFetchedDataContainer {
 		//Before submitting the editted data we add the information for the picture:
 		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
 		var reader = new window.FileReader();
+		let um = new UserManagement();
+		let gm = new GroupManagement();
+		
+		let groups = this.state.selectedGroups.map(group => group.value);
+		
+		let errHandler = (err) => {
+			this.setState({
+				...err,
+				showModal: true
+			});
+		};
+		let groupCreationHandler = (iGroup,usernames) => {
+			if(iGroup < groups.length) {
+				gm.addMembersToGroup(groups[iGroup],usernames,() => groupCreationHandler(iGroup + 1,usernames),errHandler);
+			} else {
+				this.setState({ modalTitle: 'Success', error: 'User created correctly!!', showModal: true});
+			}
+		};
+		let userCreationHandler = (userD) => {
+			um.createUser(userD,(data) => {
+				groupCreationHandler(0,[userD.username]);
+			},errHandler);
+		};
+		
 		if(typeof myBlob !== 'undefined'){
 			reader.addEventListener('load',function() {
 				var stringBase64Image = reader.result;
 				userData.picture = stringBase64Image;
-				jQuery.ajax({
-					type: 'PUT',
-					url: config.usersBaseUri,
-					headers: auth.getAuthHeaders(),
-					dataType: 'json',
-					contentType: 'application/json',
-					data: JSON.stringify(userData)
-				})
-				.done(function(data) {
-					this.setState({ modalTitle: 'Success', error: 'User created correctly!!', showModal: true});
-				}.bind(this))
-				.fail(function(jqXhr) {
-					//console.log('Failed to Create New User',jqXhr);
-					if(jqXhr.status === 0) {
-						responseText = 'Failed to Create New User. Not connect: Verify Network.';
-					} else if(jqXhr.status === 404) {
-						responseText = 'Failed to Create New User. Not found [404]';
-					} else if(jqXhr.status === 500) {
-						responseText = 'Failed to Create New User. Internal Server Error [500].';
-					} else if(jqXhr.status === 'parsererror') {
-						responseText = 'Failed to Create New User. Sent JSON parse failed.';
-					} else if(jqXhr.status === 'timeout') {
-						responseText = 'Failed to Create New User. Time out error.';
-					} else if(jqXhr.status === 'abort') {
-						responseText = 'Ajax request aborted.';
-					} else {
-						responseText = 'Uncaught Error: ' + jqXhr.responseText;
-					}
-					this.setState({modaTitle: 'Error', error: responseText, showModal: true});
-				}.bind(this));
+				
+				userCreationHandler(userData);
 			}.bind(this));
 			reader.readAsDataURL(myBlob);
 		} else {
-			jQuery.ajax({
-					type: 'PUT',
-					url: config.usersBaseUri,
-					contentType: 'application/json',
-					headers: auth.getAuthHeaders(),
-					dataType: 'json',
-					data: JSON.stringify(userData)
-				})
-				.done(function(data) {
-					//console.log('User created correctly!!');
-					this.setState({modalTitle:'Success', error: 'User created correctly!!', showModal: true});
-
-				}.bind(this))
-				.fail(function(jqXhr) {
-					//console.log('Failed to create new user',jqXhr.responseText);
-					let responseTextUser = '';
-					if(jqXhr.status === 0) {
-						responseTextUser = 'Failed to create new user. Not connect: Verify Network.';
-					} else if(jqXhr.status === 404) {
-						responseTextUser = 'Failed to create new user. Not found [404]';
-					} else if(jqXhr.status === 500) {
-						responseTextUser = 'Failed to create new user. Internal Server Error [500].';
-					} else if(jqXhr.status === 'parsererror') {
-						responseTextUser = 'Failed to create new user. Sent JSON parse failed.';
-					} else if(jqXhr.status === 'timeout') {
-						responseTextUser = 'Failed to create new user. Time out error.';
-					} else if(jqXhr.status === 'abort') {
-						responseTextUser = 'Ajax request aborted.';
-					} else {
-						responseTextUser = 'Uncaught Error: ' + jqXhr.responseText;
-					}
-					this.setState({ modalTitle: 'Error', error: responseTextUser, showModal: true});
-				}.bind(this))
-				.always(() => {
-				});
+			userCreationHandler(userData);
 		}
 	}
 	
 	render() {
-		const formData = {};
 		let schema = this.state.schema;
 
 		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
@@ -249,16 +209,16 @@ class UserNewForm extends AbstractFetchedDataContainer {
 		
 		let userImage = this.state.picture;
 		if(typeof userImage === 'undefined'){
-			userImage = imageNotFoundSrc;
+			userImage = imageNotFound.src;
 		}
 		//We generate the enums property for the Organizational Units extracting the info from data
-		let arrayOUobjects = this.state.data; var arrayOUstrings = [];
-		for(let i = 0; i < arrayOUobjects.length; i++) {
-			arrayOUstrings.push(arrayOUobjects[i].organizationalUnit);
-		}
-		arrayOUstrings.sort();
+		let arrayOUobjects = this.state.selectableOUs;
+		arrayOUobjects.sort((a,b) => { return a.value.localeCompare(b.value); });
+		let ouEnum = arrayOUobjects.map((ou) => { return ou.value; });
+		let ouEnumLabel = arrayOUobjects.map((ou) => { return ou.label; });
+		schema.properties.organizationalUnit.enum = ouEnum;
+		schema.properties.organizationalUnit.enumNames = ouEnumLabel;
 		
-		schema.properties.organizationalUnit.enum = arrayOUstrings;
 		//Replicating userPassword for schema validation and Ordering Schema for ui:order
 		//Adding a userPassword2 field to validate userPassword change
 		schema.properties.userPassword2 = schema.properties.userPassword;
@@ -302,14 +262,14 @@ class UserNewForm extends AbstractFetchedDataContainer {
 		};
 		
 		const log = (type) => console.log.bind(console, type);
-		const onSubmit = ({formData}) => this.addUserData({formData});
+		const onSubmit = () => this.addUserData();
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
 		
 		return (
 			<div>
-				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 					</Modal.Header>
@@ -317,24 +277,25 @@ class UserNewForm extends AbstractFetchedDataContainer {
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button onClick={this.close}>Close</Button>
+						<Button onClick={() => this.close()}>Close</Button>
 					</Modal.Footer>
 				</Modal>
 				<h3> Create New User </h3>
-				<Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
+				<Collapse in={this.state.in} onEntering={() => this.wait()} bsStyle="success" ref="fade">
 					<ListGroup>
-					<ListGroupItem bsStyle="success">User created successfully!!</ListGroupItem>
+						<ListGroupItem bsStyle="success">User created successfully!!</ListGroupItem>
 					</ListGroup>
 				</Collapse>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
 						<Form schema={schema}
 						uiSchema={uiSchema}
-						formData={formData}
+						formData={this.state.formData}
+						onChange={({formData}) => this.setState({formData})}
 						//onChange={log('changed')}
 						onSubmit={onSubmit}
 						onError={onError}
-						validate={this.userValidation}
+						validate={(formData,errors) => this.userValidation(formData,errors)}
 						liveValidate
 						showErrorList={false}
 						>
@@ -346,15 +307,24 @@ class UserNewForm extends AbstractFetchedDataContainer {
 					</Col>
 					<Col xs={6} md={4} >
 						<div>
-							<button type="button" onClick={this.onOpenClick} className="changeImageButton">
-								Add image
-							</button>
-							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
-								Click here or drop image
-							</Dropzone>
+							<Select
+								disabled={this.state.selectableGroups.length === 0}
+								placeholder="Select the group(s)"
+								options={this.state.selectableGroups}
+								value={this.state.selectedGroups}
+								onChange={(values) => this.setState({selectedGroups: values})}
+								multi
+							/>
+							<p>User image</p>
 							{this.state.files.length > 0 ? <div>
 							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} width="100" alt="image_user" className="imagePreview" /> )}</div>
 							</div> : <div><img src={userImage} width="100" alt="image_user" className="imagePreview" /></div>}
+							<button type="button" onClick={() => this.onOpenClick()} className="changeImageButton">
+								Add image
+							</button>
+							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={(files) => this.dropHandler(files)} ref="dropzone" >
+								Click here or drop image
+							</Dropzone>
 						</div>
 					</Col>
 				</Row>
@@ -365,8 +335,9 @@ class UserNewForm extends AbstractFetchedDataContainer {
 
 UserNewForm.propTypes = {
 	schema: React.PropTypes.object.isRequired,
-	data: React.PropTypes.array.isRequired,
-	users: React.PropTypes.array.isRequired
+	organizationalUnits: React.PropTypes.array.isRequired,
+	users: React.PropTypes.array.isRequired,
+	groups: React.PropTypes.array.isRequired
 };
 
-module.exports = UserNewForm;
+export default UserNewForm;

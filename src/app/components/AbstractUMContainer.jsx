@@ -4,7 +4,7 @@ import cache from './cache.jsx';
 //import auth from 'components/auth.jsx';
 
 // The schemas are not going to change, so cache them harder
-const DEFAULT_SCHEMA_CACHE_TTL = 60*60*1000;
+const DEFAULT_SCHEMA_CACHE_TTL = 60 * 60 * 1000;
 
 class AbstractFetchedDataContainer extends React.Component {
 	constructor(props,context) {
@@ -206,43 +206,52 @@ class AbstractFetchedDataContainer extends React.Component {
 		this.registerRequest(request);
 	}
 	
-	loadSelectableUsers() {
+	loadSelectableUsers(cb = undefined,ecb = undefined) {
 		this.loadUsers((users) => {
-			this.onChange({
-				selectableUsers: users.map((user) => {
-					return {
-						label: user.cn + ' (' + user.organizationalUnit + ')',
-						value: user.username
-					};
-				})
+			let selectableUsers = users.map((user) => {
+				return {
+					label: user.cn + ' (' + user.organizationalUnit + ')',
+					value: user.username
+				};
 			});
-		});
+			this.onChange({ selectableUsers: selectableUsers });
+			
+			if(cb) {
+				cb(selectableUsers);
+			}
+		},ecb);
 	}
 	
-	loadSelectableOrganizationalUnits() {
+	loadSelectableOrganizationalUnits(cb = undefined,ecb = undefined) {
 		this.loadOrganizationalUnits((organizationalUnits) => {
-			this.onChange({
-				selectableOUs: organizationalUnits.map((ou) => {
-					return {
-						label: ou.description + ' (' + ou.organizationalUnit + ')',
-						value: ou.organizationalUnit
-					};
-				})
+			let selectableOUs = organizationalUnits.map((ou) => {
+				return {
+					label: ou.description + ' (' + ou.organizationalUnit + ')',
+					value: ou.organizationalUnit
+				};
 			});
-		});
+			this.onChange({ selectableOUs: selectableOUs });
+			
+			if(cb) {
+				cb(selectableOUs);
+			}
+		},ecb);
 	}
 	
-	loadSelectableGroups() {
+	loadSelectableGroups(cb = undefined,ecb = undefined) {
 		this.loadGroups((groups) => {
-			this.onChange({
-				selectableGroups: groups.map((group) => {
-					return {
-						label: group.description + ' (' + group.cn + ')',
-						value: group.cn
-					};
-				})
+			let selectableGroups = groups.map((group) => {
+				return {
+					label: group.description + ' (' + group.cn + ')',
+					value: group.cn
+				};
 			});
-		});
+			this.onChange({ selectableGroups: selectableGroups });
+			
+			if(cb) {
+				cb(selectableGroups);
+			}
+		},ecb);
 	}
 }
 

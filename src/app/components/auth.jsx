@@ -8,13 +8,14 @@ class Auth {
 	constructor() {
 		// Get the token from the cookie (if exists)
 		this.token = cookie.load(COOKIE_NAME);
-		if(this.token === undefined)  this.token = null;
+		if(this.token === undefined) {
+			this.token = null;
+		}
 		this.userProps = null;
 		
 		// Forcing to get the login information
-		let auth = this;
 		this.getLoginData(() => {
-			auth.initialized = true;
+			this.initialized = true;
 		});
 	}
 	
@@ -33,7 +34,7 @@ class Auth {
 	renewSessionCookie() {
 		var expireDate = new Date();
 		// One hour expiration
-		expireDate.setTime(expireDate.getTime() + (60*60*1000));
+		expireDate.setTime(expireDate.getTime() + (60 * 60 * 1000));
 		cookie.save(COOKIE_NAME,this.token,{ path: location.pathname , expires: expireDate });
 		return this.token;
 	}
@@ -51,7 +52,6 @@ class Auth {
 	getLoginData(cb,ecb) {
 		if(this.userProps === null) {
 			if(this.token !== null) {
-				var parthis = this;
 				// Let's validate the session status, in a synchronous way
 				jQuery.ajax({
 					type: 'GET',
@@ -72,7 +72,7 @@ class Auth {
 					// As we cannot fetch the user information, remove
 					// all the session traces
 					this.invalidateSession();
-					if(ecb!==undefined) {
+					if(ecb !== undefined) {
 						ecb(xhr, status, err);
 					}
 				});
@@ -85,12 +85,12 @@ class Auth {
 	
 	getLoginToken(cb) {
 		// We validate the session here
-		var userProps = this.getLoginData(() => {
-				if(cb!==undefined) {
+		this.getLoginData(() => {
+				if(cb !== undefined) {
 					cb(this.token);
 				}
 			}, () => {
-				if(cb!==undefined) {
+				if(cb !== undefined) {
 					cb(null);
 				}
 			}
@@ -100,17 +100,23 @@ class Auth {
 	login(username, password, cb) {
 		//cb = arguments[arguments.length - 1];
 		if(localStorage.token) {
-			if(cb) cb(true);
+			if(cb) {
+				cb(true);
+			}
 			this.onChange(true);
 			return;
 		}
 		pretendRequest(username, password, (res) => {
 			if(res.authenticated) {
 				this.setLoginData(res.userProps);
-				if(cb) cb(res.userProps,null,null);
+				if(cb) {
+					cb(res.userProps,null,null);
+				}
 				this.onChange(res.userProps);
 			} else {
-				if(cb) cb(false,res.status,res.errorMsg);
+				if(cb) {
+					cb(false,res.status,res.errorMsg);
+				}
 				this.onChange(false);
 			}
 		});
@@ -118,13 +124,13 @@ class Auth {
 	
 	logout(cb) {
 		if(this.loggedIn()) {
-			var parthis = this;
-			
-			function doInvalidate() {
-				parthis.invalidateSession();
-				if(cb) cb();
-				parthis.onChange(false);
-			}
+			let doInvalidate = () => {
+				this.invalidateSession();
+				if(cb) {
+					cb();
+				}
+				this.onChange(false);
+			};
 			
 			// Let's invalidate the session status
 			jQuery.ajax({
@@ -138,7 +144,9 @@ class Auth {
 			.done(doInvalidate)
 			.fail(doInvalidate);
 		} else {
-			if(cb)  cb();
+			if(cb) {
+				cb();
+			}
 			this.onChange(false);
 		}
 	}

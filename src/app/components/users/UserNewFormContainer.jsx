@@ -1,162 +1,94 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import jQuery from 'jquery';
 import UserNewForm from './UserNewForm.jsx';
 import UserNewFormUnprivileged from './UserNewFormUnprivileged.jsx';
-import { hashHistory } from 'react-router';
 
-import config from 'config.jsx';
+import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
 
-var UserNewFormContainer = React.createClass({
-	propTypes: {
-		route: React.PropTypes.array,
-		params: React.PropTypes.object
-	},
+class UserNewFormContainer extends AbstractFetchedDataContainer {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
 	//mixins: [ History ], //This is to browse history back when user is not found after showing modal error
-	contextTypes: {
-		router: React.PropTypes.object
-	},
-	getInitialState: function() {
-		return {
-			data: null,
+	componentWillMount() {
+		super.componentWillMount();
+		this.setState({
 			schema: null,
-			groups: null,
-			users: null,
 			error: null,
+			loaded: false,
 			showModal: false,
-			task: null };
-	},
-	componentWillMount: function() {
-		this.setState({task: this.props.route.task});
-		this.loadUserSchema();
-	},
-	close(){
-		this.setState({showModal: false});
-	},
-	open(){
-		this.setState({showModal: true});
-	},
-	loadUsersFromServer: function() {
-		jQuery.ajax({
-			url: config.usersBaseUri,
-			dataType: 'json',
-			cache: false,
-		})
-		.done(function(users) {
-			//console.log('success!');
-			this.setState({users: users});
-		}.bind(this))
-		.fail(function(xhr, status, err) {
-			//console.error('json/OrganizationalUnitalUnits.json', status, err);
-			console.error(xhr.status);
-			this.setState({error: xhr.status + ' (Retrieving List of Users)'});
-		}.bind(this));
-	},
-	loadGroupsFromServer: function() {
-		jQuery.ajax({
-			url: config.groupsBaseUri,
-			dataType: 'json',
-			cache: false,
-		})
-		.done(function(groups) {
-			//console.log('success!');
-			this.setState({groups: groups});
-			this.loadUsersFromServer();
-		}.bind(this))
-		.fail(function(xhr, status, err) {
-			//console.error('json/OrganizationalUnitalUnits.json', status, err);
-			console.error(xhr.status);
-			this.setState({error: xhr.status + ' (Retrieving Groups)'});
-		}.bind(this));
-	},
-	loadOrganizationalUnitsFromServer: function() {
-		jQuery.ajax({
-			url: config.ouBaseUri,
-			dataType: 'json',
-			cache: false,
-			success: function(data) {
-				//console.log("success!");
-				this.setState({data: data});
-				//console.log(this.state.data);
-				this.loadGroupsFromServer();
-			}.bind(this),
-			error: function(xhr, status, err) {
-				//console.error("json/OrganizationalUnitalUnits.json", status, err);
-				console.error(xhr.status);
-				var responseText = '';
-				if(xhr.status === 0) {
-					responseText = 'Not connect: Verify Network.';
-				} else if(xhr.status === 404) {
-					responseText = 'Validation Schema not found [404]';
-				} else if(xhr.status === 500) {
-					responseText = 'Internal Server Error [500].';
-				} else if(xhr.status === 'parsererror') {
-					responseText = 'Requested JSON parse failed.';
-				} else if(xhr.status === 'timeout') {
-					xhr = 'Time out error.';
-				} else if(xhr.status === 'abort') {
-					responseText = 'Ajax request aborted.';
-				} else {
-					responseText = 'Uncaught Error: ' + xhr.responseText;
-				}
-				this.setState({error: responseText, showModal: true});
-				//this.setState({error: xhr.status + ' (Retrieving Organizational Units)'});
-			}.bind(this)
+			task: this.props.route.task
 		});
-	},
-	loadUserSchema: function() {
-		jQuery.ajax({
-			url: config.usersBaseUri + '?schema',
-			dataType: 'json',
-		})
-		.done(function(schema) {
-			this.setState({schema: schema});
-			this.loadOrganizationalUnitsFromServer();
-		}.bind(this))
-		.fail(function(jqXhr) {
-			//console.log('failed to retrieve user Schema',jqXhr);
-			var responseText = '';
-			if(jqXhr.status === 0) {
-				responseText = 'Not connect: Verify Network.';
-			} else if(jqXhr.status === 404) {
-				responseText = 'Validation Schema not found [404]';
-			} else if(jqXhr.status === 500) {
-				responseText = 'Internal Server Error [500].';
-			} else if(jqXhr.status === 'parsererror') {
-				responseText = 'Requested JSON parse failed.';
-			} else if(jqXhr.status === 'timeout') {
-				responseText = 'Time out error.';
-			} else if(jqXhr.status === 'abort') {
-				responseText = 'Ajax request aborted.';
-			} else {
-				responseText = 'Uncaught Error: ' + jqXhr.responseText;
-			}
-			this.setState({error: responseText, showModal: true});
-		}.bind(this));
-	},
-
-	render: function() {
-		if((this.state.schema) && (this.state.data) && (this.state.users)) {
-			if(this.state.task === 'new_privileged'){
-				return (
-					<div>
-						<UserNewForm   schema={this.state.schema} data={this.state.data} users={this.state.users}/>
-					</div>
-				);
-			} else if(this.state.task === 'new_unprivileged'){
-				if(this.state.groups){
+	}
+	
+	componentDidMount() {
+		this.loadUsersSchema((usersSchema) => {
+			this.onChange({schema: usersSchema});
+			this.loadUsers((users) => {
+				this.loadSelectableOrganizationalUnits((selectableOUs) => {
+					this.loadSelectableGroups((selectableGroups) => {
+						this.setState({loaded:true});
+					}, (err) => {
+						this.onChange({
+							...err,
+							showModal: true
+						});
+					});
+				}, (err) => {
+					this.onChange({
+						...err,
+						showModal: true
+					});
+				});
+			}, (err) => {
+				this.onChange({
+					...err,
+					showModal: true
+				});
+			});
+		}, (err) => {
+			this.onChange({
+				...err,
+				showModal: true
+			});
+		});
+	}
+	
+	close() {
+		this.setState({showModal: false});
+	}
+	
+	open() {
+		this.setState({showModal: true});
+	}
+	
+	render() {
+		if(this.state.loaded) {
+			switch(this.state.task) {
+				case 'new_privileged':
 					return (
 						<div>
-							<UserNewFormUnprivileged   schema={this.state.schema} data={this.state.data} groups={this.state.groups} users={this.state.users} />
+							<UserNewForm schema={this.state.schema} organizationalUnits={this.state.selectableOUs} groups={this.state.selectableGroups} users={this.state.users}/>
 						</div>
 					);
-				}
+				case 'new_unprivileged':
+					return (
+						<div>
+							<UserNewFormUnprivileged schema={this.state.schema} organizationalUnits={this.state.organizationalUnits} groups={this.state.selectableGroups} users={this.state.users} />
+						</div>
+					);
+				default:
+					console.log('TODO: NEW USER Unimplemented task: ' + this.state.task);
+					break;
 			}
 		}
+		
 		if(this.state.error) {
 			return (
 				<div>
-					<Modal show={this.state.showModal} onHide={()=>hashHistory.goBack()} error={this.state.error}>
+					<Modal show={this.state.showModal} onHide={()=>this.history.goBack()} error={this.state.error}>
 						<Modal.Header closeButton>
 							<Modal.Title>Error!</Modal.Title>
 						</Modal.Header>
@@ -164,13 +96,24 @@ var UserNewFormContainer = React.createClass({
 							<h4>{this.state.error}</h4>
 						</Modal.Body>
 						<Modal.Footer>
-							<Button onClick={()=>hashHistory.goBack()}>Close</Button>
+							<Button onClick={()=>this.history.goBack()}>Close</Button>
 						</Modal.Footer>
 					</Modal>
 				</div>
 			);
 		}
+		
 		return <div>Loading...</div>;
-		}
-		});
-		module.exports = UserNewFormContainer;
+	}
+}
+
+UserNewFormContainer.propTypes = {
+	route: React.PropTypes.array,
+	params: React.PropTypes.object
+};
+
+UserNewFormContainer.contextTypes = {
+	router: React.PropTypes.object
+};
+		
+export default UserNewFormContainer;

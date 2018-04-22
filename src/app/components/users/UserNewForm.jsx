@@ -93,7 +93,7 @@ class UserNewForm extends React.Component {
 	}
 	
 	open() {
-		this.setState({showModal: true, modalTitle: this.state.modalTitle});
+		this.setState({showModal: true});
 	}
 	
 	toggle() {
@@ -122,7 +122,7 @@ class UserNewForm extends React.Component {
     
 	addUserData() {
 		//console.log('yay I\'m valid!');
-		var userData = Object.assign({},this.state.formData);
+		let userData = Object.assign({},this.state.formData);
 		delete userData.userPassword2;
 		
 		//console.log('El userData contiene: ',userData);
@@ -186,12 +186,12 @@ class UserNewForm extends React.Component {
 		};
 		
 		if(typeof myBlob !== 'undefined'){
-			reader.addEventListener('load',function() {
+			reader.addEventListener('load',() => {
 				var stringBase64Image = reader.result;
 				userData.picture = stringBase64Image;
 				
 				userCreationHandler(userData);
-			}.bind(this));
+			});
 			reader.readAsDataURL(myBlob);
 		} else {
 			userCreationHandler(userData);
@@ -261,7 +261,6 @@ class UserNewForm extends React.Component {
 			}
 		};
 		
-		const log = (type) => console.log.bind(console, type);
 		const onSubmit = () => this.addUserData();
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
@@ -337,7 +336,8 @@ UserNewForm.propTypes = {
 	schema: React.PropTypes.object.isRequired,
 	organizationalUnits: React.PropTypes.array.isRequired,
 	users: React.PropTypes.array.isRequired,
-	groups: React.PropTypes.array.isRequired
+	groups: React.PropTypes.array.isRequired,
+	history: React.PropTypes.object
 };
 
 export default UserNewForm;

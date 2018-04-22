@@ -5,17 +5,13 @@ import { Row, Col, Button} from 'react-bootstrap';
 //import ModalError from './ModalError.jsx';
 
 function groupValidation(formData,errors) {
-		return errors;
+	return errors;
 }
 
-var GroupViewForm = React.createClass({
-	propTypes:{
-		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.object.isRequired
-	},
-	render: function() {
+class GroupViewForm extends React.Component {
+	render() {
 		var schema = this.props.schema;
-		var data = this.props.data;
+		var data = this.props.group;
 		//console.log('Schema contains: ',schema);
 		//console.log('Data contains: ',data);
 		//const log = (type) => console.log.bind(console, type);
@@ -64,5 +60,11 @@ var GroupViewForm = React.createClass({
 			</div>
 		);
 	}
-});
-module.exports = GroupViewForm;
+}
+
+GroupViewForm.propTypes = {
+	schema: React.PropTypes.object.isRequired,
+	group: React.PropTypes.object.isRequired
+};
+
+export default GroupViewForm;

@@ -24,36 +24,22 @@ class UserNewFormContainer extends AbstractFetchedDataContainer {
 	}
 	
 	componentDidMount() {
+		let errHandler = (err) => {
+			this.onChange({
+				...err,
+				showModal: true
+			});
+		};
 		this.loadUsersSchema((usersSchema) => {
 			this.onChange({schema: usersSchema});
 			this.loadUsers((users) => {
 				this.loadSelectableOrganizationalUnits((selectableOUs) => {
 					this.loadSelectableGroups((selectableGroups) => {
 						this.setState({loaded:true});
-					}, (err) => {
-						this.onChange({
-							...err,
-							showModal: true
-						});
-					});
-				}, (err) => {
-					this.onChange({
-						...err,
-						showModal: true
-					});
-				});
-			}, (err) => {
-				this.onChange({
-					...err,
-					showModal: true
-				});
-			});
-		}, (err) => {
-			this.onChange({
-				...err,
-				showModal: true
-			});
-		});
+					}, errHandler);
+				}, errHandler);
+			}, errHandler);
+		}, errHandler);
 	}
 	
 	close() {

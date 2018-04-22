@@ -1,61 +1,76 @@
 import React from 'react';
-import jQuery from 'jquery';
+import { Modal, Button } from 'react-bootstrap';
+
 import GroupNewForm from './GroupNewForm.jsx';
+import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
 
-import config from 'config.jsx';
-
-var GroupNewFormContainer = React.createClass({
-  getInitialState: function() {
-    return { schema: null };
-  },
-  componentWillMount: function() {
-	this.loadGroupSchema();
-  },
-  loadGroupSchema: function() {
-	jQuery.ajax({
-		url: config.groupsBaseUri + '?schema',
-		dataType: 'json',
-	})
-	.done(function(schema) {
-		this.setState({schema: schema});
-	}.bind(this))
-	.fail(function(jqXhr) {
-		//console.log('Failed to retrieve Group Schema. ',jqXhr);
-		var responseText = '';
-		if(jqXhr.status === 0) {
-			responseText = 'Failed to retrieve Group Schema. Not connect: Verify Network.';
-		} else if(jqXhr.status === 404) {
-			responseText = 'Failed to retrieve Group Schema. Validation Schema not found [404]';
-		} else if(jqXhr.status === 500) {
-			responseText = 'Failed to retrieve Group Schema. Internal Server Error [500].';
-		} else if(jqXhr.status === 'parsererror') {
-			responseText = 'Failed to retrieve Group Schema. Requested JSON parse failed.';
-		} else if(jqXhr.status === 'timeout') {
-			responseText = 'Failed to retrieve Group Schema. Time out error.';
-		} else if(jqXhr.status === 'abort') {
-			responseText = 'Failed to retrieve Group Schema. Ajax request aborted.';
-		} else {
-			responseText = 'Failed to retrieve Group Schema. Uncaught Error: ' + jqXhr.responseText;
+class GroupNewFormContainer extends AbstractFetchedDataContainer {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
+	componentWillMount() {
+		super.componentWillMount();
+		this.setState({
+			schema: null,
+			error: null,
+			loaded: false,
+			showModal: false
+		});
+	}
+	
+	componentDidMount() {
+		let errHandler = (err) => {
+			this.onChange({
+				...err,
+				showModal: true
+			});
+		};
+		
+		this.loadGroupsSchema((groupsSchema) => {
+			this.onChange({schema: groupsSchema});
+			this.loadSelectableUsers((selectableUsers) => {
+					this.setState({loaded:true});
+			}, errHandler);
+		}, errHandler);
+	}
+	
+	close() {
+		this.setState({showModal: false});
+	}
+	
+	open() {
+		this.setState({showModal: true});
+	}
+	
+	render() {
+		if(this.state.loaded) {
+			return (
+				<div>
+					<GroupNewForm schema={this.state.schema}  users={this.state.selectableUsers} />
+				</div>
+			);
 		}
-		this.setState({error: responseText});
-	}.bind(this));
-  },
-  render: function() {
-    if(this.state.schema) {
-      return (
-		<div>
-			<GroupNewForm   schema={this.state.schema} />
-		</div>
-      );
-    }
-    if(this.state.error) {
-      return (
-		<div>
-			Error: {this.state.error}
-		</div>
-      );
-    }
-    return <div>Loading...</div>;
-  }
-});
-module.exports = GroupNewFormContainer;
+		if(this.state.error) {
+			return (
+				<div>
+					<Modal show={this.state.showModal} onHide={()=>this.history.goBack()} error={this.state.error}>
+						<Modal.Header closeButton>
+							<Modal.Title>Error!</Modal.Title>
+						</Modal.Header>
+						<Modal.Body>
+							<h4>{this.state.error}</h4>
+						</Modal.Body>
+						<Modal.Footer>
+							<Button onClick={()=>this.history.goBack()}>Close</Button>
+						</Modal.Footer>
+					</Modal>
+				</div>
+			);
+		}
+		return <div>Loading...</div>;
+	}
+}
+
+export default GroupNewFormContainer;

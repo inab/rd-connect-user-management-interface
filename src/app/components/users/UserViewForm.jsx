@@ -173,7 +173,8 @@ class UserViewForm extends React.Component {
 
 UserViewForm.propTypes = {
 	schema: React.PropTypes.object.isRequired,
-	user: React.PropTypes.object.isRequired
+	user: React.PropTypes.object.isRequired,
+	history: React.PropTypes.object
 };
 
 

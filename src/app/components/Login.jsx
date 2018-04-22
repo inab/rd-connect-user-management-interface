@@ -1,14 +1,14 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Modal, Button, Col } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import Formsy from 'formsy-react';
-import { Form, Input } from 'formsy-react-components';
+import { Input } from 'formsy-react-components';
 
 import auth from 'components/auth.jsx';
 
 class Login extends React.Component {
     constructor(props,context) {
-		super(props.context);
+		super(props,context);
     }
     
     componentWillMount() {
@@ -106,58 +106,58 @@ class Login extends React.Component {
                 name="loginForm"
                 className="documentsForm login"
               >
-              <fieldset>
-                <legend>Username</legend>
-                <Input
-                    id="username"
-                    name="username"
-                    value=""
-                    label=""
-                    type="text"
-                    placeholder="Type your username (For example: a.canada)."
-                    help=""
-                    layout="horizontal"
-					  style={{width:"95%"}}
-                    required
-                />
-              </fieldset>
-              <fieldset>
-                  <legend>Password</legend>
-                  <Input
-                      id="password"
-                      name="password"
-                      value=""
-                      label=""
-                      type="password"
-                      placeholder="Type your password"
-                      layout="horizontal"
-					  autoComplete="off"
-					  style={{width:"95%"}}
-                      required
-                  />
+				<fieldset>
+					<legend>Username</legend>
+					<Input
+						id="username"
+						name="username"
+						value=""
+						label=""
+						type="text"
+						placeholder="Type your username (For example: a.canada)."
+						help=""
+						layout="horizontal"
+						style={{width:'95%'}}
+						required
+					/>
+				</fieldset>
+				<fieldset>
+					<legend>Password</legend>
+					<Input
+						id="password"
+						name="password"
+						value=""
+						label=""
+						type="password"
+						placeholder="Type your password"
+						layout="horizontal"
+						autoComplete="off"
+						style={{width:'95%'}}
+						required
+					/>
                 </fieldset>
-                      <Button type="submit" bsStyle="primary" className="right" disabled={!this.state.canSubmit} >Login</Button>
+				<Button type="submit" bsStyle="primary" className="right" disabled={!this.state.canSubmit} >Login</Button>
               </Formsy.Form>
             </Modal.Body>
             <Modal.Footer className="login">
                       {this.state.error && (
-                        <p className="badLoginInformation" >{(function(state) {
+                        <p className="badLoginInformation">{((state) => {
 							let message;
 							switch(state.status) {
 								case 404:
-									message="CAS server is unreachable";
+									message = 'CAS server is unreachable';
 									break;
 								case 401:
-									message="Error while authenticating (bad login information?)";
+									message = 'Error while authenticating (bad login information?)';
 									break;
 								case 404:
-									message="CAS UMI or server are unreachable";
+									message = 'CAS UMI or server are unreachable';
 									break;
 								default:
-									if(state.status>=500) {
-										message="CAS UserManagement internal error ("+state.status+")";
+									if(state.status >= 500) {
+										message = 'CAS UserManagement internal error (' + state.status + ')';
 									} else {
-										message="CAS UserManagement error ("+state.status+")";
+										message = 'CAS UserManagement error (' + state.status + ')';
 									}
 									break;
 							}
@@ -171,5 +171,10 @@ class Login extends React.Component {
     }
 }
 
+Login.propTypes = {
+	context: React.PropTypes.object,
+	router: React.PropTypes.object,
+	location: React.PropTypes.object
+};
 
 export default withRouter(Login);

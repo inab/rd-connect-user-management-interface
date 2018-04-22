@@ -3,20 +3,15 @@ import Navigation from './Navigation.jsx';
 import Breadcrumbs from 'react-breadcrumbs';
 
 
-var Main = React.createClass({
-    propTypes:{
-        children: React.PropTypes.object.isRequired,
-        routes: React.PropTypes.array,
-        params: React.PropTypes.object
-    },
-    render: function () {
+class Main extends React.Component {
+    render() {
         return (
       <div>
         <header className="primary-header">
             <Navigation projectName="react-bootstrap-starter" />
         </header>
-        <aside className="primary-aside"></aside>
-        <main className = "container">
+        <aside className="primary-aside" />
+        <main className="container">
           <Breadcrumbs
             routes={this.props.routes}
             params={this.props.params}
@@ -26,6 +21,12 @@ var Main = React.createClass({
       </div>
     );
   }
-});
+}
 
-module.exports = Main;
+Main.propTypes = {
+	children: React.PropTypes.object.isRequired,
+	routes: React.PropTypes.array,
+	params: React.PropTypes.object
+};
+
+export default Main;

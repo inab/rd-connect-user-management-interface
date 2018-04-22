@@ -1,99 +1,134 @@
 import React from 'react';
-import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import { Glyphicon, Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
-import { hashHistory } from 'react-router';
+import Select from 'react-select';
 
-import config from 'config.jsx';
-import auth from 'components/auth.jsx';
+import GroupManagement from '../GroupManagement.jsx';
 
 function groupValidation(formData,errors) {
+	console.log(errors);
 		return errors;
 }
 
-var GroupNewForm = React.createClass({
-	propTypes:{
-		schema: React.PropTypes.object.isRequired
-	},
-	getInitialState: function() {
-		return { modalTitle: null, error: null, showModal: false, in: false};
-	},
-	componentWillMount: function() {
-		this.setState({ schema: this.props.schema});
-	},
-	close(){
+class GroupNewForm extends React.Component {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
+	componentWillMount() {
+		this.setState({
+			modalTitle: null,
+			error: null,
+			showModal: false,
+			in: false,
+			schema: this.props.schema,
+			selectableUsers: this.props.users,
+			group: {
+				cn: '',
+				description: '',
+				groupPurpose: '',
+				owner: [],
+				members: []
+			}
+		});
+	}
+	
+	close() {
 		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
-			hashHistory.goBack();
+			this.history.goBack();
 		}
-	},
-	open(){
-		this.setState({showModal: true, modalTitle: this.state.modalTitle});
-	},
-	toggle(){
-      this.setState({ in: !this.state.in });
-    },
-    wait(){
-      setTimeout(() => {
-        this.toggle();
-      }, 3000);
-    },
-	addGroupData: function({formData}){
-		//console.log('yay I\'m valid!');
-		//console.log('Formdata sent to server:', formData);
-		var groupData = Object.assign({},formData);
-		jQuery.ajax({
-			type: 'PUT',
-			url: config.groupsBaseUri,
-			headers: auth.getAuthHeaders(),
-			dataType: 'json',
-			contentType: 'application/json',
-			data: JSON.stringify(groupData)
-		})
-		.done(function(data) {
-			this.setState({ modalTitle: 'Success', error: 'Group created correctly!!', showModal: true});
-		}.bind(this))
-		.fail(function(jqXhr) {
-			//console.log('Failed to add new group',jqXhr);
-			var responseText = '';
-			if(jqXhr.status === 0) {
-				responseText = 'Failed to add new group. Not connect: Verify Network.';
-			} else if(jqXhr.status === 404) {
-				responseText = 'Failed to add new group. Not found [404]';
-			} else if(jqXhr.status === 500) {
-				responseText = 'Failed to add new group. Internal Server Error [500].';
-			} else if(jqXhr.status === 'parsererror') {
-				responseText = 'Failed to add new group. Sent JSON parse failed.';
-			} else if(jqXhr.status === 'timeout') {
-				responseText = 'Failed to add new group. Time out error.';
-			} else if(jqXhr.status === 'abort') {
-				responseText = 'Failed to add new group. Ajax request aborted.';
-			} else {
-				responseText = 'Failed to add new group. Uncaught Error: ' + jqXhr.responseText;
-			}
-			this.setState({modaTitle: 'Error', error: responseText, showModal: true});
-		}.bind(this));
-	},
-	render: function() {
+	}
+	
+	open() {
+		this.setState({showModal: true });
+	}
+	
+	toggle() {
+		this.setState({ in: !this.state.in });
+    }
+    
+    wait() {
+		setTimeout(() => {
+			this.toggle();
+		}, 3000);
+    }
+    
+	addGroupData(){
+		let groupData = Object.assign({},this.state.group);
+		
+		
+		// First, prepare the owners and members data
+		groupData.owner = groupData.owner.map(own => own.value);
+		groupData.members = groupData.members.map(member => member.value);
+		
+		// And now, submit!!!!!
+		let gm = new GroupManagement();
+		
+		let errHandler = (err) => {
+			this.setState({
+				...err,
+				showModal: true
+			});
+		};
+
+		let groupCreationHandler = (groupD) => {
+			gm.createGroup(groupD,(data) => {
+				this.setState({ modalTitle: 'Success', error: 'Group created correctly!!', showModal: true});
+			},errHandler);
+		};
+		
+		groupCreationHandler(groupData);
+	}
+	
+	render() {
 		var schema = this.state.schema;
 		//console.log('Schema: ', schema);
 		delete schema.title;
 		//console.log(schema);
-		const formData = undefined;
-		//console.log(schema);
-		const uiSchema = {
-
+		
+		const CustomUsersWidget = (props) => {
+			return (
+				<Select
+					disabled={props.disabled}
+					placeholder="Select the user(s)"
+					options={this.state.selectableUsers}
+					value={props.value}
+					onChange={(values) => props.onChange(values)}
+					multi
+				/>
+			);
 		};
-		const log = (type) => console.log.bind(console, type);
-		const onSubmit = ({formData}) => this.addGroupData({formData});
+		
+		// Tweak to for the rendering
+		schema.properties.owner.type = 'string';
+		delete schema.properties.owner.items;
+		delete schema.properties.owner.minItems;
+		delete schema.properties.owner.uniqueItems;
+		schema.properties.members.type = 'string';
+		delete schema.properties.members.items;
+		delete schema.properties.members.minItems;
+		delete schema.properties.members.uniqueItems;
+		
+		const uiSchema = {
+			owner: {
+				'ui:widget': CustomUsersWidget
+			},
+			members: {
+				'ui:widget': CustomUsersWidget
+			}
+		};
+		
+		const onSubmit = () => this.addGroupData();
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
 		return (
 			<div>
-				<Modal show={this.state.showModal} onHide={this.close}>
+				<Modal show={this.state.showModal} onHide={() => this.close()}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 						</Modal.Header>
@@ -101,28 +136,31 @@ var GroupNewForm = React.createClass({
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button onClick={this.close}>Close</Button>
+						<Button onClick={() => this.close()}>Close</Button>
 					</Modal.Footer>
 				</Modal>
 				<h3> Create New Group</h3>
 				<Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
 					<ListGroup>
-					<ListGroupItem bsStyle="success">Group created successfully!!</ListGroupItem>
+						<ListGroupItem bsStyle="success">Group created successfully!!</ListGroupItem>
 					</ListGroup>
 				</Collapse>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
 							<Form schema={schema}
 								uiSchema={uiSchema}
-								formData={formData}
-								onChange={log('changed')}
+								formData={this.state.group}
+								onChange={({formData}) => this.setState({group: formData})}
+								//onChange={log('changed')}
 								onSubmit={onSubmit}
 								onError={onError}
 								validate={groupValidation}
-								liveValidate= {false}
+								noValidate
+								liveValidate={false}
+								showErrorList={false}
 							>
 								<div className="button-submit">
-									<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons"><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
+									<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons"><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 									<Button bsStyle="primary" type="submit" className="submitCancelButtons">Submit</Button>
 								</div>
 							</Form>
@@ -132,5 +170,12 @@ var GroupNewForm = React.createClass({
 			</div>
 		);
 	}
-});
-module.exports = GroupNewForm;
+}
+
+GroupNewForm.propTypes = {
+	schema: React.PropTypes.object.isRequired,
+	users: React.PropTypes.array.isRequired,
+	history:  React.PropTypes.object.isRequired
+};
+
+export default GroupNewForm;

@@ -285,7 +285,8 @@ class UserEditForm extends React.Component {
 
 UserEditForm.propTypes = {
 	schema: React.PropTypes.object.isRequired,
-	user: React.PropTypes.object.isRequired
+	user: React.PropTypes.object.isRequired,
+	history: React.PropTypes.object
 };
 
 

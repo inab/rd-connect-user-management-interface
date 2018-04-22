@@ -1,9 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { hashHistory, Redirect, Router, Route, Link, withRouter, IndexRoute } from 'react-router';
+import { hashHistory, Router, Route, Link, IndexRoute } from 'react-router';
 //import withExampleBasename from 'components/withExampleBasename.js';
-import { Modal, Button, Col } from 'react-bootstrap';
-import Raven from 'raven-js';
 //import sentryConfig from './sentryConfig.js';
 
 import auth from 'components/auth.jsx';
@@ -11,7 +9,6 @@ import Login from 'components/Login.jsx';
 import Navigation from 'components/Navigation.jsx';
 import Breadcrumbs from 'react-breadcrumbs';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import Main from 'components/main.jsx';
 import Box from 'components/Box.jsx';
 import UsersContainer from 'components/users/UsersContainer.jsx';
 import UserFormContainer from 'components/users/UserFormContainer.jsx';
@@ -41,10 +38,6 @@ import DocumentsGroupNew from 'components/documents/DocumentsGroupNew.jsx';
 import MailingContainer from 'components/mailing/MailingContainer.jsx';
 import NewUserMailTemplatesContainer from 'components/mailing/NewUserMailTemplatesContainer.jsx';
 
-import Formsy from 'formsy-react';
-import FRC from 'formsy-react-components';
-
-const {Form, Input } = FRC;
 var _APP_INFO = {
   name: 'RD-Connect User Management Interface',
   branch: 'Master',
@@ -85,7 +78,7 @@ const App = React.createClass({
 	},
 	scheduleUserViewRedirect: function() {
 		auth.getLoginData((loginData) => {
-			history.push('/users/view/'+encodeURIComponent(loginData.username));
+			history.push('/users/view/' + encodeURIComponent(loginData.username));
 		});
 	},
   render() {
@@ -142,7 +135,7 @@ const UserProfile = React.createClass({
 	componentDidMount: function() {
 		auth.getLoginData((loginData) => {
 			this.setState({loginData: loginData });
-			history.push('/users/view/'+encodeURIComponent(loginData.username));
+			history.push('/users/view/' + encodeURIComponent(loginData.username));
 		});
 	},
   render() {
@@ -156,7 +149,7 @@ const UserProfile = React.createClass({
         <p>e-mail: {loginData.email}</p>
         <p>Category: {loginData.userCategory}</p>
       </div>
-    ) : (<div></div>);
+    ) : (<div />);
   }
 });
 

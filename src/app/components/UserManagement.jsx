@@ -36,10 +36,10 @@ class UserManagement {
 					responseText += 'Time out error.';
 					break;
 				case 'abort':
-					responseText = 'Ajax request aborted.';
+					responseText += 'Ajax request aborted.';
 					break;
 				default:
-					responseText = 'Uncaught Error: ' + jqXhr.responseText;
+					responseText += 'Uncaught Error: ' + jqXhr.responseText;
 					break;
 			}
 			

@@ -26,22 +26,19 @@ class UserFormContainer extends AbstractFetchedDataContainer {
 	}
 	
 	componentDidMount() {
-		this.loadUsersSchema((usersSchema) => {
-			this.onChange({schema: usersSchema});
-			this.loadUser(this.props.params.username,(user) => {
-				this.onChange({user: user});
-			}, (err) => {
-				this.onChange({
-					...err,
-					showModal: true
-				});
-			});
-		}, (err) => {
+		let errHandler = (err) => {
 			this.onChange({
 				...err,
 				showModal: true
 			});
-		});
+		};
+		
+		this.loadUsersSchema((usersSchema) => {
+			this.onChange({schema: usersSchema});
+			this.loadUser(this.props.params.username,(user) => {
+				this.onChange({user: user});
+			}, errHandler);
+		}, errHandler);
 	}
 	
 	componentWillUnmount() {

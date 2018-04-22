@@ -71,4 +71,4 @@ const UserTable = ({users}) => {
 UserTable.propTypes = {
     users: React.PropTypes.array.isRequired
 };
-module.exports = UserTable;
+export default UserTable;

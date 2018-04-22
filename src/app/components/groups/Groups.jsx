@@ -4,10 +4,10 @@ import { Glyphicon, Row, Panel, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
 import Underscore from 'underscore';
 
-const Groups = ({data}) => {
+const Groups = ({groups}) => {
   //console.log("Data so far is: ", data);
   var sortedData = Underscore
-    .chain(data)
+    .chain(groups)
     .sortBy(function(groupObjects){ return groupObjects.cn; })
     .value();
   //console.log('sortedData so far is: ', sortedData);
@@ -52,10 +52,15 @@ const Groups = ({data}) => {
                       <td>
                         {groupMembers.map(function(member, k){
 							let retval = [];
-							if(k > 0) {
-								retval.push(', ');
+							
+							if(k < 3) {
+								if(k > 0) {
+									retval.push(', ');
+								}
+								retval.push(<Link to={'/users/view/' + member}>{member}</Link>);
+							} else if(k === 3) {
+								retval.push(' and ' + (groupMembers.length - k) + ' more');
 							}
-							retval.push(<Link to={'/users/view/' + member}>{member}</Link>);
 							return retval;
                           })}
                       </td>
@@ -77,7 +82,7 @@ const Groups = ({data}) => {
 };
 
 Groups.propTypes = {
-    data: React.PropTypes.array.isRequired
+    groups: React.PropTypes.array.isRequired
 };
 
-module.exports = Groups;
+export default Groups;

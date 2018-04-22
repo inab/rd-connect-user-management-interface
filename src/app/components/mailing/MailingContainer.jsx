@@ -61,6 +61,8 @@ function String2DataURI(string,cb,mime = 'text/html') {
 			let iSemiColon = reader.result.indexOf(';');
 			let result = reader.result.substring(0,iSemiColon) + ';charset=utf-8' + reader.result.substring(iSemiColon);
 			
+			console.log(result);
+			
 			cb(result);
 		}
 	}, false);
@@ -167,7 +169,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 					})
 					.done(function(data) {
 						//console.log('Password correctly updated!!');
-						this.setState({modalTitle:'Success', error: 'Password changed correctly!!', showModal: true});
+						this.setState({modalTitle:'Success', error: 'Mail properly delivered!!', showModal: true});
 
 					}.bind(this))
 					.fail(function(jqXhr) {
@@ -217,7 +219,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	render() {
 		return (
 		<div>
-				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 					</Modal.Header>
@@ -225,7 +227,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button bsStyle="info" onClick={this.close}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
+						<Button bsStyle="info" onClick={() => this.close()}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
 					</Modal.Footer>
 				</Modal>
 			<form onSubmit={this.onSubmit.bind(this)}>
@@ -243,10 +245,15 @@ class MailingContainer extends AbstractFetchedDataContainer {
 								onChange={(e) => { this.onChange({subject: e.target.value}); }}
 							/>
 							<br/>
-							<RichTextEditor
-								value={this.state.body}
-								onChange={(value) => { this.onChange({body: value}); }}
-							/>
+							<div style={{float: 'left',clear:'left'}}><ControlLabel>Mail body</ControlLabel></div>
+							<div style={{float: 'right',clear:'right'}}>(accepted keywords: <b>[% username %]</b> and <b>[% fullname %]</b>)</div>
+							<div style={{clear: 'both'}}>
+								<RichTextEditor
+									className={'umi-mailing'}
+									value={this.state.body}
+									onChange={(value) => { this.onChange({body: value}); }}
+								/>
+							</div>
 							<br />
 							<ControlLabel>Attachments</ControlLabel>
 							<div>

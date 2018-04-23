@@ -1,6 +1,6 @@
 import jQuery from 'jquery';
 //import config from 'config.jsx';
-//import auth from './auth.jsx';
+import auth from './auth.jsx';
 
 // Default TTL in milliseconds
 const DEFAULT_TTL = 60 * 1000;
@@ -10,7 +10,7 @@ class UMCache {
 		this.cache = {};
 	}
 	
-	getData(url,label,cb = undefined,ecb = undefined,fresh = false,ttl = DEFAULT_TTL) {
+	getData(url,label,cb = undefined,ecb = undefined,isAuth = false,fresh = false,ttl = DEFAULT_TTL) {
 		if(url in this.cache) {
 			// Clean cache entries whenever it is needed
 			let bestBefore = this.cache[url].bestBefore;
@@ -27,17 +27,43 @@ class UMCache {
 			}
 			return null;
 		} else {
-			return this.loadData(url,label,ttl,cb,ecb);
+			return this.loadData(url,'json',isAuth,label,ttl,cb,ecb);
 		}
 	}
 	
-	loadData(url,label,ttl,cb,ecb) {
-		let request = jQuery.ajax({
+	getRawData(url,label,cb = undefined,ecb = undefined,isAuth = false,fresh = false,ttl = DEFAULT_TTL) {
+		if(url in this.cache) {
+			// Clean cache entries whenever it is needed
+			let bestBefore = this.cache[url].bestBefore;
+			if(!!fresh || bestBefore < Date.now()) {
+				delete this.cache[url];
+			}
+		}
+		
+		if(url in this.cache) {
+			if(cb) {
+				// As it is raw data, no clues about cloning it
+				let data = this.cache[url].value;
+				cb(data);
+			}
+			return null;
+		} else {
+			return this.loadData(url,'text',isAuth,label,ttl,cb,ecb);
+		}
+	}
+	
+	loadData(url,dataType,isAuth,label,ttl,cb,ecb) {
+		let query = {
 			url: url,
 			type: 'GET',
 			cache: false,
-			dataType: 'json',
-		})
+			dataType: dataType,
+		};
+		if(isAuth) {
+			query.headers = auth.getAuthHeaders();
+		}
+		
+		let request = jQuery.ajax(query)
 		.done((data) => {
 			// Saving in the cache
 			if(ttl && ttl > 0) {
@@ -49,8 +75,15 @@ class UMCache {
 				this.cache[url] = cachedElem;
 			}
 			if(cb) {
-				// Do now allow changes on the cached data
-				cb((data instanceof Array) ? [...data] : {...data});
+				let retData;
+				if(dataType === 'text') {
+					// Do not know how to properly clone it
+					retData = data;
+				} else {
+					// Do now allow changes on the clonable cached data
+					retData = (data instanceof Array) ? [...data] : {...data};
+				}
+				cb(retData);
 			}
 		})
 		.fail((jqXhr, textStatus, errorThrown) => {

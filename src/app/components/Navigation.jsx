@@ -41,7 +41,7 @@ var Navigation = React.createClass({
                     </NavDropdown>
                     <NavDropdown id="NavDropdown-Mailing" eventKey={6} title={<Glyphicon glyph="envelope"> Mail tasks</Glyphicon>}>
 						<LinkContainer to="/mail/platformMailing"><MenuItem eventKey={6.1}>Send e-mail to the platform</MenuItem></LinkContainer>
-						<LinkContainer to="/mail/newUserTemplatesManagement"><MenuItem eventKey={6.2}>Send e-mail to the platform</MenuItem></LinkContainer>
+						<LinkContainer to="/mail/newUserTemplatesManagement"><MenuItem eventKey={6.2}>New user mail template management</MenuItem></LinkContainer>
                     </NavDropdown>
                 </Nav>
             </Navbar>

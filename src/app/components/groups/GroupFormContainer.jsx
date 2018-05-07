@@ -34,6 +34,15 @@ class GroupFormContainer extends GroupNewFormContainer {
 		}, errHandler);
 	}
 	
+	// We have to invalidate the groups cache
+	componentWillUnmount() {
+		super.componentWillUnmount();
+		
+		if(this.state.task === 'edit') {
+			this.invalidateGroup(this.props.params.groupName);
+		}
+	}
+	
 	//This is to browse history back when group is not found after showing modal error
 	render() {
 		//console.log('this.state.schema is: ',this.state.schema);
@@ -43,11 +52,11 @@ class GroupFormContainer extends GroupNewFormContainer {
 			switch(this.state.task) {
 				case 'edit':
 					return (
-							<GroupEditForm schema={this.state.schema}  group={this.state.group}  users={this.state.selectableUsers} />
+							<GroupEditForm schema={this.state.schema} group={this.state.group} users={this.state.selectableUsers} history={this.history} />
 					);
 				case 'view':
 					return (
-							<GroupViewForm schema={this.state.schema}  group={this.state.group}  />
+							<GroupViewForm schema={this.state.schema} group={this.state.group} history={this.history} />
 					);
 			}
 		}

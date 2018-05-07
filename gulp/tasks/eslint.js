@@ -3,7 +3,7 @@ var eslint = require('gulp-eslint');
 var config = require('../config');
 
 // Lint JS/JSX files
-gulp.task('eslint', function() {
+gulp.task('eslint', ['buildInfo'], function() {
   return gulp.src(config.eslint.src)
     .pipe(eslint({
       baseConfig: {

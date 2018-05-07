@@ -20,6 +20,10 @@ module.exports = {
         ],
         dest: destCSS
     },
+    buildInfo: {
+		src: 'buildinfo.json',
+		dest: src
+	},
     importCSS: {
 		src: ['assets/*.css','node_modules/bootstrap/dist/css/bootstrap.min.css*'],
 		dest: destCSS

@@ -1,54 +1,56 @@
 import React from 'react';
-import jQuery from 'jquery';
 import Users from './Users.jsx';
-import config from 'config.jsx';
 
+import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
 
-var UsersContainer = React.createClass({
-	getInitialState: function() {
-		return {
-			data: []
+class UsersContainer extends AbstractFetchedDataContainer {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
+	componentWillMount() {
+		super.componentWillMount();
+		
+		this.setState({
+			users: [],
+			task: this.props.route.task
+		});
+	}
+	
+	componentDidMount() {
+		let errHandler = (err) => {
+			this.onChange({
+				...err,
+				showModal: true
+			});
 		};
-
-	},
-	componentDidMount: function() {
-		this.loadUsersFromServer();
-		this.loadUsersInterval = setInterval(this.loadUsersFromServer, 15000);
-	},
-	componentWillUnmount: function(){
-		clearInterval(this.loadUsersInterval);
-		this.serverRequest.abort();
-	},
-	loadUsersFromServer: function() {
-		this.serverRequest = jQuery.ajax({
-			url: config.usersBaseUri,
-			dataType: 'json',
-			cache: false,
-		})
-		.done(function(data) {
-			this.setState({data: data});
-		}.bind(this))
-		.fail(function(xhr, status, err) {
-			//console.error("json/users.json", status, err);
-			console.error(xhr.status);
-			this.setState({error: xhr.status + ' (Retrieving users)'});
-		}.bind(this));
-	},
-	render: function() {
+		
+		this.loadUsers((users) => {
+			this.onChange({users: users});
+		}, errHandler);
+	}
+	
+	componentWillUnmount() {
+		super.componentWillUnmount();
+		this.setState({task: this.props.route.task});
+	}
+	
+	render() {
 		if(this.state.error) {
 			return (
 				<div>Error {this.state.error}</div>
 			);
 		}
-		if(this.state.data) {
+		if(this.state.users.length > 0) {
 			return (
 				<div>
-					<Users data={this.state.data}/>
+					<Users users={this.state.users} history={this.history} />
 				</div>
 			);
 		}
 		return <div>Loading...</div>;
 	}
-});
+}
 
-module.exports = UsersContainer;
+export default UsersContainer;

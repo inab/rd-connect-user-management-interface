@@ -53,7 +53,7 @@ class UserManagement {
 		//console.log('inside addMembersToGroup, members contains: ',formData.members);
 		return jQuery.ajax({
 			type: 'POST',
-			url: config.usersBaseUri + '/' + encodeURIComponent(username),
+			url: config.composeUserURI(username),
 			headers: auth.getAuthHeaders(),
 			contentType: 'application/json',
 			data: JSON.stringify(user)

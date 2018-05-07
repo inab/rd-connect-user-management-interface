@@ -1,39 +1,38 @@
 import React from 'react';
 import jQuery from 'jquery';
 import { Glyphicon, Modal, Button } from 'react-bootstrap';
-import { hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 
-const UserPasswordReset = React.createClass({
-	propTypes:{
-		user: React.PropTypes.object.isRequired,
-	},
-	getInitialState: function() {
-		return {
+class UserPasswordReset extends React.Component {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
+	componentWillMount(){
+		this.setState({
 			modalTitle: null,
 			error: null,
 			showModal: false,
-			user: {},
-		};
-	},
-	componentWillMount: function(){
-		console.log(this.props);
-		console.log(this.state);
-		this.setState({user: this.props.user});
-	},
-	close(){
+			user: this.props.user
+		});
+	}
+	
+	close() {
 		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
-			hashHistory.goBack();
+			this.history.goBack();
 		}
-	},
-	open(){
+	}
+	
+	open() {
 		this.setState({showModal: true, modalTitle: this.state.modalTitle});
-	},
-	resetPassword: function(){
+	}
+	
+	resetPassword() {
 		jQuery.ajax({
 				type: 'POST',
 				url: config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username) + '/resetPassword',
@@ -68,15 +67,14 @@ const UserPasswordReset = React.createClass({
 			}.bind(this))
 			.always(() => {
 			});
-	},
-	render: function() {
+	}
+	
+	render() {
 		const onSubmit = () => this.resetPassword();
-		console.log(this.props);
-		console.log(this.state);
 		return (
 			<div>
 				<h3>Password reset for user {this.props.user.username}</h3>
-				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 					</Modal.Header>
@@ -84,18 +82,24 @@ const UserPasswordReset = React.createClass({
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button bsStyle="info" onClick={this.close}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
+						<Button bsStyle="info" onClick={() => this.close()}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
 					</Modal.Footer>
 				</Modal>
 				<form onSubmit={onSubmit}>
 					<p>Are you sure you want to reset password for user {this.props.user.username}?</p>
 					<div className="button-submit">
-						<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
+						<Button bsStyle="info" onClick={() => this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 						<Button bsStyle="danger" type="submit" className="submitCancelButtons" >Reset password&nbsp;<Glyphicon glyph="pencil" /></Button>
 					</div>
 				</form>
 			</div>
 		);
 	}
-});
-module.exports = UserPasswordReset;
+}
+
+UserPasswordReset.propTypes = {
+	history: React.PropTypes.object.isRequired,
+	user: React.PropTypes.object.isRequired
+};
+
+export default UserPasswordReset;

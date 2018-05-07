@@ -20,7 +20,7 @@
         "react/jsx-max-props-per-line": 0,
         "react/jsx-indent-props": 0,
         "react/jsx-no-duplicate-props": 1,
-        "react/jsx-no-undef": 1,
+        "react/jsx-no-undef": 2,
         "jsx-quotes": 1,         // specify whether double or single quotes should be 
         "react/jsx-sort-prop-types": 0,
         "react/jsx-sort-props": 0,

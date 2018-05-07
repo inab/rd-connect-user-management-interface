@@ -1,7 +1,8 @@
 import React from 'react';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Glyphicon, Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem } from 'react-bootstrap';
+import LayoutField from 'react-jsonschema-form-layout';
+import { Glyphicon, Modal, Row, Col, Button, Collapse, ControlLabel, ListGroup, ListGroupItem } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import imageNotFound from './defaultNoImageFound.jsx';
 import zxcvbn from 'zxcvbn';
@@ -27,6 +28,27 @@ class UserNewForm extends React.Component {
 	}
 	
 	componentWillMount() {
+		let initialFormData = this.props.template ? JSON.parse(JSON.stringify(this.props.template)): {};
+		initialFormData.enabled = true;
+		
+		let initiallySelectedGroups = [];
+		if(this.props.template) {
+			// Removing attributes which are from the template user
+			delete initialFormData.cn;
+			delete initialFormData.username;
+			delete initialFormData.givenName;
+			delete initialFormData.surname;
+			delete initialFormData.title;
+			delete initialFormData.email;
+			
+			
+			// Migrating the value to a more appropriate place
+			if(initialFormData.groups) {
+				initiallySelectedGroups = initialFormData.groups;
+				delete initialFormData.groups;
+			}
+		}
+		
 		this.setState({
 			modalTitle: null,
 			error: null,
@@ -34,12 +56,14 @@ class UserNewForm extends React.Component {
 			files: [],
 			in: false,
 			picture: imageNotFound.src,
-			schema: this.props.schema,
+			schema: {
+				...this.props.schema
+			},
 			selectableOUs: this.props.organizationalUnits,
 			users: this.props.users,
 			selectableGroups: this.props.groups,
-			selectedGroups: [],
-			formData: {}
+			selectedGroups: initiallySelectedGroups,
+			formData: initialFormData
 		});
 	}
 	
@@ -221,21 +245,58 @@ class UserNewForm extends React.Component {
 		
 		//Replicating userPassword for schema validation and Ordering Schema for ui:order
 		//Adding a userPassword2 field to validate userPassword change
-		schema.properties.userPassword2 = schema.properties.userPassword;
+		schema.properties.userPassword2 = JSON.parse(JSON.stringify(schema.properties.userPassword));
+		schema.properties.userPassword2.title += ' (again)';
 		//First we create an array with the fields with the desired order.
-		let order = ['username','cn','givenName','surname','userPassword','userPassword2','email'];
+		var order = ['username','cn','title','givenName','surname','userPassword','userPassword2','organizationalUnit','userCategory','enabled','email','telephoneNumber','facsimileTelephoneNumber','links'];
 		//We filter all the properties retrieving only the elements that are not in 'order' array
 		let userSchemaKeys = Object.keys(schema.properties).filter(function(elem) {
 			return order.indexOf(elem) === -1;
 		});
-		//We concatenate order with userSchemaKeys, retrieving the ordered schema as desired
-		let schemaOrdered = order.concat(userSchemaKeys);
+		
+		let keysLayout = userSchemaKeys.map((key) => {
+			let retval = {};
+			retval[key] = {md:12};
+			return retval;
+		});
+		
+		const fields = {
+			layout: LayoutField
+		};
 
 		//var data = this.props.data;
 		//delete data.userPassword;
 		//console.log(schema);
 		const uiSchema = {
-			'ui:order': schemaOrdered,
+			'ui:field': 'layout',
+			'ui:layout': [
+				{
+					'username': { md: 6},
+					'organizationalUnit': { md: 6 },
+				},
+				{
+					'userPassword': { md: 6 },
+					'userPassword2': { md: 6 }
+				},
+				{
+					'title': { md: 12 },
+				},
+				{
+					'givenName': { md: 6},
+					'surname': { md: 6},
+				},
+				{
+					'userCategory': { md: 5 },
+					'enabled': { md: 2 },
+					'email': { md: 5 },
+				},
+				{
+					'links': { md: 6 },
+					'telephoneNumber': { md: 3 },
+					'facsimileTelephoneNumber': { md: 3 },
+				},
+				...keysLayout
+			],
 			'userPassword': {
 				'ui:widget': 'password',
 				'ui:placeholder': '************'
@@ -250,6 +311,9 @@ class UserNewForm extends React.Component {
 			'organizationalUnit': {
 				'ui:widget': 'select',
 				'type': 'string'
+			},
+			'enabled': {
+				'ui:widget': 'radio'
 			},
 			'registeredAddress': {
 				'ui:widget': 'textarea',
@@ -286,10 +350,11 @@ class UserNewForm extends React.Component {
 					</ListGroup>
 				</Collapse>
 				<Row className="show-grid">
-					<Col xs={12} md={8}>
+					<Col xs={12} md={9}>
 						<Form schema={schema}
 						uiSchema={uiSchema}
 						formData={this.state.formData}
+						fields={fields}
 						onChange={({formData}) => this.setState({formData})}
 						//onChange={log('changed')}
 						onSubmit={onSubmit}
@@ -304,9 +369,10 @@ class UserNewForm extends React.Component {
 							</div>
 						</Form>
 					</Col>
-					<Col xs={6} md={4} >
-						<div>
-							<Select
+					<Col xs={6} md={3} >
+						<div style={{textAlign: 'center'}}>
+							<ControlLabel>Initial Groups</ControlLabel>
+							<Select style={{textAlign: 'left'}}
 								disabled={this.state.selectableGroups.length === 0}
 								placeholder="Select the group(s)"
 								options={this.state.selectableGroups}
@@ -314,12 +380,12 @@ class UserNewForm extends React.Component {
 								onChange={(values) => this.setState({selectedGroups: values})}
 								multi
 							/>
-							<p>User image</p>
+							<ControlLabel>User Picture</ControlLabel>
 							{this.state.files.length > 0 ? <div>
 							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} width="100" alt="image_user" className="imagePreview" /> )}</div>
 							</div> : <div><img src={userImage} width="100" alt="image_user" className="imagePreview" /></div>}
 							<button type="button" onClick={() => this.onOpenClick()} className="changeImageButton">
-								Add image
+								Set user picture
 							</button>
 							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={(files) => this.dropHandler(files)} ref="dropzone" >
 								Click here or drop image
@@ -334,6 +400,7 @@ class UserNewForm extends React.Component {
 
 UserNewForm.propTypes = {
 	schema: React.PropTypes.object.isRequired,
+	template: React.PropTypes.object,
 	organizationalUnits: React.PropTypes.array.isRequired,
 	users: React.PropTypes.array.isRequired,
 	groups: React.PropTypes.array.isRequired,

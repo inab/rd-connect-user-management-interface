@@ -1,7 +1,8 @@
 import React from 'react';
-import { Glyphicon, Modal, Button, Row, Col } from 'react-bootstrap';
+import { Glyphicon, Modal, Button, ButtonGroup, ControlLabel, Row, Col } from 'react-bootstrap';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
+import LayoutField from 'react-jsonschema-form-layout';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from './defaultNoImageFound.jsx';
 import { Link } from 'react-router';
@@ -35,8 +36,11 @@ class UserEditForm extends React.Component {
 			modalTitle: null,
 			error: null,
 			showModal: false,
+			schema: {
+				...this.props.schema
+			},
 			files: [],
-			picture: this.props.user.picture
+			picture: this.props.user.picture ? this.props.user.picture : imageNotFoundSrc,
 		});
 	}
 	
@@ -131,7 +135,7 @@ class UserEditForm extends React.Component {
 			if(iGroup < groups.length) {
 				gm.addMembersToGroup(groups[iGroup],usernames,() => groupCreationHandler(iGroup + 1,usernames),errHandler);
 			} else {
-				this.setState({ modalTitle: 'Success', error: 'User created correctly!!', showModal: true});
+				this.setState({ modalTitle: 'Success', error: 'User properly modified!!', showModal: true});
 			}
 		};
 		let userEditHandler = (username,userD) => {
@@ -154,7 +158,8 @@ class UserEditForm extends React.Component {
 	}
 	
 	render() {
-		var schema = this.props.schema;
+		var schema = this.state.schema;
+		
 		// Replicating userPassword for schema validation and Ordering Schema for ui:order
 		//Adding a userPassword2 field to validate userPassword change
 		//schema.properties.userPassword2 = schema.properties.userPassword;
@@ -163,7 +168,7 @@ class UserEditForm extends React.Component {
 
 		//First we create an array with the fields with the desired order.
 		//var order = ['username','cn','givenName','surname','userPassword','userPassword2'];
-		var order = ['username','cn','givenName','surname'];
+		var order = ['username','cn','title','givenName','surname','organizationalUnit','userCategory','enabled','email','telephoneNumber','facsimileTelephoneNumber','groups','links'];
 
 		//We remove picture from the schema since this will be managed by react-dropzone component
 		//var schemaPicture = schema.properties.picture;
@@ -173,9 +178,12 @@ class UserEditForm extends React.Component {
 		var userSchemaKeys = Object.keys(schema.properties).filter(function(elem) {
 			return order.indexOf(elem) === -1;
 		});
-
-		//We concatenate order with userSchemaKeys, retrieving the ordered schema as desired
-		var schemaOrdered = order.concat(userSchemaKeys);
+		
+		let keysLayout = userSchemaKeys.map((key) => {
+			let retval = {};
+			retval[key] = {md:12};
+			return retval;
+		});
 
 		var data = this.props.user;
 		//console.log('Picture en el state contiene: ', this.state.picture);
@@ -186,8 +194,44 @@ class UserEditForm extends React.Component {
 		//delete data.userPassword;
 		//console.log('SCHEMA: ',schema);
 		//console.log('DATA: ',data);
+		
+		const fields = {
+			layout: LayoutField
+		};
+		
+		
+		
+		
 		const uiSchema = {
-			'ui:order': schemaOrdered,
+			'ui:field': 'layout',
+			'ui:layout': [
+				{
+					'username': { md: 6},
+					'cn': { md: 6},
+				},
+				{
+					'title': { md: 12 },
+				},
+				{
+					'givenName': { md: 6},
+					'surname': { md: 6},
+				},
+				{
+					'organizationalUnit': { md: 5 },
+					'userCategory': { md: 5 },
+					'enabled': { md: 2 }
+				},
+				{
+					'email': { md: 6 },
+					'telephoneNumber': { md: 3 },
+					'facsimileTelephoneNumber': { md: 3 },
+				},
+				{
+					'groups': { md: 6 },
+					'links': { md: 6 }
+				},
+				...keysLayout
+			],
 			'username': {
 				'ui:readonly': true,
 			},
@@ -209,6 +253,9 @@ class UserEditForm extends React.Component {
 			},
 			'groups': {
 				'ui:readonly': true,
+			},
+			'enabled': {
+				'ui:widget': 'radio'
 			},
 			'registeredAddress': {
 				'ui:widget': 'textarea',
@@ -245,9 +292,10 @@ class UserEditForm extends React.Component {
 					</Modal.Footer>
 				</Modal>
 				<Row className="show-grid">
-					<Col xs={12} md={8}>
+					<Col xs={12} md={9}>
 						<Form schema={schema}
 							uiSchema={uiSchema}
+							fields={fields}
 							formData={data}
 							//onChange={({formData}) => this.setState({formData})}
 							onSubmit={onSubmit}
@@ -261,20 +309,27 @@ class UserEditForm extends React.Component {
 							</div>
 						</Form>
 					</Col>
-					<Col xs={6} md={4} >
-						<Link className="btn btn-danger changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(data.username)}>
-							Change Password&nbsp;<Glyphicon glyph="pencil" />
-						</Link>
-						<div>
-							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={(images) => this.userImageDropHandler(images)} ref="userImageDropzone" >
-								Click here or drop image for {data.username}
-							</Dropzone>
+					<Col xs={6} md={3} >
+						<div style={{textAlign: 'center'}}>
+							<ControlLabel>Password</ControlLabel>
+							<ButtonGroup block justified>
+								<Link className="btn btn-danger changePasswordButton" role="button" to={'/users/reset-password/' + encodeURIComponent(data.username)}>
+									Reset&nbsp;<Glyphicon glyph="alert" />
+								</Link>
+								<Link className="btn btn-danger changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(data.username)}>
+									Change&nbsp;<Glyphicon glyph="pencil" />
+								</Link>
+							</ButtonGroup>
+							<ControlLabel>User Picture</ControlLabel>
 							{this.state.files.length > 0 ? <div>
 							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} name="documentFile" width="100" alt="image_user" className="imagePreview" /> )}</div>
 							</div> : <div><img src={userImage} name="documentFile" width="100" alt="image_user" className="imagePreview" /></div>}
 							<Link className="btn btn-primary changeImageButton" role="button" onClick={() => this.onOpenClick()}>
-								Change Image
+								Change User Picture
 							</Link>
+							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={(images) => this.userImageDropHandler(images)} ref="userImageDropzone" >
+								Click here or drop image for {data.username}
+							</Dropzone>
 						</div>
 					</Col>
 				</Row>
@@ -286,7 +341,7 @@ class UserEditForm extends React.Component {
 UserEditForm.propTypes = {
 	schema: React.PropTypes.object.isRequired,
 	user: React.PropTypes.object.isRequired,
-	history: React.PropTypes.object
+	history: React.PropTypes.object.isRequired
 };
 
 

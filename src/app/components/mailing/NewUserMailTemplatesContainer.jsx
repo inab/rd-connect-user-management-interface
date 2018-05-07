@@ -1,10 +1,8 @@
 import React from 'react';
 import RichTextEditor from 'react-rte';
 import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
-import { Button, Col, ControlLabel, FormControl, FormGroup, Glyphicon, Modal, Row } from 'react-bootstrap';
+import { Button, ControlLabel, Glyphicon, Modal } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
-
-import auth from 'components/auth.jsx';
 
 class NewUserMailTemplatesContainer extends AbstractFetchedDataContainer {
 	constructor(props,context) {

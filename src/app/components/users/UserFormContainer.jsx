@@ -62,13 +62,13 @@ class UserFormContainer extends AbstractFetchedDataContainer {
 		if(this.state.schema && this.state.user) {
 			switch(this.state.task) {
 				case 'edit':
-					return <UserEditForm schema={this.state.schema}  user={this.state.user}  />;
+					return <UserEditForm schema={this.state.schema} user={this.state.user} history={this.history} />;
 					//break;
 				case 'view':
-					return <UserViewForm schema={this.state.schema}  user={this.state.user}  />;
+					return <UserViewForm schema={this.state.schema} user={this.state.user} history={this.history}  />;
 					//break;
 				case 'enable_disable':
-					return <UserEnableDisableForm schema={this.state.schema}  user={this.state.user}  />;
+					return <UserEnableDisableForm schema={this.state.schema} user={this.state.user} history={this.history}  />;
 					//break;
 				default:
 					console.log('TODO: USER Unimplemented task: ' + this.state.task);

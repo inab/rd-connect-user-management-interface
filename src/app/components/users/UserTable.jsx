@@ -1,6 +1,7 @@
 import React from 'react';
 import { Glyphicon, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
+import imageNotFoundSrc from './defaultNoImageFound.jsx';
 //import User from './User.jsx';
 
 
@@ -46,18 +47,23 @@ const UserTable = ({users}) => {
 							}
                             </td>
                             <td className="border4colspan">
-                              <Link className="btn btn-success btn-xs editViewButton" role="button" to={'/users/view/' + encodeURIComponent(`${user.username}`)}>
+                              <Link className="btn btn-success btn-xs editViewButton" role="button" to={'/users/view/' + encodeURIComponent(user.username)}>
                                 View&nbsp;
 								<Glyphicon glyph="user" />
                               </Link>
-                              <Link className="btn btn-primary btn-xs editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(`${user.username}`)}>
+                              <Link className="btn btn-primary btn-xs editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(user.username)}>
                                 Edit&nbsp;
 								<Glyphicon glyph="edit" />
                               </Link>
                               <br/>
-								<Link className="btn btn-danger btn-xs changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(`${user.username}`)}>
+								<Link className="btn btn-danger btn-xs editViewButton" role="button" to={'/users/password/' + encodeURIComponent(user.username)}>
 									Change Password&nbsp;
 								<Glyphicon glyph="pencil" />
+								</Link>
+                              <br/>
+								<Link className="btn btn-primary btn-xs editViewButton" role="button" to={'/users/new-as-template/' + encodeURIComponent(user.username)}>
+									Use as template&nbsp;
+								<Glyphicon glyph="user" />
 								</Link>
                             </td>
                           </tr>

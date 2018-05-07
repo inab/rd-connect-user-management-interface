@@ -35,11 +35,24 @@ class UserNewFormContainer extends AbstractFetchedDataContainer {
 			this.loadUsers((users) => {
 				this.loadSelectableOrganizationalUnits((selectableOUs) => {
 					this.loadSelectableGroups((selectableGroups) => {
-						this.setState({loaded:true});
+						if(this.props.route.task === 'new_as_template') {
+							this.loadUser(this.props.params.username,(user) => {
+								this.onChange({loaded: true, template: user});
+							}, errHandler);
+						} else {
+							this.setState({loaded: true});
+						}
 					}, errHandler);
 				}, errHandler);
 			}, errHandler);
 		}, errHandler);
+	}
+	
+	// We have to invalidate the users cache
+	componentWillUnmount() {
+		super.componentWillUnmount();
+		
+		this.invalidateUsers();
 	}
 	
 	close() {
@@ -56,13 +69,51 @@ class UserNewFormContainer extends AbstractFetchedDataContainer {
 				case 'new_privileged':
 					return (
 						<div>
-							<UserNewForm schema={this.state.schema} organizationalUnits={this.state.selectableOUs} groups={this.state.selectableGroups} users={this.state.users}/>
+							<UserNewForm
+								schema={this.state.schema}
+								organizationalUnits={this.state.selectableOUs}
+								groups={this.state.selectableGroups}
+								users={this.state.users}
+								history={this.history}
+							/>
+						</div>
+					);
+				case 'new_privileged_ou':
+					return (
+						<div>
+							<UserNewForm
+								schema={this.state.schema}
+								template={{organizationalUnit: this.props.params.organizationalUnit}}
+								organizationalUnits={this.state.selectableOUs}
+								groups={this.state.selectableGroups}
+								users={this.state.users}
+								history={this.history}
+							/>
+						</div>
+					);
+				case 'new_as_template':
+					return (
+						<div>
+							<UserNewForm
+								schema={this.state.schema}
+								template={this.state.template}
+								organizationalUnits={this.state.selectableOUs}
+								groups={this.state.selectableGroups}
+								users={this.state.users}
+								history={this.history}
+							/>
 						</div>
 					);
 				case 'new_unprivileged':
 					return (
 						<div>
-							<UserNewFormUnprivileged schema={this.state.schema} organizationalUnits={this.state.organizationalUnits} groups={this.state.selectableGroups} users={this.state.users} />
+							<UserNewFormUnprivileged
+								schema={this.state.schema}
+								organizationalUnits={this.state.organizationalUnits}
+								groups={this.state.selectableGroups}
+								users={this.state.users}
+								history={this.history}
+							/>
 						</div>
 					);
 				default:
@@ -94,7 +145,7 @@ class UserNewFormContainer extends AbstractFetchedDataContainer {
 }
 
 UserNewFormContainer.propTypes = {
-	route: React.PropTypes.array,
+	route: React.PropTypes.object,
 	params: React.PropTypes.object
 };
 

@@ -10,12 +10,16 @@ class UMCache {
 		this.cache = {};
 	}
 	
+	invalidateData(url) {
+		delete this.cache[url];
+	}
+	
 	getData(url,label,cb = undefined,ecb = undefined,isAuth = false,fresh = false,ttl = DEFAULT_TTL) {
 		if(url in this.cache) {
 			// Clean cache entries whenever it is needed
 			let bestBefore = this.cache[url].bestBefore;
 			if(!!fresh || bestBefore < Date.now()) {
-				delete this.cache[url];
+				this.invalidateData(url);
 			}
 		}
 		
@@ -23,7 +27,7 @@ class UMCache {
 			if(cb) {
 				// Do now allow changes on the cached data
 				let data = this.cache[url].value;
-				cb((data instanceof Array) ? [...data] : {...data});
+				cb(JSON.parse(JSON.stringify(data)));
 			}
 			return null;
 		} else {
@@ -36,7 +40,7 @@ class UMCache {
 			// Clean cache entries whenever it is needed
 			let bestBefore = this.cache[url].bestBefore;
 			if(!!fresh || bestBefore < Date.now()) {
-				delete this.cache[url];
+				this.invalidateData(url);
 			}
 		}
 		
@@ -81,7 +85,7 @@ class UMCache {
 					retData = data;
 				} else {
 					// Do now allow changes on the clonable cached data
-					retData = (data instanceof Array) ? [...data] : {...data};
+					retData = JSON.parse(JSON.stringify(data));
 				}
 				cb(retData);
 			}

@@ -86,9 +86,14 @@ class AbstractFetchedDataContainer extends React.Component {
 		this.registerRequest(request);
 	}
 	
+	// The list of users is invalidated
+	invalidateUsers() {
+		cache.invalidateData(config.usersBaseUri);
+	}
+	
 	loadUser(username,cb,ecb = undefined) {
 		let request;
-		request = cache.getData(config.usersBaseUri + '/' + encodeURIComponent(username),'user ' + username,(user) => {
+		request = cache.getData(config.composeUserURI(username),'user ' + username,(user) => {
 			if(cb) {
 				cb(user);
 			}
@@ -99,6 +104,12 @@ class AbstractFetchedDataContainer extends React.Component {
 			}
 		});
 		this.registerRequest(request);
+	}
+	
+	// When a user is invalidated, the cache of all users should also be invalidated
+	invalidateUser(username) {
+		this.invalidateUsers();
+		cache.invalidateData(config.composeUserURI(username));
 	}
 	
 	loadOrganizationalUnitsSchema(cb,ecb = undefined) {
@@ -141,9 +152,14 @@ class AbstractFetchedDataContainer extends React.Component {
 		this.registerRequest(request);
 	}
 	
+	// The list of organizational units is invalidated
+	invalidateOrganizationalUnits() {
+		cache.invalidateData(config.ouBaseUri);
+	}
+	
 	loadOrganizationalUnit(ou,cb,ecb = undefined) {
 		let request;
-		request = cache.getData(config.ouBaseUri + '/' + encodeURIComponent(ou),'organizational unit ' + ou,(organizationalUnit) => {
+		request = cache.getData(config.composeOrganizationalUnitURI(ou),'organizational unit ' + ou,(organizationalUnit) => {
 			if(cb) {
 				cb(organizationalUnit);
 			}
@@ -154,6 +170,12 @@ class AbstractFetchedDataContainer extends React.Component {
 			}
 		});
 		this.registerRequest(request);
+	}
+	
+	// When an ou is invalidated, the cache of all ous should also be invalidated
+	invalidateOrganizationalUnit(ou) {
+		this.invalidateOrganizationalUnits();
+		cache.invalidateData(config.composeOrganizationalUnitURI(ou));
 	}
 	
 	loadGroupsSchema(cb,ecb = undefined) {
@@ -196,9 +218,14 @@ class AbstractFetchedDataContainer extends React.Component {
 		this.registerRequest(request);
 	}
 	
+	// The list of groups is invalidated
+	invalidateGroups() {
+		cache.invalidateData(config.groupsBaseUri);
+	}
+	
 	loadGroup(groupname,cb,ecb = undefined) {
 		let request;
-		request = cache.getData(config.groupsBaseUri + '/' + groupname,'group ' + groupname,(group) => {
+		request = cache.getData(config.composeGroupURI(groupname),'group ' + groupname,(group) => {
 			if(cb) {
 				cb(group);
 			}
@@ -209,6 +236,12 @@ class AbstractFetchedDataContainer extends React.Component {
 			}
 		});
 		this.registerRequest(request);
+	}
+	
+	// When a group is invalidated, the cache of all groups should also be invalidated
+	invalidateGroup(groupname) {
+		this.invalidateGroups();
+		cache.invalidateData(config.composeGroupURI(groupname));
 	}
 	
 	loadSelectableUsers(cb = undefined,ecb = undefined) {

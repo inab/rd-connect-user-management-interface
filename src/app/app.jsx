@@ -193,6 +193,7 @@ ReactDOM.render((
                     <Route path="password/:username" name="Change Password" staticName component={PasswordContainer} task={'passwordChange'}/>
                     <Route path="reset-password/:username" name="Reset Password" staticName component={PasswordContainer} task={'passwordReset'}/>
                     <Route path="new" name="New" component={UserNewFormContainer} task={'new_privileged'}/>
+                    <Route path="new-as-template/:username" name="New using a template" component={UserNewFormContainer} task={'new_as_template'} />
                     <Route path="new-unprivileged" name="New (unprivileged)" component={UserNewFormContainer} task={'new_unprivileged'} />
                     <Route path="groups" name="Users in groups" component={Box} >
                         <IndexRoute component={UsersGroupsContainer}/>
@@ -204,6 +205,7 @@ ReactDOM.render((
                 <Route path="organizationalUnits" name="Organizational Units" component={Box} onEnter={requireAuth}>
                     <IndexRoute component={OrganizationalUnitsContainer}/>
                     <Route path="list" name="List Organizational Units" component={OrganizationalUnitsContainer} />
+                    <Route path="addUser/:organizationalUnit" name="Add User" staticName component={UserNewFormContainer} task={'new_privileged_ou'} />
                     <Route path="edit/:organizationalUnit" name="Edit" staticName component={OrganizationalUnitFormContainer} task={'edit'} />
                     <Route path="view/:organizationalUnit" name="View" staticName component={OrganizationalUnitFormContainer} task={'view'} />
                     <Route path="new" name="New" component={OrganizationalUnitNewFormContainer} />

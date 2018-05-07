@@ -1,51 +1,19 @@
 import React from 'react';
 import jQuery from 'jquery';
 import { Glyphicon, Modal, Grid, Row, Col, Button, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
-import { hashHistory } from 'react-router';
 import config from 'config.jsx';
 import auth from 'components/auth.jsx';
 import zxcvbn from 'zxcvbn';
 import ReactMustache from 'react-mustache';
 
-const UserPassword = React.createClass({
-	propTypes:{
-		data: React.PropTypes.object.isRequired,
-	},
-	getInitialState: function() {
-		return {
-			modalTitle: null,
-			error: null,
-			showModal: false,
-			data: null,
-			valuePassword1: '',
-			valuePassword2: '',
-			zxcvbnObject1:null,
-			mustachePassword1:'',
-			mustachePassword2:'',
-			template:'',
-			suggestionsMessage:''
-		};
-	},
-	componentWillMount: function(){
-		this.setState({data: this.props.data, suggestionsMessage: 'Password strength estimator based on zxcvbn'});
-	},
-	close(){
-		if(this.state.modalTitle === 'Error'){
-			this.setState({showModal: false});
-		} else {
-			this.setState({showModal: false});
-			hashHistory.goBack();
-		}
-	},
-	open(){
-		this.setState({showModal: true, modalTitle: this.state.modalTitle});
-	},
-	getValidationPassword1() {
-		var zxcv = zxcvbn(this.state.valuePassword1);
-		this.state.zxcvbnObject1 = zxcv;
-		//console.log(zxcv);
-		//console.log(zxcv.sequence);
-		var template = '<table class=""> \
+class UserPassword extends React.Component {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
+	componentWillMount() {
+		let template = '<table class=""> \
         <tr>\
             <td colspan="3">guess times:</td>\
         </tr>\
@@ -71,7 +39,37 @@ const UserPassword = React.createClass({
         </tr>\
     </tbody>\
 </table>';
-		this.state.template = template;
+		this.setState({
+			user: this.props.user,
+			modalTitle: null,
+			error: null,
+			showModal: false,
+			valuePassword1: '',
+			valuePassword2: '',
+			mustachePassword1:'',
+			mustachePassword2:'',
+			template: template,
+			suggestionsMessage: 'Password strength estimator based on zxcvbn'
+		});
+	}
+	
+	close() {
+		if(this.state.modalTitle === 'Error'){
+			this.setState({showModal: false});
+		} else {
+			this.setState({showModal: false});
+			this.history.goBack();
+		}
+	}
+	
+	open() {
+		this.setState({showModal: true, modalTitle: this.state.modalTitle});
+	}
+	
+	getValidationPassword1() {
+		let zxcv = zxcvbn(this.state.valuePassword1);
+		//console.log(zxcv);
+		//console.log(zxcv.sequence);
 		//var mustachePassword1 = Mustache.render(template, zxcv);
 		//this.state.mustachePassword1 = mustachePassword1;
 		//console.log(mustachePassword1);
@@ -88,24 +86,28 @@ const UserPassword = React.createClass({
 			return 'error';
 		}
 
-	},
+	}
+	
 	getValidationPassword2() {
 		if(this.state.valuePassword1 === this.state.valuePassword2) {
 			return this.getValidationPassword1();
 		} else {
 			return 'error';
 		}
-	},
+	}
+	
 	handleChange1(e) {
 		this.setState({ valuePassword1: e.target.value });
-	},
+	}
+	
 	handleChange2(e) {
 		this.setState({ valuePassword2: e.target.value });
-	},
-	changePassword: function(){
+	}
+	
+	changePassword(){
 		jQuery.ajax({
 				type: 'POST',
-				url: config.usersBaseUri + '/' + encodeURIComponent(this.props.data.username) + '/resetPassword',
+				url: config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username) + '/resetPassword',
 				contentType: 'application/json',
 				headers: auth.getAuthHeaders(),
 				dataType: 'json',
@@ -172,14 +174,15 @@ const UserPassword = React.createClass({
 			this.setState({error: responseText, showModal: true});
 		}.bind(this));
 		*/
-	},
-	render: function() {
+	}
+	
+	render() {
 		var suggestions = this.state.suggestionsMessage;
 		const onSubmit = () => this.changePassword();
 		return (
 			<div>
-				<h3>Password change for user {this.props.data.username}</h3>
-				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+				<h3>Password change for user {this.props.user.username}</h3>
+				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 					</Modal.Header>
@@ -187,7 +190,7 @@ const UserPassword = React.createClass({
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button bsStyle="info" onClick={this.close}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
+						<Button bsStyle="info" onClick={() => this.close()}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
 					</Modal.Footer>
 				</Modal>
 				<form onSubmit={onSubmit}>
@@ -203,7 +206,7 @@ const UserPassword = React.createClass({
 									type="password"
 									value={this.state.valuePassword1}
 									placeholder="New password"
-									onChange={this.handleChange1}
+									onChange={(e) => this.handleChange1(e)}
 								/>
 								<FormControl.Feedback />
 								<HelpBlock>{suggestions}</HelpBlock>
@@ -219,7 +222,7 @@ const UserPassword = React.createClass({
 										type="password"
 										value={this.state.valuePassword2}
 										placeholder="Repeat password"
-										onChange={this.handleChange2}
+										onChange={(e) => this.handleChange2(e)}
 									/>
 									<FormControl.Feedback />
 								</FormGroup>
@@ -227,13 +230,19 @@ const UserPassword = React.createClass({
 						</Row>
 					</Grid>
 					<div className="button-submit">
-						<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
+						<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 						<Button bsStyle="danger" type="submit" className="submitCancelButtons" >Change password&nbsp;<Glyphicon glyph="pencil" /></Button>
 					</div>
 				</form>
-				<ReactMustache template={this.state.template} data={this.state.zxcvbnObject1} />
+				<ReactMustache template={this.state.template} data={zxcvbn(this.state.valuePassword1)} />
 			</div>
 		);
 	}
-});
-module.exports = UserPassword;
+}
+
+UserPassword.propTypes = {
+	history: React.PropTypes.object.isRequired,
+	user: React.PropTypes.object.isRequired
+};
+
+export default UserPassword;

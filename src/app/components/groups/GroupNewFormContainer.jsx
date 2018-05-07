@@ -36,6 +36,13 @@ class GroupNewFormContainer extends AbstractFetchedDataContainer {
 		}, errHandler);
 	}
 	
+	// We have to invalidate the groups cache
+	componentWillUnmount() {
+		super.componentWillUnmount();
+		
+		this.invalidateGroups();
+	}
+	
 	close() {
 		this.setState({showModal: false});
 	}
@@ -48,7 +55,7 @@ class GroupNewFormContainer extends AbstractFetchedDataContainer {
 		if(this.state.loaded) {
 			return (
 				<div>
-					<GroupNewForm schema={this.state.schema}  users={this.state.selectableUsers} />
+					<GroupNewForm schema={this.state.schema} users={this.state.selectableUsers} history={this.history} />
 				</div>
 			);
 		}

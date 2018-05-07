@@ -53,7 +53,7 @@ class GroupManagement {
 		//console.log('inside addMembersToGroup, members contains: ',formData.members);
 		return jQuery.ajax({
 			type: 'POST',
-			url: config.groupsBaseUri + '/' + encodeURIComponent(groupname),
+			url: config.composeGroupURI(groupname),
 			headers: auth.getAuthHeaders(),
 			contentType: 'application/json',
 			data: JSON.stringify(group)
@@ -96,7 +96,7 @@ class GroupManagement {
 		//console.log('inside addMembersToGroup, members contains: ',formData.members);
 		return jQuery.ajax({
 			type: 'DELETE',
-			url: config.groupsBaseUri + '/' + encodeURIComponent(groupname) + '/' + endpoint,
+			url: config.composeGroupEndpointURI(groupname,endpoint),
 			headers: auth.getAuthHeaders(),
 			contentType: 'application/json',
 			data: JSON.stringify(usersToRemove)
@@ -147,7 +147,7 @@ class GroupManagement {
 		//console.log('inside addMembersToGroup, members contains: ',formData.members);
 		return jQuery.ajax({
 			type: 'POST',
-			url: config.groupsBaseUri + '/' + encodeURIComponent(groupname) + '/' + endpoint,
+			url: config.composeGroupEndpointURI(groupname,endpoint),
 			headers: auth.getAuthHeaders(),
 			contentType: 'application/json',
 			data: JSON.stringify(usersToAdd)

@@ -3,11 +3,8 @@ import { Glyphicon, Navbar, Nav, NavDropdown, MenuItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
 
-var Navigation = React.createClass({
-    propTypes:{
-        projectName: React.PropTypes.string.isRequired
-    },
-    render: function() {
+class Navigation extends React.Component {
+    render() {
         return (
             <Navbar fixedTop className="navigation" >
                 <Navbar.Header>
@@ -47,6 +44,12 @@ var Navigation = React.createClass({
             </Navbar>
         );
     }
-});
+}
 
-module.exports = Navigation;
+Navigation.propTypes = {
+	projectName: React.PropTypes.string.isRequired
+};
+    
+
+
+export default Navigation;

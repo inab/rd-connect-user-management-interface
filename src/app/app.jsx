@@ -5,9 +5,10 @@ import { hashHistory, Router, Route, Link, IndexRoute } from 'react-router';
 //import sentryConfig from './sentryConfig.js';
 
 import auth from 'components/auth.jsx';
+import App from 'components/App.jsx';
 import Login from 'components/Login.jsx';
-import Navigation from 'components/Navigation.jsx';
-import Breadcrumbs from 'react-breadcrumbs';
+import Logout from 'components/Logout.jsx';
+import UserProfile from 'components/UserProfile.jsx';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import Box from 'components/Box.jsx';
 import UsersContainer from 'components/users/UsersContainer.jsx';
@@ -54,114 +55,6 @@ Raven.config(sentryURL, {
 */
 
 const history = hashHistory;
-
-const App = React.createClass({
-  getInitialState() {
-    return {
-      loggedIn: auth.loggedIn(),
-      loginData: {},
-      canSubmit: false,
-      validationErrors: {}
-    };
-  },
-  componentWillMount() {
-    auth.onChange = this.updateAuth;
-    //auth.login();
-  },
-	updateAuth(loggedIn) {
-		this.setState({loggedIn: !!loggedIn,loginData: loggedIn ? loggedIn : {}});
-		//auth.getLoginData((loginData) => {
-		//	this.setState({
-		//		loginData: loginData
-		//	});
-		//});
-	},
-	scheduleUserViewRedirect: function() {
-		auth.getLoginData((loginData) => {
-			history.push('/users/view/' + encodeURIComponent(loginData.username));
-		});
-	},
-  render() {
-	if(!this.props.children) {
-		if(this.state.loggedIn) {
-			this.scheduleUserViewRedirect();
-		}
-	}
-    return (
-        <div>
-            <div>
-                <header className="primary-header">
-                    <div className="loginBox">
-						<Link to="/userProfile">User's Profile</Link>
-						&nbsp;|&nbsp;
-                                {this.state.loggedIn ? (
-                                <Link to="/logout">Log out</Link>
-                                ) : (
-                                <Link to="/login">Login</Link>
-                                )}
-                    </div>
-                    <Navigation projectName="react-bootstrap-starter" />
-                </header>
-                <aside className="primary-aside"></aside>
-                <main className = "container">
-                    <Breadcrumbs
-                        routes={this.props.routes}
-                        params={this.props.params}
-                    />
-                    {
-						this.props.children ||
-                        <div>
-                            <p>You are {!this.state.loggedIn && 'not'} logged in.</p>
-                            {this.state.loggedIn ? (
-                                <Link to="/logout">Log out</Link>
-                                ) : (
-                                <Link to="/login">Login</Link>
-                            )}
-                        </div>
-                    }
-                </main>
-            </div>
-      </div>
-    );
-  }
-});
-
-const UserProfile = React.createClass({
-	getInitialState: function() {
-		return {
-			loginData: null
-		};
-	},
-	componentDidMount: function() {
-		auth.getLoginData((loginData) => {
-			this.setState({loginData: loginData });
-			history.push('/users/view/' + encodeURIComponent(loginData.username));
-		});
-	},
-  render() {
-    const loginData = this.state.loginData;
-
-    return loginData ? (
-      <div>
-        <h1>User's Profile</h1>
-        <p>Username: {loginData.username}</p>
-        <p>Fullname: {loginData.fullname}</p>
-        <p>e-mail: {loginData.email}</p>
-        <p>Category: {loginData.userCategory}</p>
-      </div>
-    ) : (<div />);
-  }
-});
-
-const Logout = React.createClass({
-  componentDidMount() {
-    auth.logout();
-  },
-
-  render() {
-    return <p>You are now logged out</p>;
-  }
-});
 
 function requireAuth(nextState, replace) {
   if(!auth.loggedIn()) {

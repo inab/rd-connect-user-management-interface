@@ -77,6 +77,8 @@ class Auth {
 					}
 				});
 			}
+		} else {
+			cb(this.userProps);
 		}
 		
 		// Let's return whatever we have

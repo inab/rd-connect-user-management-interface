@@ -343,7 +343,7 @@ class UserNewForm extends React.Component {
 						<Button onClick={() => this.close()}>Close</Button>
 					</Modal.Footer>
 				</Modal>
-				<h3> Create New User </h3>
+				<h3> Create New User { (this.props.template && this.props.template.cn) ? ' (based on ' + this.props.template.cn + ')' : '' }</h3>
 				<Collapse in={this.state.in} onEntering={() => this.wait()} bsStyle="success" ref="fade">
 					<ListGroup>
 						<ListGroupItem bsStyle="success">User created successfully!!</ListGroupItem>

@@ -7,7 +7,10 @@ import GroupManagement from '../GroupManagement.jsx';
 
 function groupValidation(formData,errors) {
 	console.log(errors);
-		return errors;
+	if(formData.owner.length === 0) {
+		errors.owner.addError('At least one owner is needed');
+	}
+	return errors;
 }
 
 class GroupNewForm extends React.Component {
@@ -155,7 +158,6 @@ class GroupNewForm extends React.Component {
 								onSubmit={onSubmit}
 								onError={onError}
 								validate={groupValidation}
-								noValidate
 								liveValidate={false}
 								showErrorList={false}
 							>

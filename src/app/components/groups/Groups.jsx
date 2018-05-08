@@ -20,6 +20,12 @@ const Groups = ({groups}) => {
       <div className="clear-both" />
       <Row className="show-grid">
               {sortedData.map(function(group,i){
+					if(group.owner === undefined) {
+						group.owner = [];
+					}
+					if(group.members === undefined) {
+						group.members = [];
+					}
                 var listOwners = group.owner.sort();
                 var groupMembers = group.members.sort();
                 //var listMembers=group.members.join(", ");

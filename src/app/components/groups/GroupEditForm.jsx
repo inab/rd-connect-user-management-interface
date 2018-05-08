@@ -23,8 +23,15 @@ class GroupEditForm extends React.Component {
 	
 	componentWillMount() {
 		let group = this.props.group;
-		let startMembers = group.members;
+		// Protecting from corner cases
+		if(group.owner === undefined) {
+			group.owner = [];
+		}
+		if(group.members === undefined) {
+			group.members = [];
+		}
 		let startOwners = group.owner;
+		let startMembers = group.members;
 		
 		// Initializing the components
 		//group.members = startMembers.map(username => { return (username in hashUsers) ? hashUsers[username] : {value:username,label:username};});
@@ -220,7 +227,6 @@ class GroupEditForm extends React.Component {
 								onSubmit={onSubmit}
 								onError={onError}
 								validate={groupValidation}
-								noValidate
 								liveValidate={false}
 								showErrorList={false}
 							>

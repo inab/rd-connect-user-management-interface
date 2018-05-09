@@ -126,7 +126,7 @@ class GroupNewForm extends React.Component {
 		};
 		
 		const onSubmit = () => this.addGroupData();
-		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
+		//const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
 		return (
@@ -156,7 +156,7 @@ class GroupNewForm extends React.Component {
 								onChange={({formData}) => this.setState({group: formData})}
 								//onChange={log('changed')}
 								onSubmit={onSubmit}
-								onError={onError}
+								//onError={onError}
 								validate={groupValidation}
 								liveValidate={false}
 								showErrorList={false}

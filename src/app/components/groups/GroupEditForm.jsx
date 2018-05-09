@@ -73,82 +73,87 @@ class GroupEditForm extends React.Component {
     }
     
 	updateGroupData(){
-		let groupData = Object.assign({},this.state.group);
-		
-		// First, prepare the owners and members data
-		let owners = groupData.owner.map(own => own.value);
-		let members = groupData.members.map(member => member.value);
-		
-		let groupname = groupData.cn;
-		
-		//console.log('yay I\'m valid!');
-		// Now, we delete all the missing members and later we add the new members
-		let membersToRemove = Underscore.difference(this.state.startMembers,members);
-		let membersToAdd = Underscore.difference(members, this.state.startMembers);
-		
-		// Then, we delete all the missing owners and later we add the new members
-		let ownersToRemove = Underscore.difference(this.state.startOwners,owners);
-		let ownersToAdd = Underscore.difference(owners, this.state.startOwners);
-		
-		
-		// And now, submit!!!!!
-		let gm = new GroupManagement();
-		
-		let errHandler = (err) => {
-			this.setState({
-				...err,
-				showModal: true
-			});
-		};
-		
-		let addMembersHandler = (cb) => {
-			if(membersToAdd.length > 0) {
-				gm.addMembersToGroup(groupname,membersToAdd,cb,errHandler);
-			} else if(cb) {
-				cb();
-			}
-		};
-		
-		let removeMembersHandler = (cb) => {
-			if(membersToRemove.length > 0) {
-				gm.removeMembersFromGroup(groupname,membersToRemove,cb,errHandler);
-			} else if(cb) {
-				cb();
-			}
-		};
-		
-		let addOwnersHandler = (cb) => {
-			if(ownersToAdd.length > 0) {
-				gm.addOwnersToGroup(groupname,ownersToAdd,cb,errHandler);
-			} else if(cb) {
-				cb();
-			}
-		};
-		
-		let removeOwnersHandler = (cb) => {
-			if(ownersToRemove.length > 0) {
-				gm.removeOwnersFromGroup(groupname,ownersToRemove,cb,errHandler);
-			} else if(cb) {
-				cb();
-			}
-		};
-		
-		// First, group modification
-		// Then, add members
-		// Third, remove members
-		// Fourth, add owners
-		// Fifth, remove owners
-		gm.modifyGroup(groupname, groupData,() => {
-			addMembersHandler(() => {
-				removeMembersHandler(() => {
-					addOwnersHandler(() => {
-						removeOwnersHandler(() => {
-							this.setState({ modalTitle: 'Success', error: 'Group modified correctly!!', showModal: true});
+		if(this.state.group.owner.length > 0) {
+			let groupData = Object.assign({},this.state.group);
+			
+			
+			// First, prepare the owners and members data
+			let owners = groupData.owner.map(own => own.value);
+			let members = groupData.members.map(member => member.value);
+			groupData.owner = owners;
+			groupData.members = members;
+			
+			let groupname = groupData.cn;
+			
+			//console.log('yay I\'m valid!');
+			// Now, we delete all the missing members and later we add the new members
+			let membersToRemove = Underscore.difference(this.state.startMembers,members);
+			let membersToAdd = Underscore.difference(members, this.state.startMembers);
+			
+			// Then, we delete all the missing owners and later we add the new members
+			let ownersToRemove = Underscore.difference(this.state.startOwners,owners);
+			let ownersToAdd = Underscore.difference(owners, this.state.startOwners);
+			
+			
+			// And now, submit!!!!!
+			let gm = new GroupManagement();
+			
+			let errHandler = (err) => {
+				this.setState({
+					...err,
+					showModal: true
+				});
+			};
+			
+			let addMembersHandler = (cb) => {
+				if(membersToAdd.length > 0) {
+					gm.addMembersToGroup(groupname,membersToAdd,cb,errHandler);
+				} else if(cb) {
+					cb();
+				}
+			};
+			
+			let removeMembersHandler = (cb) => {
+				if(membersToRemove.length > 0) {
+					gm.removeMembersFromGroup(groupname,membersToRemove,cb,errHandler);
+				} else if(cb) {
+					cb();
+				}
+			};
+			
+			let addOwnersHandler = (cb) => {
+				if(ownersToAdd.length > 0) {
+					gm.addOwnersToGroup(groupname,ownersToAdd,cb,errHandler);
+				} else if(cb) {
+					cb();
+				}
+			};
+			
+			let removeOwnersHandler = (cb) => {
+				if(ownersToRemove.length > 0) {
+					gm.removeOwnersFromGroup(groupname,ownersToRemove,cb,errHandler);
+				} else if(cb) {
+					cb();
+				}
+			};
+			
+			// First, group modification
+			// Then, add members
+			// Third, remove members
+			// Fourth, add owners
+			// Fifth, remove owners
+			gm.modifyGroup(groupname, groupData,() => {
+				addMembersHandler(() => {
+					removeMembersHandler(() => {
+						addOwnersHandler(() => {
+							removeOwnersHandler(() => {
+								this.setState({ modalTitle: 'Success', error: 'Group modified correctly!!', showModal: true});
+							});
 						});
 					});
 				});
-			});
-		}, errHandler);
+			}, errHandler);
+		}
 	}
 	
 	render() {
@@ -195,7 +200,10 @@ class GroupEditForm extends React.Component {
 		};
 		
 		const onSubmit = () => this.updateGroupData();
-		const onError = (errors) => this.setState({error: errors[0].property + ' ' + errors[0].message, showModal: true});
+		//const onError = (errors) => {
+		//	console.log(errors);
+		//	//this.setState({error: errors[0].property + ' ' + errors[0].message, showModal: true});
+		//};
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
 		return (
@@ -212,7 +220,7 @@ class GroupEditForm extends React.Component {
 					</Modal.Footer>
 				</Modal>
 				<h3>Modify Group {this.state.group.cn}</h3>
-				<Collapse in={this.state.in} onEntering={this.wait} bsStyle="success" ref="fade">
+				<Collapse in={this.state.in} onEntering={() => this.wait()} bsStyle="success" ref="fade">
 					<ListGroup>
 						<ListGroupItem bsStyle="success">Group modified successfully!!</ListGroupItem>
 					</ListGroup>
@@ -225,7 +233,7 @@ class GroupEditForm extends React.Component {
 								onChange={({formData}) => this.setState({group: formData})}
 								//onChange={log('changed')}
 								onSubmit={onSubmit}
-								onError={onError}
+								//onError={onError}
 								validate={groupValidation}
 								liveValidate={false}
 								showErrorList={false}

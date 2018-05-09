@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { hashHistory, Router, Route, Link, IndexRoute } from 'react-router';
+import { hashHistory, Router, Route, IndexRoute } from 'react-router';
 //import withExampleBasename from 'components/withExampleBasename.js';
 //import sentryConfig from './sentryConfig.js';
 
@@ -39,11 +39,11 @@ import DocumentsGroupNew from 'components/documents/DocumentsGroupNew.jsx';
 import MailingContainer from 'components/mailing/MailingContainer.jsx';
 import NewUserMailTemplatesContainer from 'components/mailing/NewUserMailTemplatesContainer.jsx';
 
-var _APP_INFO = {
-  name: 'RD-Connect User Management Interface',
-  branch: 'Master',
-  version: '1.0'
-};
+//var _APP_INFO = {
+//  name: 'RD-Connect User Management Interface',
+//  branch: 'Master',
+//  version: '1.0'
+//};
 /*var sentryURL = 'https://' + sentryConfig.sentryKey + '@sentry.io/' + sentryConfig.sentryApp;
 Raven.config(sentryURL, {
   release: _APP_INFO.version,
@@ -56,14 +56,18 @@ Raven.config(sentryURL, {
 
 const history = hashHistory;
 
-function requireAuth(nextState, replace) {
-  if(!auth.loggedIn()) {
-    replace({
-      pathname: '/login',
-      state: { nextPathname: nextState.location.pathname }
-    });
-  }
+function requireAuth(nextState, replace, callback) {
+	auth.getLoginData((userProps) => {
+		callback();
+	},(xhr, status, err) => {
+		replace({
+			pathname: '/login',
+			state: { nextPathname: nextState.location.pathname }
+		});
+		callback();
+	});
 }
+
 //Needed for onTouchTap
 //Can go away when react 1.0 release
 //Check this repo:
@@ -76,7 +80,7 @@ ReactDOM.render((
                 {/* add it here, as a child of `/` */}
                 <Route path="login" component={Login} name="Login" />
                 <Route path="logout" component={Logout} name="Logout" />
-                <Route path="userProfile" component={UserProfile} onEnter={requireAuth} name="User's Profile" />
+                <Route path="userProfile" component={UserProfile} name="User's Profile" />
                 <Route path="users" name="Users" component={Box} onEnter={requireAuth}>
                     <IndexRoute component={UsersContainer} />
                     <Route path="list" name="List" component={UsersContainer} task={'list'} />

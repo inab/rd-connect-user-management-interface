@@ -28,7 +28,7 @@ class UserNewForm extends React.Component {
 	}
 	
 	componentWillMount() {
-		let initialFormData = this.props.template ? JSON.parse(JSON.stringify(this.props.template)): {};
+		let initialFormData = this.props.template ? JSON.parse(JSON.stringify(this.props.template)) : {};
 		initialFormData.enabled = true;
 		
 		let initiallySelectedGroups = [];

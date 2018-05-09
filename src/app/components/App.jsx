@@ -67,7 +67,7 @@ class App extends React.Component {
 						{
 							this.props.children ||
 							<div>
-								<p>You are {!this.state.loggedIn && 'not'} logged in.</p>
+								<p>You are { this.state.loggedIn || 'not'} logged in.</p>
 								{this.state.loggedIn ? (
 									<Link to="/logout">Log out</Link>
 									) : (
@@ -78,9 +78,16 @@ class App extends React.Component {
 						}
 					</main>
 				</div>
-		  </div>
+			</div>
 		);
 	}
 }
+
+App.propTypes = {
+	router: React.PropTypes.object.isRequired,
+	params: React.PropTypes.object.isRequired,
+	routes: React.PropTypes.object.isRequired,
+	children: React.PropTypes.array,
+};
 
 export default withRouter(App);

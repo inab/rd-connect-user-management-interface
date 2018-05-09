@@ -41,6 +41,9 @@ class Auth {
 	
 	setLoginData(newUserProps) {
 		this.userProps = newUserProps;
+		if(!(newUserProps.email instanceof Array)) {
+			newUserProps.email = [ newUserProps.email ];
+		}
 		// Populating token (and preserving it)
 		if(newUserProps.session_id !== undefined) {
 			this.token = newUserProps.session_id;
@@ -76,8 +79,10 @@ class Auth {
 						ecb(xhr, status, err);
 					}
 				});
+			} else if(ecb !== undefined) {
+				ecb({},401,'Unauthorized');
 			}
-		} else {
+		} else if(cb !== undefined) {
 			cb(this.userProps);
 		}
 		

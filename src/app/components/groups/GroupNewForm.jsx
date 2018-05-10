@@ -65,8 +65,14 @@ class GroupNewForm extends React.Component {
 		
 		
 		// First, prepare the owners and members data
-		groupData.owner = groupData.owner.map(own => own.value);
-		groupData.members = groupData.members.map(member => member.value);
+		let owners = groupData.owner.map(own => {
+			return own.value !== undefined ? own.value : own;
+		});
+		let members = groupData.members.map(member => {
+			return member.value !== undefined ? member.value : member;
+		});
+		groupData.owner = owners;
+		groupData.members = members;
 		
 		// And now, submit!!!!!
 		let gm = new GroupManagement();

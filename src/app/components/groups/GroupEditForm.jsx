@@ -78,8 +78,12 @@ class GroupEditForm extends React.Component {
 			
 			
 			// First, prepare the owners and members data
-			let owners = groupData.owner.map(own => own.value);
-			let members = groupData.members.map(member => member.value);
+			let owners = groupData.owner.map(own => {
+				return own.value !== undefined ? own.value : own;
+			});
+			let members = groupData.members.map(member => {
+				return member.value !== undefined ? member.value : member;
+			});
 			groupData.owner = owners;
 			groupData.members = members;
 			

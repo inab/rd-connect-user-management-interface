@@ -14,6 +14,26 @@ class UMCache {
 		delete this.cache[url];
 	}
 	
+	getDataPromise(url,label,registerRequest = undefined,isAuth = false,fresh = false,ttl = DEFAULT_TTL) {
+		return new Promise((resolve,reject) => {
+			if(url in this.cache) {
+				// Clean cache entries whenever it is needed
+				let bestBefore = this.cache[url].bestBefore;
+				if(!!fresh || bestBefore < Date.now()) {
+					this.invalidateData(url);
+				}
+			}
+			
+			if(url in this.cache) {
+				let data = this.cache[url].value;
+				// Do now allow changes on the cached data
+				resolve(JSON.parse(JSON.stringify(data)));
+			} else {
+				resolve(this.loadDataPromise(url,'json',registerRequest,isAuth,label,ttl));
+			}
+		});
+	}
+	
 	getData(url,label,cb = undefined,ecb = undefined,isAuth = false,fresh = false,ttl = DEFAULT_TTL) {
 		if(url in this.cache) {
 			// Clean cache entries whenever it is needed
@@ -35,6 +55,26 @@ class UMCache {
 		}
 	}
 	
+	getRawDataPromise(url,label,registerRequest = undefined,isAuth = false,fresh = false,ttl = DEFAULT_TTL) {
+		return new Promise((resolve,reject) => {
+			if(url in this.cache) {
+				// Clean cache entries whenever it is needed
+				let bestBefore = this.cache[url].bestBefore;
+				if(!!fresh || bestBefore < Date.now()) {
+					this.invalidateData(url);
+				}
+			}
+			
+			if(url in this.cache) {
+				// As it is raw data, no clues about cloning it
+				let data = this.cache[url].value;
+				resolve(data);
+			} else {
+				resolve(this.loadDataPromise(url,'text',registerRequest,isAuth,label,ttl));
+			}
+		});
+	}
+	
 	getRawData(url,label,cb = undefined,ecb = undefined,isAuth = false,fresh = false,ttl = DEFAULT_TTL) {
 		if(url in this.cache) {
 			// Clean cache entries whenever it is needed
@@ -54,6 +94,19 @@ class UMCache {
 		} else {
 			return this.loadData(url,'text',isAuth,label,ttl,cb,ecb);
 		}
+	}
+	
+	loadDataPromise(url,dataType,registerRequest,isAuth,label,ttl) {
+		return new Promise((resolve,reject) => {
+			let request = this.loadData(url,dataType,isAuth,label,ttl,resolve,reject);
+			
+			// Registering the request, if it is needed
+			if(registerRequest) {
+				registerRequest(request);
+			}
+			
+			return request;
+		});
 	}
 	
 	loadData(url,dataType,isAuth,label,ttl,cb,ecb) {

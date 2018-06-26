@@ -300,34 +300,52 @@ class AbstractFetchedDataContainer extends React.Component {
 		},ecb);
 	}
 	
-	listDocuments(docsBaseURI,label,cb,ecb = undefined) {
-		let request;
-		request = cache.getData(docsBaseURI + '/documents','docs-' + label,(listDocuments) => {
-			if(cb) {
-				cb(listDocuments);
-			}
-		},(errMsg) => {
-			console.error('Unable to load document list from ' + docsBaseURI);
-			if(ecb) {
-				ecb(errMsg);
-			}
-		},true);
-		this.registerRequest(request);
+	listDocumentsPromise(docsBaseURI,label) {
+		return new Promise((resolve,reject) => {
+			cache.getDataPromise(
+				docsBaseURI + '/documents',
+				'docs-' + label,
+				this.registerRequest,
+				true
+			).then(resolve,(errMsg) => {
+				console.error('Unable to load document list from ' + docsBaseURI);
+				
+				reject(errMsg);
+			});
+		});
 	}
 	
-	getDocument(docsBaseURI,documentName,label,cb,ecb = undefined) {
-		let request;
-		request = cache.getRawData(docsBaseURI + '/documents/' + documentName,'doc-' + label + '-' + documentName,(document) => {
-			if(cb) {
-				cb(document);
-			}
-		},(errMsg) => {
-			console.error('Unable to get document ' + documentName + ' from ' + docsBaseURI);
-			if(ecb) {
-				ecb(errMsg);
-			}
-		},true);
-		this.registerRequest(request);
+	documentPromise(docsBaseURI,docDesc,label) {
+		return new Promise((resolve,reject) => {
+			let documentName = typeof docDesc === 'string' ? docDesc : docDesc.cn;
+			let documentURL = docsBaseURI + '/documents/' + documentName;
+			
+			let rawProm = cache.getRawDataPromise(
+				documentURL,
+				'doc-' + label + '-' + documentName,
+				this.registerRequest,
+				true
+			);
+			
+			let metaProm = typeof docDesc === 'string' ? cache.getDataPromise(
+				documentURL + '/metadata',
+				'doc-meta-' + label + '-' + documentName,
+				this.registerRequest,
+				true
+			) : Promise.resolve(docDesc);
+			
+			Promise.all([rawProm,metaProm])
+			.then((docMD) => {
+				resolve({
+					...docMD[1],
+					...docMD[0]
+				});
+			},(errMsg) => {
+				console.error('Unable to get document ' + documentName + ' from ' + docsBaseURI);
+				
+				reject(errMsg);
+			});
+		});
 	}
 	
 	overwriteDocument(docsBaseURI,documentName,content,mime,label,cb,ecb = undefined) {
@@ -341,6 +359,10 @@ class AbstractFetchedDataContainer extends React.Component {
 			dataType: 'text',
 			headers: auth.getAuthHeaders()
 		};
+		
+		// The cached document must be invalidated,
+		// so it is got fresh on next try
+		cache.invalidateData(query.url);
 		
 		let request = jQuery.ajax(query)
 		.done((data) => {
@@ -383,42 +405,125 @@ class AbstractFetchedDataContainer extends React.Component {
 		this.registerRequest(request);
 	}
 	
-	listTemplateDocuments(cb,ecb) {
-			this.listDocuments(config.mailingBaseUri + '/newUser','newUserTemplates',cb,ecb);
+	overwriteDocumentMetadata(docsBaseURI,documentName,docMeta,label,cb,ecb = undefined) {
+		let fullLabel = 'doc-' + label + '-' + documentName;
+		let query = {
+			url: docsBaseURI + '/documents/' + documentName + '/metadata',
+			type: 'POST',
+			cache: false,
+			contentType: 'application/json',
+			data: JSON.stringify(docMeta),
+			headers: auth.getAuthHeaders()
+		};
+		
+		// The cached document must be invalidated,
+		// so it is got fresh on next try
+		cache.invalidateData(query.url);
+		
+		let request = jQuery.ajax(query)
+		.done((data) => {
+			if(cb) {
+				cb(data);
+			}
+		})
+		.fail((jqXhr, textStatus, errorThrown) => {
+			//console.log('Failed to retrieve user Information',jqXhr);
+			let responseText = 'Failed to put ' + fullLabel + ' Information. ';
+			switch(jqXhr.status) {
+				case 0:
+					responseText += 'Not connect: Verify Network.';
+					break;
+				case 404:
+					responseText += 'Requested User not found [404]';
+					break;
+				case 500:
+					responseText += 'Internal Server Error [500].';
+					break;
+				case 'parsererror':
+					responseText += 'Requested JSON parse failed.';
+					break;
+				case 'timeout':
+					responseText += 'Time out error.';
+					break;
+				case 'abort':
+					responseText += 'Ajax request aborted.';
+					break;
+				default:
+					responseText += 'Uncaught Error: ' + jqXhr.responseText;
+					break;
+			}
+			console.error(responseText);
+			if(ecb) {
+				ecb({label: label, error: responseText, status: jqXhr.status});
+			}
+		});
+		
+		this.registerRequest(request);
 	}
 	
-	getTemplateMail(cb,ecb) {
-		this.listTemplateDocuments((files) => {
-			var noTemplate = true;
+	overwriteDocumentPromise(docsBaseURI,file,label) {
+		/*
+		return new Promise.all([
+			new Promise((resolve,reject) => {
+				this.overwriteDocument(docsBaseURI,file.cn,file.content,file.mime,label,resolve,reject);
+			})
+			,
+			new Promise((resolve,reject) => {
+				this.overwriteDocumentMetadata(docsBaseURI,file.cn,file.meta,label,resolve,reject);
+			})
+		]);
+		*/
+		return new Promise((resolve,reject) => {
+			this.overwriteDocument(docsBaseURI,file.cn,file.content,file.mime,label,resolve,reject);
+		});
+	}
+	
+	newUserTemplateDocumentsPromise() {
+		return this.listDocumentsPromise(config.mailingBaseUri + '/newUser','newUserTemplates');
+	}
+	
+	templateMailPromise(files) {
+		return new Promise((resolve,reject) => {
+			let templatePromise;
+			let promArray = [];
 			files.forEach(file => {
 				if(file.documentClass === 'mailTemplate') {
-					noTemplate = false;
-					
-					this.getDocument(config.mailingBaseUri + '/newUser',file.cn,'newUserTemplates',cb,ecb);
+					templatePromise = this.documentPromise(config.mailingBaseUri + '/newUser',file,'newUserTemplates');
+				} else {
+					promArray.push(
+						this.documentPromise(config.mailingBaseUri + '/newUser',file,'newUserTemplates')
+					);
 				}
 			});
 			// Report no template was available
-			if(noTemplate) {
-				ecb({label:'noTemplate',error:'There was no template available',status:-1});
+			if(templatePromise) {
+				let wholeP = [ templatePromise ];
+				if(promArray.length > 0) {
+					wholeP.push(Promise.all(promArray));
+				}
+				resolve(Promise.all(wholeP));
+			} else {
+				reject({label:'noTemplate',error:'There was no template available',status:-1});
 			}
-		},ecb);
+		});
 	}
 	
-	saveTemplateMail(mailTemplate,cb,ecb) {
-		this.listTemplateDocuments((files) => {
-			var noTemplate = true;
+	saveTemplateMailPromise(mailTemplateFile,mailTemplateAttachments) {
+		return new Promise((resolve,reject) => {
+			let files = [mailTemplateFile,...mailTemplateAttachments];
+			let promArray = [];
 			files.forEach(file => {
-				if(file.documentClass === 'mailTemplate') {
-					noTemplate = false;
-					
-					this.overwriteDocument(config.mailingBaseUri + '/newUser',file.cn,mailTemplate,'text/html','newUserTemplates',cb,ecb);
-				}
+				promArray.push(
+					this.overwriteDocumentPromise(config.mailingBaseUri + '/newUser',file,'newUserTemplates')
+				);
 			});
 			// Report no template was available
-			if(noTemplate) {
-				ecb({label:'noTemplate',error:'There was no template available',status:-1});
+			if(promArray.length > 0) {
+				resolve(Promise.all(promArray));
+			} else {
+				reject({label:'noTemplate',error:'There was no template available',status:-1});
 			}
-		},ecb);
+		});
 	}
 }
 

@@ -30,15 +30,20 @@ class NewUserMailTemplatesContainer extends AbstractFetchedDataContainer {
 				showModal: true
 			});
 		};
-		this.listTemplateDocuments((listing) => {
-			this.getTemplateMail((mailTemplate) => {
+		
+		this.newUserTemplateDocumentsPromise()
+			.then((listing) => {
+				return this.templateMailPromise(listing);
+			},errHandler)
+			.then((mailTemplateFiles) => {
 				//let mailTemplate = '<p>Component in development</p>';
 				this.setState({
-					mailTemplate: RichTextEditor.createValueFromString(mailTemplate, 'html'),
+					mailTemplateFile: mailTemplateFiles[0],
+					mailTemplateAttachments: (mailTemplateFiles.length > 1) ? mailTemplateFiles[1] : [],
+					mailTemplate: RichTextEditor.createValueFromString(mailTemplateFiles[0].content, 'html'),
 					loaded: true
 				});
 			},errHandler);
-		},errHandler);
 	}
 	
 	
@@ -62,9 +67,13 @@ class NewUserMailTemplatesContainer extends AbstractFetchedDataContainer {
 				showModal: true
 			});
 		};
-		this.saveTemplateMail(this.state.mailTemplate.toString('html'),() => {
-			this.setState({modalTitle:'Success', error: 'Mail template properly stored!!', showModal: true});
-		},errHandler);
+		
+		this.state.mailTemplateFile.content = this.state.mailTemplate.toString('html');
+		this.state.mailTemplateFile.mime = 'text/html';
+		this.saveTemplateMailPromise(this.state.mailTemplateFile,this.state.mailTemplateAttachments)
+			.then(() => {
+				this.setState({modalTitle:'Success', error: 'Mail template (and attachments) properly stored!!', showModal: true});
+			},errHandler);
 	}
 
 	render() {

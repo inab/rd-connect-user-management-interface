@@ -68,32 +68,14 @@ class UMCache {
 			if(url in this.cache) {
 				// As it is raw data, no clues about cloning it
 				let data = this.cache[url].value;
-				resolve(data);
+				resolve({
+					content: data,
+					mime: this.cache[url].mime
+				});
 			} else {
 				resolve(this.loadDataPromise(url,'text',registerRequest,isAuth,label,ttl));
 			}
 		});
-	}
-	
-	getRawData(url,label,cb = undefined,ecb = undefined,isAuth = false,fresh = false,ttl = DEFAULT_TTL) {
-		if(url in this.cache) {
-			// Clean cache entries whenever it is needed
-			let bestBefore = this.cache[url].bestBefore;
-			if(!!fresh || bestBefore < Date.now()) {
-				this.invalidateData(url);
-			}
-		}
-		
-		if(url in this.cache) {
-			if(cb) {
-				// As it is raw data, no clues about cloning it
-				let data = this.cache[url].value;
-				cb(data);
-			}
-			return null;
-		} else {
-			return this.loadData(url,'text',isAuth,label,ttl,cb,ecb);
-		}
 	}
 	
 	loadDataPromise(url,dataType,registerRequest,isAuth,label,ttl) {
@@ -104,8 +86,6 @@ class UMCache {
 			if(registerRequest) {
 				registerRequest(request);
 			}
-			
-			return request;
 		});
 	}
 	
@@ -121,12 +101,18 @@ class UMCache {
 		}
 		
 		let request = jQuery.ajax(query)
-		.done((data) => {
+		.done((data, textStatus, jqXHR) => {
 			// Saving in the cache
+			let mime = jqXHR.getResponseHeader('Content-Type');
+			let semiPos = mime.indexOf(';');
+			if(semiPos >= 0) {
+				mime = mime.substr(0,semiPos);
+			}
 			if(ttl && ttl > 0) {
 				let bestBefore = Date.now() + ttl;
 				let cachedElem = {
-					bestBefore: bestBefore, 
+					bestBefore: bestBefore,
+					mime: mime,
 					value: data
 				};
 				this.cache[url] = cachedElem;
@@ -135,7 +121,10 @@ class UMCache {
 				let retData;
 				if(dataType === 'text') {
 					// Do not know how to properly clone it
-					retData = data;
+					retData = {
+						content: data,
+						mime: mime
+					};
 				} else {
 					// Do now allow changes on the clonable cached data
 					retData = JSON.parse(JSON.stringify(data));

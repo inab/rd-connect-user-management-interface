@@ -26,9 +26,10 @@ class UsersContainer extends AbstractFetchedDataContainer {
 			});
 		};
 		
-		this.loadUsers((users) => {
-			this.onChange({users: users});
-		}, errHandler);
+		this.usersPromise()
+			.then((users) => {
+				this.onChange({users: users});
+			}, errHandler);
 	}
 	
 	componentWillUnmount() {

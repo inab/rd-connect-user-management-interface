@@ -148,8 +148,8 @@ class GroupEditForm extends React.Component {
 			// Fifth, remove owners
 			gm.modifyGroup(groupname, groupData,() => {
 				addMembersHandler(() => {
-					removeMembersHandler(() => {
-						addOwnersHandler(() => {
+					addOwnersHandler(() => {
+						removeMembersHandler(() => {
 							removeOwnersHandler(() => {
 								this.setState({ modalTitle: 'Success', error: 'Group modified correctly!!', showModal: true});
 							});

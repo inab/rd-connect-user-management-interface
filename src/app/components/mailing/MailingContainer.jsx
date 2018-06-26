@@ -98,7 +98,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	componentDidMount() {
 		//super.componentDidMount();
 		
-		this.loadSelectableUsers();
+		this.selectableUsersPromise();
 		
 		this.loadSelectableOrganizationalUnits();
 		

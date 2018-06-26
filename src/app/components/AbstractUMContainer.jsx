@@ -12,6 +12,7 @@ class AbstractFetchedDataContainer extends React.Component {
 		super(props,context);
 		this.requests = [];
 		this.onChange = this.onChange.bind(this);
+		this.registerRequest = this.registerRequest.bind(this);
 	}
 
 	componentWillMount() {
@@ -36,54 +37,62 @@ class AbstractFetchedDataContainer extends React.Component {
 	
 	abortPendingRequests() {
 		this.requests.forEach(request => {
-			if(request) {
-				request.abort();
-			}
+			request.abort();
 		});
 	}
 	
 	registerRequest(request) {
-		this.requests.push(request);
+		if(request) {
+			this.requests.push(request);
+		}
 	}
 	
-	loadUsersSchema(cb,ecb = undefined) {
+	usersSchemaPromise() {
 		// https://stackoverflow.com/questions/34956479/how-do-i-setstate-for-nested-array
-		let request;
-		request = cache.getData(config.usersBaseUri + '?schema','users JSON schema',(usersSchema) => {
-			this.onChange((prevState) => {
-				return {
-					schemas: {
-						...prevState.schemas,
-						users: usersSchema
-					}
-				};
+		
+		return new Promise((resolve,reject) => {
+			// It is not being returned through resolve or reject
+			// because we want to call them after all the content
+			cache.getDataPromise(
+				config.usersBaseUri + '?schema',
+				'users JSON schema',
+				this.registerRequest,
+				false,
+				false,
+				DEFAULT_SCHEMA_CACHE_TTL
+			).then((usersSchema) => {
+				this.onChange((prevState) => {
+					return {
+						schemas: {
+							...prevState.schemas,
+							users: usersSchema
+						}
+					};
+				});
+				
+				resolve(usersSchema);
+			},(errMsg) => {
+				console.error('Unable to load users schema');
+				
+				reject(errMsg);
 			});
-			if(cb) {
-				cb(usersSchema);
-			}
-		},(errMsg) => {
-			console.error('Unable to load users schema');
-			if(ecb) {
-				ecb(errMsg);
-			}
-		},false,false,DEFAULT_SCHEMA_CACHE_TTL);
-		this.registerRequest(request);
+		});
 	}
 	
-	loadUsers(cb,ecb = undefined) {
-		let request;
-		request = cache.getData(config.usersBaseUri,'users',(users) => {
-			this.onChange({users: users});
-			if(cb) {
-				cb(users);
-			}
-		},(errMsg) => {
-			console.error('Unable to load users');
-			if(ecb) {
-				ecb(errMsg);
-			}
+	usersPromise() {
+		return new Promise((resolve,reject) => {
+			cache.getDataPromise(
+				config.usersBaseUri,
+				'users',
+				this.registerRequest
+			).then((users) => {
+				resolve(users);
+			},(errMsg) => {
+				console.error('Unable to load users');
+				
+				reject(errMsg);
+			});
 		});
-		this.registerRequest(request);
 	}
 	
 	// The list of users is invalidated
@@ -244,20 +253,19 @@ class AbstractFetchedDataContainer extends React.Component {
 		cache.invalidateData(config.composeGroupURI(groupname));
 	}
 	
-	loadSelectableUsers(cb = undefined,ecb = undefined) {
-		this.loadUsers((users) => {
-			let selectableUsers = users.map((user) => {
-				return {
-					label: user.cn + ' (' + user.organizationalUnit + ')',
-					value: user.username
-				};
+	selectableUsersPromise() {
+		return this.usersPromise()
+			.then((users) => {
+				let selectableUsers = users.map((user) => {
+					return {
+						label: user.cn + ' (' + user.organizationalUnit + ')',
+						value: user.username
+					};
+				});
+				this.onChange({ selectableUsers: selectableUsers });
+				
+				return selectableUsers;
 			});
-			this.onChange({ selectableUsers: selectableUsers });
-			
-			if(cb) {
-				cb(selectableUsers);
-			}
-		},ecb);
 	}
 	
 	loadSelectableOrganizationalUnits(cb = undefined,ecb = undefined) {

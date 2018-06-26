@@ -30,9 +30,11 @@ class GroupNewFormContainer extends AbstractFetchedDataContainer {
 		
 		this.loadGroupsSchema((groupsSchema) => {
 			this.onChange({schema: groupsSchema});
-			this.loadSelectableUsers((selectableUsers) => {
+			this.selectableUsersPromise()
+				.catch(errHandler)
+				.then((selectableUsers) => {
 					this.setState({loaded:true});
-			}, errHandler);
+				});
 		}, errHandler);
 	}
 	

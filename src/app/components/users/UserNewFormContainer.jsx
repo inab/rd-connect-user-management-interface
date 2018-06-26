@@ -30,9 +30,17 @@ class UserNewFormContainer extends AbstractFetchedDataContainer {
 				showModal: true
 			});
 		};
-		this.loadUsersSchema((usersSchema) => {
-			this.onChange({schema: usersSchema});
-			this.loadUsers((users) => {
+		
+		this.usersSchemaPromise()
+			.then((usersSchema) => {
+				this.onChange({schema: usersSchema});
+				
+				// Force user loading
+				return this.usersPromise();
+			},errHandler)
+			.then((users) => {
+				this.onChange({users: users});
+				
 				this.loadSelectableOrganizationalUnits((selectableOUs) => {
 					this.loadSelectableGroups((selectableGroups) => {
 						if(this.props.route.task === 'new_as_template') {
@@ -45,7 +53,6 @@ class UserNewFormContainer extends AbstractFetchedDataContainer {
 					}, errHandler);
 				}, errHandler);
 			}, errHandler);
-		}, errHandler);
 	}
 	
 	// We have to invalidate the users cache

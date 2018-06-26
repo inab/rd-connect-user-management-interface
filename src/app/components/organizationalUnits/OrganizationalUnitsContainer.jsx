@@ -59,32 +59,35 @@ class OrganizationalUnitsContainer extends AbstractFetchedDataContainer {
 			);
 			this.onChange({organizationalUnits: organizationalUnits});
 			
-			this.loadUsers((users) => {
-				let objOusWithUsers = {};
-				organizationalUnits.forEach((organizationalUnit) => {
-					let organizationalUnitName = organizationalUnit.organizationalUnit;
-					//console.log('organizationalUnitName', organizationalUnitName);
-					objOusWithUsers[organizationalUnitName] = [];
-				});
-				//Once we have the array with the objects, we fill it with the users iterating over data variable which contains all the users
-				//console.log('objOusWithUsers: ', objOusWithUsers);
+			this.usersPromise()
+				.then((users) => {
+					//this.setState({users: users});
+					
+					let objOusWithUsers = {};
+					organizationalUnits.forEach((organizationalUnit) => {
+						let organizationalUnitName = organizationalUnit.organizationalUnit;
+						//console.log('organizationalUnitName', organizationalUnitName);
+						objOusWithUsers[organizationalUnitName] = [];
+					});
+					//Once we have the array with the objects, we fill it with the users iterating over data variable which contains all the users
+					//console.log('objOusWithUsers: ', objOusWithUsers);
 
-				users.forEach((user) => {
-					let organizationalUnitName = user.organizationalUnit;
-					//We have the user and its organizationalUnit. We can load the user in its place inside arrayOusWithUsers
-					if(organizationalUnitName in objOusWithUsers){
-						let tmpArrayUsers = objOusWithUsers[organizationalUnitName];
-						tmpArrayUsers.push(user);
-						objOusWithUsers[organizationalUnitName] = tmpArrayUsers;
-					}
-				});
-				let ousWithUsersSorted = sortObjOusWithUsers(objOusWithUsers);
-				//var jsonStringOusWith = JSON.stringify([...ousWithUsersSorted]);
-				//console.log('jsonStringOusWith: ', jsonStringOusWith);
-				this.setState({data: ousWithUsersSorted});
-				//console.log(this.state.data);
-				
-			}, errHandler);
+					users.forEach((user) => {
+						let organizationalUnitName = user.organizationalUnit;
+						//We have the user and its organizationalUnit. We can load the user in its place inside arrayOusWithUsers
+						if(organizationalUnitName in objOusWithUsers){
+							let tmpArrayUsers = objOusWithUsers[organizationalUnitName];
+							tmpArrayUsers.push(user);
+							objOusWithUsers[organizationalUnitName] = tmpArrayUsers;
+						}
+					});
+					let ousWithUsersSorted = sortObjOusWithUsers(objOusWithUsers);
+					//var jsonStringOusWith = JSON.stringify([...ousWithUsersSorted]);
+					//console.log('jsonStringOusWith: ', jsonStringOusWith);
+					this.setState({data: ousWithUsersSorted});
+					//console.log(this.state.data);
+					
+				}, errHandler);
 		}, errHandler);
 	}
 	

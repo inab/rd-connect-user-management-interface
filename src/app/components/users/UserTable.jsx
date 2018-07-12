@@ -58,7 +58,7 @@ const UserTable = ({users}) => {
                               <br/>
 								<Link className="btn btn-danger btn-xs editViewButton" role="button" to={'/users/reset-password/' + encodeURIComponent(user.username)}>
 									Reset Password&nbsp;
-								<Glyphicon glyph="pencil" />
+								<Glyphicon glyph="alert" />
 								</Link>
                               <br/>
 								<Link className="btn btn-primary btn-xs editViewButton" role="button" to={'/users/new-as-template/' + encodeURIComponent(user.username)}>

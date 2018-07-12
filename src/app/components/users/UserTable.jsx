@@ -56,8 +56,8 @@ const UserTable = ({users}) => {
 								<Glyphicon glyph="edit" />
                               </Link>
                               <br/>
-								<Link className="btn btn-danger btn-xs editViewButton" role="button" to={'/users/password/' + encodeURIComponent(user.username)}>
-									Change Password&nbsp;
+								<Link className="btn btn-danger btn-xs editViewButton" role="button" to={'/users/reset-password/' + encodeURIComponent(user.username)}>
+									Reset Password&nbsp;
 								<Glyphicon glyph="pencil" />
 								</Link>
                               <br/>

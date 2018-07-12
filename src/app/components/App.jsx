@@ -86,8 +86,8 @@ class App extends React.Component {
 App.propTypes = {
 	router: React.PropTypes.object.isRequired,
 	params: React.PropTypes.object.isRequired,
-	routes: React.PropTypes.object.isRequired,
-	children: React.PropTypes.array,
+	routes: React.PropTypes.array.isRequired,
+	children: React.PropTypes.object,
 };
 
 export default withRouter(App);

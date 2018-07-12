@@ -37,13 +37,14 @@ class Users extends React.Component {
 						var organizationalUnit = ouUsers[0].organizationalUnit;
 						return (
 							<Panel collapsible defaultExpanded center header={
-								<div style={{width:'100%'}}>
-									{organizationalUnit}
-									<div style={{float: 'right',cleaer: 'right'}}>
-										<Link className="btn btn-primary" role="button" to={'/organizationalUnits/addUser/' + encodeURIComponent(organizationalUnit)}>Create User &nbsp;<Glyphicon glyph="user" /></Link>
+									<div style={{width:'100%'}}>
+										{organizationalUnit}
+										<div style={{float: 'right',cleaer: 'right'}}>
+											<Link className="btn btn-primary" role="button" to={'/organizationalUnits/addUser/' + encodeURIComponent(organizationalUnit)}>Create User &nbsp;<Glyphicon glyph="user" /></Link>
+										</div>
 									</div>
-								</div>
-								} key={i}>
+								} key={i}
+							>
 								<UserTable users={ouUsers} />
 							</Panel>
 						);

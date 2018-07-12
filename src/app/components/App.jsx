@@ -58,7 +58,7 @@ class App extends React.Component {
 						</div>
 						<Navigation projectName="react-bootstrap-starter" />
 					</header>
-					<aside className="primary-aside"></aside>
+					<aside className="primary-aside" />
 					<main className = "container">
 						<Breadcrumbs
 							routes={this.props.routes}

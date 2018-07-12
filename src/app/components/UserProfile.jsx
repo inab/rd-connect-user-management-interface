@@ -28,22 +28,24 @@ class UserProfile extends React.Component {
 	render() {
 		const loginData = this.state.loginData;
 
-		return <div>
-			{
-			this.state.loaded && [
-				<h1>User's Profile</h1>
-				,
-				<p>Username: <Link to={'/users/view/' + encodeURIComponent(loginData.username)}>{loginData.username}</Link></p>
-				,
-				<p>Fullname: {loginData.fullname}</p>
-				,
-				<p>e-mail: {loginData.email ? loginData.email.map((email) => {return <span><a href={'mailto:'+encodeURIComponent(email)} target="_blank">{email}</a>&nbsp;</span>;}) : ''}</p>
-				,
-				<p>Category: {loginData.userCategory}</p>
-			]
-			}
-			<p>Debug info:</p><pre>{JSON.stringify(config.buildInfo, null, '\t')}</pre>
-		</div>;
+		return (
+			<div>
+				{
+				this.state.loaded && [
+					<h1>User's Profile</h1>
+					,
+					<p>Username: <Link to={'/users/view/' + encodeURIComponent(loginData.username)}>{loginData.username}</Link></p>
+					,
+					<p>Fullname: {loginData.fullname}</p>
+					,
+					<p>e-mail: {loginData.email ? loginData.email.map((email) => {return <span><a href={'mailto:' + encodeURIComponent(email)} target="_blank">{email}</a>&nbsp;</span>;}) : ''}</p>
+					,
+					<p>Category: {loginData.userCategory}</p>
+				]
+				}
+				<p>Debug info:</p><pre>{JSON.stringify(config.buildInfo, null, '\t')}</pre>
+			</div>
+		);
 	}
 }
 

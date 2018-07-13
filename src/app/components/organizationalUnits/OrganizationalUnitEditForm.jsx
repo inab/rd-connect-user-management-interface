@@ -1,50 +1,60 @@
 import React from 'react';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Glyphicon, Modal, Button, Row, Col } from 'react-bootstrap';
+import { Glyphicon, Modal, Button, Row, Col, ControlLabel } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import imageNotFoundSrc from '../users/defaultNoImageFound.jsx';
-import { hashHistory } from 'react-router';
-import config from 'config.jsx';
-import auth from 'components/auth.jsx';
+import { Link } from 'react-router';
+
+import OrganizationalUnitManagement from '../OrganizationalUnitManagement.jsx';
 
 function organizationalUnitValidation(formData,errors) {
 	return errors;
 }
 function validateImageInput(image) {
-	var responseText = null;
+	let responseText = null;
 	if((image.type !== 'image/jpeg') && (image.type !== 'image/png')) {
 		responseText = 'Image should be in JPEG or PNG format';
 	}
 	return responseText;
 }
 
-var OrganizationalUnitEditForm = React.createClass({
-	propTypes:{
-		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.object.isRequired
-	},
-	getInitialState: function() {
-		return { modalTitle: null, error: null, showModal:false, files: [], picture : null};
-	},
-	componentWillMount: function() {
-		this.setState({picture: this.props.data.picture});
-	},
-	close(){
+class OrganizationalUnitEditForm extends React.Component {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
+	componentWillMount() {
+		this.setState({
+			modalTitle: null,
+			error: null,
+			showModal:false,
+			schema: {
+				...this.props.schema
+			},
+			files: [],
+			picture:  this.props.data.picture ? this.props.data.picture : imageNotFoundSrc,
+		});
+	}
+	
+	close() {
 		if(this.state.modalTitle === 'Error'){
 			this.setState({showModal: false});
 		} else {
 			this.setState({showModal: false});
-			hashHistory.goBack();
+			this.history.goBack();
 		}
-	},
+	}
+	
 	open(){
-		this.setState({showModal: true, modalTitle: this.state.modalTitle});
-	},
-	dropHandler: function (files) {
+		this.setState({showModal: true});
+	}
+	
+	ouImageDropHandler(files) {
 		//console.log('Received files: ', files);
         files.forEach((file)=> {
-			var error = validateImageInput(file);
+			let error = validateImageInput(file);
 			if(!error){
 				this.setState({files: files});
 				this.setState({picture: file.preview});
@@ -52,96 +62,52 @@ var OrganizationalUnitEditForm = React.createClass({
 				this.setState({modalTitle: 'Error', error: error, showModal: true});
 			}
         });
-    },
-	onOpenClick: function () {
-      this.refs.dropzone.open();
-    },
-	updateOrganizationalUnitData: function({formData}){
+	}
+    
+	onOpenClick() {
+		this.refs.ouImageDropzone.open();
+	}
+	
+	updateOrganizationalUnitData(formData) {
 		//console.log('yay I\'m valid!');
 		//console.log('El formData contiene: ',formData);
-		var organizationalUnitData = Object.assign({},formData);
-		var myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
-		var reader = new window.FileReader();
-		//console.log('myBlob needs to be controlled, contains: ', myBlob);
-		if(typeof myBlob !== 'undefined'){
-			reader.readAsDataURL(myBlob);
-			reader.onloadend = function() {
-				var stringBase64Image = reader.result;
-				organizationalUnitData.picture = stringBase64Image;
-				jQuery.ajax({
-					type: 'POST',
-					url: config.ouBaseUri + '/' + encodeURIComponent(organizationalUnitData.organizationalUnit),
-					headers: auth.getAuthHeaders(),
-					dataType: 'json',
-					contentType: 'application/json',
-					data: JSON.stringify(organizationalUnitData)
-				})
-				.done(function(data) {
-					this.setState({ modalTitle: 'Success', error: 'Organizational Unit modified correctly!!', showModal: true});
-				}.bind(this))
-				.fail(function(jqXhr) {
-					//console.log('Failed to Update Organizational Unit Information',jqXhr);
-					var responseText = '';
-					if(jqXhr.status === 0) {
-						responseText = 'Failed to Update Organizational Unit Information. Not connect: Verify Network.';
-					} else if(jqXhr.status === 404) {
-						responseText = 'Failed to Update Organizational Unit Information. Not found [404]';
-					} else if(jqXhr.status === 500) {
-						responseText = 'Failed to Update Organizational Unit Information. Internal Server Error [500].';
-					} else if(jqXhr.status === 'parsererror') {
-						responseText = 'Failed to Update Organizational Unit Information. Sent JSON parse failed.';
-					} else if(jqXhr.status === 'timeout') {
-						responseText = 'Failed to Update Organizational Unit Information. Time out error.';
-					} else if(jqXhr.status === 'abort') {
-						responseText = 'Ajax request aborted.';
-					} else {
-						responseText = 'Uncaught Error: ' + jqXhr.responseText;
-					}
-					this.setState({modalTitle: 'Success', error: responseText, showModal: true});
-				}.bind(this))
-				.always(() => {
-				});
-			}.bind(this);
-		} else {
-			jQuery.ajax({
-					type: 'POST',
-					url: config.ouBaseUri + '/' + encodeURIComponent(organizationalUnitData.organizationalUnit),
-					contentType: 'application/json',
-					headers: auth.getAuthHeaders(),
-					dataType: 'json',
-					data: JSON.stringify(organizationalUnitData)
-			})
-			.done(function(data) {
-				//console.log('Organizational Unit modified correctly!!');
-				this.setState({modalTitle:'Success', error: 'Organizational Unit modified correctly!!', showModal: true});
-			}.bind(this))
-			.fail(function(jqXhr) {
-				//console.log('Failed to Update Organization Information',jqXhr.responseText);
-				var responseText = '';
-				if(jqXhr.status === 0) {
-					responseText = 'Failed to Update Organization Information. Not connect: Verify Network.';
-				} else if(jqXhr.status === 404) {
-					responseText = 'Failed to Update Organization Information. Not found [404]';
-				} else if(jqXhr.status === 500) {
-					responseText = 'Failed to Update Organization Information. Internal Server Error [500].';
-				} else if(jqXhr.status === 'parsererror') {
-					responseText = 'Failed to Update Organization Information. Sent JSON parse failed.';
-				} else if(jqXhr.status === 'timeout') {
-					responseText = 'Failed to Update Organization Information. Time out error.';
-				} else if(jqXhr.status === 'abort') {
-					responseText = 'Ajax request aborted.';
-				} else {
-					responseText = 'Uncaught Error: ' + jqXhr.responseText;
-				}
-				this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
-			}.bind(this))
-			.always(() => {
+		let organizationalUnitData = Object.assign({},formData);
+		let myBlob = jQuery('.dropzoneEditNew input').get(0).files[0];
+		let reader = new window.FileReader();
+		
+		let oum = new OrganizationalUnitManagement();
+		
+		let errHandler = (err) => {
+			this.setState({
+				...err,
+				modalTitle: 'Error',
+				showModal: true
 			});
+		};
+		
+		let ouEditHandler = (ouName,ouD) => {
+			oum.modifyOrganizationalUnitPromise(ouName,ouD)
+				.then(() => {
+					this.setState({ modalTitle: 'Success', error: 'Organizational Unit modified correctly!!', showModal: true});
+				},errHandler);
+		};
+		
+		if(typeof myBlob !== 'undefined'){
+			reader.addEventListener('load',function() {
+				let stringBase64Image = reader.result;
+				organizationalUnitData.picture = stringBase64Image;
+				
+				ouEditHandler(this.props.data.organizationalUnit,organizationalUnitData);
+			}.bind(this));
+			reader.readAsDataURL(myBlob);
+		} else {
+			ouEditHandler(this.props.data.organizationalUnit,organizationalUnitData);
 		}
-	},
-	render: function() {
-		var schema = this.props.schema;
-		var data = this.props.data;
+	}
+	
+	render() {
+		let schema = this.state.schema;
+		let data = this.props.data;
 		const uiSchema = {
 			/*,
 			'picture': {
@@ -159,19 +125,19 @@ var OrganizationalUnitEditForm = React.createClass({
 
 		//console.log('Retrieved schema from API: ', schema);
 
-		const log = (type) => console.log.bind(console, type);
-		const onSubmit = ({formData}) => this.updateOrganizationalUnitData({formData});
+		//const log = (type) => console.log.bind(console, type);
+		const onSubmit = ({formData}) => this.updateOrganizationalUnitData(formData);
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
 
-		var ouImage = this.state.picture;
+		let ouImage = this.state.picture;
 		if(typeof ouImage === 'undefined'){
 			ouImage = imageNotFoundSrc;
 		}
 		return (
 			<div>
-				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>
 					</Modal.Header>
@@ -179,42 +145,50 @@ var OrganizationalUnitEditForm = React.createClass({
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button onClick={this.close}>Close</Button>
+						<Button onClick={() => this.close()}>Close</Button>
 					</Modal.Footer>
 				</Modal>
 				<Row className = "show-grid">
-					<Col xs={12} md={8}>
+					<Col xs={12} md={9}>
 							<Form schema={schema}
-							uiSchema={uiSchema}
-							formData={data}
-							onChange={log('changed')}
-							onSubmit={onSubmit}
-							onError={onError}
-							validate={organizationalUnitValidation}
-							liveValidate
+								uiSchema={uiSchema}
+								formData={data}
+								//onChange={log('changed')}
+								onSubmit={onSubmit}
+								onError={onError}
+								validate={organizationalUnitValidation}
+								liveValidate
 							>
 								<div className="button-submit">
-									<Button bsStyle="info" onClick={()=>hashHistory.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
-									<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit</Button>
+									<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
+									<Button bsStyle="primary" type="submit" className="submitCancelButtons" >Submit&nbsp;<Glyphicon glyph="pencil" /></Button>
 								</div>
 							</Form>
 					</Col>
-					<Col xs={6} md={4} >
+					<Col xs={6} md={3} >
 						<div>
-							<button type="button" onClick={this.onOpenClick} className="changeImageButton">
-								Change image
-							</button>
-							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={this.dropHandler} ref="dropzone" >
-								Click here or drop image for {data.username}
-							</Dropzone>
+							<ControlLabel>Organizational Unit Picture</ControlLabel>
 							{this.state.files.length > 0 ? <div>
-							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} width="100" alt="ou_image" className="imagePreview" /> )}</div>
-							</div> : <div><img src={ouImage} width="100" alt="ou_image" className="imagePreview" /></div>}
+							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} name="documentFile" width="100" alt="image_ou" className="imagePreview" /> )}</div>
+							</div> : <div><img src={ouImage} name="documentFile" width="100" alt="image_ou" className="imagePreview" /></div>}
+							<Link role="button" onClick={() => this.onOpenClick()} className="btn btn-primary changeImageButton">
+								Change picture
+							</Link>
+							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={(images) => this.ouImageDropHandler(images)} ref="ouImageDropzone" >
+								Click here or drop image for {data.organizationalUnit}
+							</Dropzone>
 						</div>
 					</Col>
 				</Row>
 			</div>
 		);
 	}
-});
-module.exports = OrganizationalUnitEditForm;
+}
+
+OrganizationalUnitEditForm.propTypes = {
+	schema: React.PropTypes.object.isRequired,
+	data: React.PropTypes.object.isRequired,
+	history: React.PropTypes.object.isRequired
+};
+
+export default OrganizationalUnitEditForm;

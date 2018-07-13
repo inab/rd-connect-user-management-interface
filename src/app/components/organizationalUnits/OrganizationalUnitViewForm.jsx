@@ -1,11 +1,8 @@
 import React from 'react';
-import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Modal, Row, Col, Button } from 'react-bootstrap';
+import { Modal, Row, Col, Button, Glyphicon } from 'react-bootstrap';
+import imageNotFoundSrc from '../users/defaultNoImageFound.jsx';
 //import ModalError from './ModalError.jsx';
-
-import config from 'config.jsx';
-import auth from 'components/auth.jsx';
 
 function organizationalUnitValidation(formData,errors) {
 	//if(formData.userPassword !== formData.userPassword2) {
@@ -14,61 +11,36 @@ function organizationalUnitValidation(formData,errors) {
 		return errors;
 }
 
-var OrganizationalUnitViewForm = React.createClass({
-	propTypes:{
-		schema: React.PropTypes.object.isRequired,
-		data: React.PropTypes.object.isRequired
-	},
-	getInitialState: function() {
-		return { error: null, showModal:false};
-	},
-	close(){
+class OrganizationalUnitViewForm extends React.Component {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
+	componentWillMount() {
+		this.setState({
+			modalTitle: null,
+			error: null,
+			showModal:false,
+			schema: {
+				...this.props.schema
+			},
+			files: [],
+			picture:  this.props.data.picture ? this.props.data.picture : imageNotFoundSrc,
+		});
+	}
+	
+	close() {
 		this.setState({showModal: false});
-	},
-	open(){
+	}
+	
+	open() {
 		this.setState({showModal: true});
-	},
-	updateOrganizationalUnitData: function({formData}){
-		//console.log('yay I\'m valid!');
-		//console.log(formData);
-		var organizationalUnitData = Object.assign({},formData);
-		jQuery.ajax({
-			type: 'POST',
-			url: config.ouBaseUri + '/' + encodeURIComponent(this.state.data.organizationalUnit),
-			headers: auth.getAuthHeaders(),
-			dataType: 'json',
-			contentType: 'application/json',
-			data: JSON.stringify(organizationalUnitData)
-		})
-		.done(function(data) {
-			self.clearForm();
-		})
-		.fail(function(jqXhr) {
-			//console.log('Failed to Update Organizational Unit Information',jqXhr);
-			var responseText = '';
-			if(jqXhr.status === 0) {
-				responseText = 'Failed to Update Organizational Unit Information. Not connect: Verify Network.';
-			} else if(jqXhr.status === 404) {
-				responseText = 'Failed to Update Organizational Unit Information. Not found [404]';
-			} else if(jqXhr.status === 500) {
-				responseText = 'Failed to Update Organizational Unit Information. Internal Server Error [500].';
-			} else if(jqXhr.status === 'parsererror') {
-				responseText = 'Failed to Update Organizational Unit Information. Sent JSON parse failed.';
-			} else if(jqXhr.status === 'timeout') {
-				responseText = 'Failed to Update Organizational Unit Information. Time out error.';
-			} else if(jqXhr.status === 'abort') {
-				responseText = 'Failed to Update Organizational Unit Information. Ajax request aborted.';
-			} else {
-				responseText = 'Failed to Update Organizational Unit Information. Uncaught Error: ' + jqXhr.responseText;
-			}
-			this.setState({error: responseText, showModal: true});
-		}.bind(this));
-	},
-	render: function() {
+	}
+	
+	render() {
 		var schema = this.props.schema;
 		var data = this.props.data;
-		const log = (type) => console.log.bind(console, type);
-		const onSubmit = ({formData}) => this.updateOrganizationalUnitData({formData});
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
@@ -88,7 +60,7 @@ var OrganizationalUnitViewForm = React.createClass({
 		};
 		return (
 			<div>
-				<Modal show={this.state.showModal} onHide={this.close} error={this.state.error}>
+				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>Error!</Modal.Title>
 					</Modal.Header>
@@ -96,7 +68,7 @@ var OrganizationalUnitViewForm = React.createClass({
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
-						<Button onClick={this.close}>Close</Button>
+						<Button onClick={() => this.close()}>Close</Button>
 					</Modal.Footer>
 				</Modal>
 				<Row className="show-grid">
@@ -104,14 +76,13 @@ var OrganizationalUnitViewForm = React.createClass({
 							<Form schema={schema}
 							uiSchema={uiSchema}
 							formData={data}
-							onChange={log('changed')}
-							onSubmit={onSubmit}
+							onSubmit={()=>this.history.goBack()}
 							onError={onError}
 							validate={organizationalUnitValidation}
 							liveValidate
 							>
 							<div>
-									<Button>Back</Button>
+									<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 								</div>
 							</Form>
 					</Col>
@@ -120,5 +91,12 @@ var OrganizationalUnitViewForm = React.createClass({
 			</div>
 		);
 	}
-});
-module.exports = OrganizationalUnitViewForm;
+}
+
+OrganizationalUnitViewForm.propTypes = {
+	schema: React.PropTypes.object.isRequired,
+	data: React.PropTypes.object.isRequired,
+	history: React.PropTypes.object.isRequired
+};
+
+export default OrganizationalUnitViewForm;

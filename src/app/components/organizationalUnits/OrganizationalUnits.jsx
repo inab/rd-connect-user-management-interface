@@ -71,6 +71,9 @@ class OrganizationalUnits extends React.Component {
 											</ul>
 										</td>
 										<td style={{textAlign:'center'}}>
+											<Link className="btn btn-success editViewButton" role="button" to={'/organizationalUnits/view/' + encodeURIComponent(objOrganizationalUnit.organizationalUnit)}>
+												View&nbsp;<Glyphicon glyph="education" />
+											</Link>
 											<Link className="btn btn-primary editViewButton" role="button" to={'/organizationalUnits/edit/' + encodeURIComponent(objOrganizationalUnit.organizationalUnit)}>
 												Edit&nbsp;<Glyphicon glyph="edit" />
 											</Link>

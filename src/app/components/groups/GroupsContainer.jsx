@@ -20,7 +20,7 @@ class GroupsContainer extends AbstractFetchedDataContainer {
 	
 	componentDidMount() {
 		// The value is already populated by this method
-		this.loadGroups(null,(xhr) => this.setState({error: xhr.status + ' (Retrieving groups)'}));
+		this.groupsPromise().catch((err) => this.setState({error: err.status + ' (Retrieving groups)'}));
 	}
 	
 	render() {

@@ -85,9 +85,10 @@ class GroupNewForm extends React.Component {
 		};
 
 		let groupCreationHandler = (groupD) => {
-			gm.createGroup(groupD,(data) => {
-				this.setState({ modalTitle: 'Success', error: 'Group created correctly!!', showModal: true});
-			},errHandler);
+			gm.createGroupPomise(groupD)
+				.then((data) => {
+					this.setState({ modalTitle: 'Success', error: 'Group created correctly!!', showModal: true});
+				},errHandler);
 		};
 		
 		groupCreationHandler(groupData);

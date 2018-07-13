@@ -109,54 +109,35 @@ class GroupEditForm extends React.Component {
 				});
 			};
 			
-			let addMembersHandler = (cb) => {
-				if(membersToAdd.length > 0) {
-					gm.addMembersToGroup(groupname,membersToAdd,cb,errHandler);
-				} else if(cb) {
-					cb();
-				}
-			};
-			
-			let removeMembersHandler = (cb) => {
-				if(membersToRemove.length > 0) {
-					gm.removeMembersFromGroup(groupname,membersToRemove,cb,errHandler);
-				} else if(cb) {
-					cb();
-				}
-			};
-			
-			let addOwnersHandler = (cb) => {
-				if(ownersToAdd.length > 0) {
-					gm.addOwnersToGroup(groupname,ownersToAdd,cb,errHandler);
-				} else if(cb) {
-					cb();
-				}
-			};
-			
-			let removeOwnersHandler = (cb) => {
-				if(ownersToRemove.length > 0) {
-					gm.removeOwnersFromGroup(groupname,ownersToRemove,cb,errHandler);
-				} else if(cb) {
-					cb();
-				}
-			};
-			
 			// First, group modification
 			// Then, add members
 			// Third, remove members
 			// Fourth, add owners
 			// Fifth, remove owners
-			gm.modifyGroup(groupname, groupData,() => {
-				addMembersHandler(() => {
-					addOwnersHandler(() => {
-						removeMembersHandler(() => {
-							removeOwnersHandler(() => {
-								this.setState({ modalTitle: 'Success', error: 'Group modified correctly!!', showModal: true});
-							});
-						});
-					});
-				});
-			}, errHandler);
+			gm.modifyGroupPromise(groupname, groupData)
+				.then(() => {
+					if(membersToAdd.length > 0) {
+						return gm.addMembersToGroupPromise(groupname,membersToAdd);
+					}
+				},errHandler)
+				.then(() => {
+					if(ownersToAdd.length > 0) {
+						return gm.addOwnersToGroupPromise(groupname,ownersToAdd);
+					}
+				},errHandler)
+				.then(() => {
+					if(membersToRemove.length > 0) {
+						return gm.removeMembersFromGroupPromise(groupname,membersToRemove);
+					}
+				},errHandler)
+				.then(() => {
+					if(ownersToRemove.length > 0) {
+						return gm.removeOwnersFromGroupPromise(groupname,ownersToRemove);
+					}
+				},errHandler)
+				.then(() => {
+					this.setState({ modalTitle: 'Success', error: 'Group modified correctly!!', showModal: true});
+				},errHandler);
 		}
 	}
 	

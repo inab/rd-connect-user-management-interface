@@ -28,10 +28,11 @@ class GroupFormContainer extends GroupNewFormContainer {
 		};
 		
 		// The parent loads the other needed features
-		this.loadGroup(this.props.params.groupName,(group) => {
-			this.onChange({group: group});
-			super.componentDidMount();
-		}, errHandler);
+		this.groupPromise(this.props.params.groupName)
+			.then((group) => {
+				this.onChange({group: group});
+				super.componentDidMount();
+			}, errHandler);
 	}
 	
 	// We have to invalidate the groups cache

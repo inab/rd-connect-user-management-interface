@@ -28,14 +28,15 @@ class GroupNewFormContainer extends AbstractFetchedDataContainer {
 			});
 		};
 		
-		this.loadGroupsSchema((groupsSchema) => {
-			this.onChange({schema: groupsSchema});
-			this.selectableUsersPromise()
-				.catch(errHandler)
-				.then((selectableUsers) => {
-					this.setState({loaded:true});
-				});
-		}, errHandler);
+		this.groupsSchemaPromise()
+			.then((groupsSchema) => {
+				this.onChange({schema: groupsSchema});
+				
+				return this.selectableUsersPromise();
+			}, errHandler)
+			.then((selectableUsers) => {
+				this.setState({selectableUsers: selectableUsers, loaded:true});
+			}, errHandler);
 	}
 	
 	// We have to invalidate the groups cache

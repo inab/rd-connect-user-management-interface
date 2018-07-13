@@ -6,192 +6,184 @@ class GroupManagement {
 	constructor() {
 	}
 	
-	createGroup(group,cb,ecb) {
-		//console.log('inside addMembersToGroup, members contains: ',formData.members);
-		return jQuery.ajax({
-			type: 'PUT',
-			url: config.groupsBaseUri,
-			headers: auth.getAuthHeaders(),
-			contentType: 'application/json',
-			data: JSON.stringify(group)
-		})
-		.done(cb)
-		.fail((jqXhr) => {
-			//console.log('Failed to add members to Group ',jqXhr);
-			let responseText = 'Failed to create group. ';
-			switch(jqXhr.status) {
-				case 0:
-					responseText += 'Not connect: Verify Network.';
-					break;
-				case 404:
-					responseText += 'Not found [404]';
-					break;
-				case 500:
-					responseText += 'Internal Server Error [500].';
-					break;
-				case 'parsererror':
-					responseText += 'Sent JSON parse failed.';
-					break;
-				case 'timeout':
-					responseText += 'Time out error.';
-					break;
-				case 'abort':
-					responseText += 'Ajax request aborted.';
-					break;
-				default:
-					responseText += 'Uncaught Error: ' + jqXhr.responseText;
-					break;
-			}
-			
-			if(ecb) {
-				ecb({ modalTitle: 'Error', error: responseText});
-			}
+	createGroupPromise(group) {
+		return new Promise((resolve,reject) => {
+			jQuery.ajax({
+				type: 'PUT',
+				url: config.groupsBaseUri,
+				headers: auth.getAuthHeaders(),
+				contentType: 'application/json',
+				data: JSON.stringify(group)
+			})
+			.done(resolve)
+			.fail((jqXhr) => {
+				let responseText = 'Failed to create group. ';
+				switch(jqXhr.status) {
+					case 0:
+						responseText += 'Not connect: Verify Network.';
+						break;
+					case 404:
+						responseText += 'Not found [404]';
+						break;
+					case 500:
+						responseText += 'Internal Server Error [500].';
+						break;
+					case 'parsererror':
+						responseText += 'Sent JSON parse failed.';
+						break;
+					case 'timeout':
+						responseText += 'Time out error.';
+						break;
+					case 'abort':
+						responseText += 'Ajax request aborted.';
+						break;
+					default:
+						responseText += 'Uncaught Error: ' + jqXhr.responseText;
+						break;
+				}
+				
+				reject({ modalTitle: 'Error', error: responseText});
+			});
 		});
 	}
 	
-	modifyGroup(groupname,group,cb,ecb) {
-		//console.log('inside addMembersToGroup, members contains: ',formData.members);
-		return jQuery.ajax({
-			type: 'POST',
-			url: config.composeGroupURI(groupname),
-			headers: auth.getAuthHeaders(),
-			contentType: 'application/json',
-			data: JSON.stringify(group)
-		})
-		.done(cb)
-		.fail((jqXhr) => {
-			//console.log('Failed to add members to Group ',jqXhr);
-			let responseText = 'Failed to modify group ' + groupname + '. ';
-			switch(jqXhr.status) {
-				case 0:
-					responseText += 'Not connect: Verify Network.';
-					break;
-				case 404:
-					responseText += 'Not found [404]';
-					break;
-				case 500:
-					responseText += 'Internal Server Error [500].';
-					break;
-				case 'parsererror':
-					responseText += 'Sent JSON parse failed.';
-					break;
-				case 'timeout':
-					responseText += 'Time out error.';
-					break;
-				case 'abort':
-					responseText += 'Ajax request aborted.';
-					break;
-				default:
-					responseText += 'Uncaught Error: ' + jqXhr.responseText;
-					break;
-			}
-			
-			if(ecb) {
-				ecb({ modalTitle: 'Error', error: responseText});
-			}
+	modifyGroupPromise(groupname,group) {
+		return new Promise((resolve,reject) => {
+			jQuery.ajax({
+				type: 'POST',
+				url: config.composeGroupURI(groupname),
+				headers: auth.getAuthHeaders(),
+				contentType: 'application/json',
+				data: JSON.stringify(group)
+			})
+			.done(resolve)
+			.fail((jqXhr) => {
+				let responseText = 'Failed to modify group ' + groupname + '. ';
+				switch(jqXhr.status) {
+					case 0:
+						responseText += 'Not connect: Verify Network.';
+						break;
+					case 404:
+						responseText += 'Not found [404]';
+						break;
+					case 500:
+						responseText += 'Internal Server Error [500].';
+						break;
+					case 'parsererror':
+						responseText += 'Sent JSON parse failed.';
+						break;
+					case 'timeout':
+						responseText += 'Time out error.';
+						break;
+					case 'abort':
+						responseText += 'Ajax request aborted.';
+						break;
+					default:
+						responseText += 'Uncaught Error: ' + jqXhr.responseText;
+						break;
+				}
+				
+				reject({ modalTitle: 'Error', error: responseText});
+			});
 		});
 	}
 	
-	removeUsersFromGroup(groupname, usersToRemove, endpoint, cb,ecb) {
-		//console.log('inside addMembersToGroup, members contains: ',formData.members);
-		return jQuery.ajax({
-			type: 'DELETE',
-			url: config.composeGroupEndpointURI(groupname,endpoint),
-			headers: auth.getAuthHeaders(),
-			contentType: 'application/json',
-			data: JSON.stringify(usersToRemove)
-		})
-		.done(cb)
-		.fail((jqXhr) => {
-			//console.log('Failed to add members to Group ',jqXhr);
-			let responseText = 'Failed to remove ' + endpoint + ' from group ' + groupname + '. ';
-			switch(jqXhr.status) {
-				case 0:
-					responseText += 'Not connect: Verify Network.';
-					break;
-				case 404:
-					responseText += 'Not found [404]';
-					break;
-				case 500:
-					responseText += 'Internal Server Error [500].';
-					break;
-				case 'parsererror':
-					responseText += 'Sent JSON parse failed.';
-					break;
-				case 'timeout':
-					responseText += 'Time out error.';
-					break;
-				case 'abort':
-					responseText = 'Ajax request aborted.';
-					break;
-				default:
-					responseText = 'Uncaught Error: ' + jqXhr.responseText;
-					break;
-			}
-			
-			if(ecb) {
-				ecb({ modalTitle: 'Error', error: responseText});
-			}
+	removeUsersFromGroupPromise(groupname, usersToRemove, endpoint) {
+		return new Promise((resolve,reject) => {
+			jQuery.ajax({
+				type: 'DELETE',
+				url: config.composeGroupEndpointURI(groupname,endpoint),
+				headers: auth.getAuthHeaders(),
+				contentType: 'application/json',
+				data: JSON.stringify(usersToRemove)
+			})
+			.done(resolve)
+			.fail((jqXhr) => {
+				let responseText = 'Failed to remove ' + endpoint + ' from group ' + groupname + '. ';
+				switch(jqXhr.status) {
+					case 0:
+						responseText += 'Not connect: Verify Network.';
+						break;
+					case 404:
+						responseText += 'Not found [404]';
+						break;
+					case 500:
+						responseText += 'Internal Server Error [500].';
+						break;
+					case 'parsererror':
+						responseText += 'Sent JSON parse failed.';
+						break;
+					case 'timeout':
+						responseText += 'Time out error.';
+						break;
+					case 'abort':
+						responseText = 'Ajax request aborted.';
+						break;
+					default:
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+						break;
+				}
+				
+				reject({ modalTitle: 'Error', error: responseText});
+			});
 		});
 	}
 	
-	removeMembersFromGroup(groupname, membersToRemove,cb,ecb) {
-		return this.removeUsersFromGroup(groupname,membersToRemove,'members',cb,ecb);
+	removeMembersFromGroupPromise(groupname, membersToRemove) {
+		return this.removeUsersFromGroupPromise(groupname,membersToRemove,'members');
 	}
 	
-	removeOwnersFromGroup(groupname, ownersToRemove,cb,ecb) {
-		return this.removeUsersFromGroup(groupname,ownersToRemove,'owners',cb,ecb);
+	removeOwnersFromGroupPromise(groupname, ownersToRemove) {
+		return this.removeUsersFromGroupPromise(groupname,ownersToRemove,'owners');
 	}
 	
-	addUsersToGroup(groupname, usersToAdd, endpoint, cb,ecb) {
-		//console.log('inside addMembersToGroup, members contains: ',formData.members);
-		return jQuery.ajax({
-			type: 'POST',
-			url: config.composeGroupEndpointURI(groupname,endpoint),
-			headers: auth.getAuthHeaders(),
-			contentType: 'application/json',
-			data: JSON.stringify(usersToAdd)
-		})
-		.done(cb)
-		.fail((jqXhr) => {
-			//console.log('Failed to add members to Group ',jqXhr);
-			let responseText = 'Failed to add ' + endpoint + ' to group ' + groupname + '. ';
-			switch(jqXhr.status) {
-				case 0:
-					responseText += 'Not connect: Verify Network.';
-					break;
-				case 404:
-					responseText += 'Not found [404]';
-					break;
-				case 500:
-					responseText += 'Internal Server Error [500].';
-					break;
-				case 'parsererror':
-					responseText += 'Sent JSON parse failed.';
-					break;
-				case 'timeout':
-					responseText += 'Time out error.';
-					break;
-				case 'abort':
-					responseText = 'Ajax request aborted.';
-					break;
-				default:
-					responseText = 'Uncaught Error: ' + jqXhr.responseText;
-					break;
-			}
-			
-			if(ecb) {
-				ecb({ modalTitle: 'Error', error: responseText});
-			}
+	addUsersToGroupPromise(groupname, usersToAdd, endpoint) {
+		return new Promise((resolve,reject) => {
+			jQuery.ajax({
+				type: 'POST',
+				url: config.composeGroupEndpointURI(groupname,endpoint),
+				headers: auth.getAuthHeaders(),
+				contentType: 'application/json',
+				data: JSON.stringify(usersToAdd)
+			})
+			.done(resolve)
+			.fail((jqXhr) => {
+				let responseText = 'Failed to add ' + endpoint + ' to group ' + groupname + '. ';
+				switch(jqXhr.status) {
+					case 0:
+						responseText += 'Not connect: Verify Network.';
+						break;
+					case 404:
+						responseText += 'Not found [404]';
+						break;
+					case 500:
+						responseText += 'Internal Server Error [500].';
+						break;
+					case 'parsererror':
+						responseText += 'Sent JSON parse failed.';
+						break;
+					case 'timeout':
+						responseText += 'Time out error.';
+						break;
+					case 'abort':
+						responseText = 'Ajax request aborted.';
+						break;
+					default:
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+						break;
+				}
+				
+				reject({ modalTitle: 'Error', error: responseText});
+			});
 		});
 	}
 	
-	addMembersToGroup(groupname, membersToAdd,cb,ecb) {
-		return this.addUsersToGroup(groupname,membersToAdd,'members',cb,ecb);
+	addMembersToGroupPromise(groupname, membersToAdd) {
+		return this.addUsersToGroupPromise(groupname,membersToAdd,'members');
 	}
 	
-	addOwnersToGroup(groupname, ownersToAdd,cb,ecb) {
-		return this.addUsersToGroup(groupname,ownersToAdd,'owners',cb,ecb);
+	addOwnersToGroupPromise(groupname, ownersToAdd) {
+		return this.addUsersToGroupPromise(groupname,ownersToAdd,'owners');
 	}
 }
 

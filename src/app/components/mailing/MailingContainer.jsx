@@ -100,9 +100,9 @@ class MailingContainer extends AbstractFetchedDataContainer {
 		
 		this.selectableUsersPromise();
 		
-		this.loadSelectableOrganizationalUnits();
+		this.selectableOrganizationalUnitsPromise();
 		
-		this.loadSelectableGroups();
+		this.selectableGroupsPromise();
 	}
 	
 	onSubjectChange(e) {

@@ -36,9 +36,11 @@ class UserFormContainer extends AbstractFetchedDataContainer {
 		this.usersSchemaPromise()
 			.then((usersSchema) => {
 				this.onChange({schema: usersSchema});
-				this.loadUser(this.props.params.username,(user) => {
-					this.onChange({user: user});
-				}, errHandler);
+				
+				return this.userPromise(this.props.params.username);
+			}, errHandler)
+			.then((user) => {
+				this.onChange({user: user});
 			}, errHandler);
 	}
 	

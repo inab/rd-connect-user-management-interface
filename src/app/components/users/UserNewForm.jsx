@@ -198,15 +198,19 @@ class UserNewForm extends React.Component {
 		};
 		let groupCreationHandler = (iGroup,usernames) => {
 			if(iGroup < groups.length) {
-				gm.addMembersToGroup(groups[iGroup],usernames,() => groupCreationHandler(iGroup + 1,usernames),errHandler);
+				return gm.addMembersToGroupPromise(groups[iGroup],usernames)
+					.then(() => {
+						return groupCreationHandler(iGroup + 1,usernames);
+					},errHandler);
 			} else {
 				this.setState({ modalTitle: 'Success', error: 'User created correctly!!', showModal: true});
 			}
 		};
 		let userCreationHandler = (userD) => {
-			um.createUser(userD,(data) => {
-				groupCreationHandler(0,[userD.username]);
-			},errHandler);
+			um.createUserPromise(userD)
+				.then((data) => {
+					return groupCreationHandler(0,[userD.username]);
+				},errHandler);
 		};
 		
 		if(typeof myBlob !== 'undefined'){

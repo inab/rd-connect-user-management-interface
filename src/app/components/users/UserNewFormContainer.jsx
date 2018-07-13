@@ -41,17 +41,24 @@ class UserNewFormContainer extends AbstractFetchedDataContainer {
 			.then((users) => {
 				this.onChange({users: users});
 				
-				this.loadSelectableOrganizationalUnits((selectableOUs) => {
-					this.loadSelectableGroups((selectableGroups) => {
-						if(this.props.route.task === 'new_as_template') {
-							this.loadUser(this.props.params.username,(user) => {
-								this.onChange({loaded: true, template: user});
-							}, errHandler);
-						} else {
-							this.setState({loaded: true});
-						}
-					}, errHandler);
-				}, errHandler);
+				return this.selectableOrganizationalUnitsPromise();
+			},errHandler)
+			.then((selectableOUs) => {
+				this.onChange({selectableOUs: selectableOUs});
+				
+				return this.selectableGroupsPromise();
+			},errHandler)
+			.then((selectableGroups) => {
+				// This works because there is a side effect where the selectable groups are stored
+				if(this.props.route.task === 'new_as_template') {
+					this.onChange({selectableGroups: selectableGroups});
+					return this.userPromise(this.props.params.username)
+						.then((user) => {
+							this.onChange({loaded: true, template: user});
+						}, errHandler);
+				} else {
+					this.setState({selectableGroups: selectableGroups, loaded: true});
+				}
 			}, errHandler);
 	}
 	

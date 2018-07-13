@@ -133,15 +133,19 @@ class UserEditForm extends React.Component {
 		};
 		let groupCreationHandler = (iGroup,usernames) => {
 			if(iGroup < groups.length) {
-				gm.addMembersToGroup(groups[iGroup],usernames,() => groupCreationHandler(iGroup + 1,usernames),errHandler);
+				return gm.addMembersToGroupPromise(groups[iGroup],usernames)
+					.then(() => {
+						return groupCreationHandler(iGroup + 1,usernames);
+					},errHandler);
 			} else {
 				this.setState({ modalTitle: 'Success', error: 'User properly modified!!', showModal: true});
 			}
 		};
 		let userEditHandler = (username,userD) => {
-			um.modifyUser(username,userD,(data) => {
-				groupCreationHandler(0,[username]);
-			},errHandler);
+			um.modifyUserPromise(username,userD)
+				.then((data) => {
+					return groupCreationHandler(0,[username]);
+				},errHandler);
 		};
 		
 		if(typeof myBlob !== 'undefined'){

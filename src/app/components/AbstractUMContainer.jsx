@@ -100,19 +100,20 @@ class AbstractFetchedDataContainer extends React.Component {
 		cache.invalidateData(config.usersBaseUri);
 	}
 	
-	loadUser(username,cb,ecb = undefined) {
-		let request;
-		request = cache.getData(config.composeUserURI(username),'user ' + username,(user) => {
-			if(cb) {
-				cb(user);
-			}
-		},(errMsg) => {
-			console.error('Unable to load user ' + username);
-			if(ecb) {
-				ecb(errMsg);
-			}
+	userPromise(username) {
+		return new Promise((resolve,reject) => {
+			cache.getDataPromise(
+				config.composeUserURI(username),
+				'user ' + username,
+				this.registerRequest
+			).then((user) => {
+				resolve(user);
+			},(errMsg) => {
+				console.error('Unable to load user ' + username);
+				
+				reject(errMsg);
+			});
 		});
-		this.registerRequest(request);
 	}
 	
 	// When a user is invalidated, the cache of all users should also be invalidated
@@ -121,44 +122,52 @@ class AbstractFetchedDataContainer extends React.Component {
 		cache.invalidateData(config.composeUserURI(username));
 	}
 	
-	loadOrganizationalUnitsSchema(cb,ecb = undefined) {
+	organizationalUnitsSchemaPromise() {
 		// https://stackoverflow.com/questions/34956479/how-do-i-setstate-for-nested-array
-		let request;
-		request = cache.getData(config.ouBaseUri + '?schema','organizational units schema',(ouSchema) => {
-			this.onChange((prevState) => {
-				return {
-					schemas: {
-						...prevState.schemas,
-						organizationalUnits: ouSchema
-					}
-				};
+		
+		return new Promise((resolve,reject) => {
+			cache.getDataPromise(
+				config.ouBaseUri + '?schema',
+				'organizational units schema',
+				this.registerRequest,
+				false,
+				false,
+				DEFAULT_SCHEMA_CACHE_TTL
+			).then((ouSchema) => {
+				this.onChange((prevState) => {
+					return {
+						schemas: {
+							...prevState.schemas,
+							organizationalUnits: ouSchema
+						}
+					};
+				});
+				
+				resolve(ouSchema);
+			},(errMsg) => {
+				console.error('Unable to load organizations schema');
+
+				reject(errMsg);
 			});
-			if(cb) {
-				cb(ouSchema);
-			}
-		},(errMsg) => {
-			console.error('Unable to load organizations schema');
-			if(ecb) {
-				ecb(errMsg);
-			}
-		},false,false,DEFAULT_SCHEMA_CACHE_TTL);
-		this.registerRequest(request);
+		});
 	}
 	
-	loadOrganizationalUnits(cb,ecb = undefined) {
-		let request;
-		request = cache.getData(config.ouBaseUri,'organizational units',(organizationalUnits) => {
-			this.onChange({organizationalUnits: organizationalUnits});
-			if(cb) {
-				cb(organizationalUnits);
-			}
-		},(errMsg) => {
-			console.error('Unable to load organizations');
-			if(ecb) {
-				ecb(errMsg);
-			}
+	organizationalUnitsPromise() {
+		return new Promise((resolve,reject) => {
+			cache.getDataPromise(
+				config.ouBaseUri,
+				'organizational units',
+				this.registerRequest
+			).then((organizationalUnits) => {
+				this.onChange({organizationalUnits: organizationalUnits});
+				
+				resolve(organizationalUnits);
+			},(errMsg) => {
+				console.error('Unable to load organizations');
+				
+				reject(errMsg);
+			});
 		});
-		this.registerRequest(request);
 	}
 	
 	// The list of organizational units is invalidated
@@ -166,19 +175,17 @@ class AbstractFetchedDataContainer extends React.Component {
 		cache.invalidateData(config.ouBaseUri);
 	}
 	
-	loadOrganizationalUnit(ou,cb,ecb = undefined) {
-		let request;
-		request = cache.getData(config.composeOrganizationalUnitURI(ou),'organizational unit ' + ou,(organizationalUnit) => {
-			if(cb) {
-				cb(organizationalUnit);
-			}
-		},(errMsg) => {
-			console.error('Unable to load organization ' + ou);
-			if(ecb) {
-				ecb(errMsg);
-			}
+	organizationalUnitPromise(ou) {
+		return new Promise((resolve,reject) => {
+			cache.getDataPromise(
+				config.composeOrganizationalUnitURI(ou),
+				'organizational unit ' + ou,
+				this.registerRequest
+			).then(resolve,(errMsg) => {
+				console.error('Unable to load organization ' + ou);
+				reject(errMsg);
+			});
 		});
-		this.registerRequest(request);
 	}
 	
 	// When an ou is invalidated, the cache of all ous should also be invalidated
@@ -187,44 +194,50 @@ class AbstractFetchedDataContainer extends React.Component {
 		cache.invalidateData(config.composeOrganizationalUnitURI(ou));
 	}
 	
-	loadGroupsSchema(cb,ecb = undefined) {
+	groupsSchemaPromise() {
 		// https://stackoverflow.com/questions/34956479/how-do-i-setstate-for-nested-array
-		let request;
-		request = cache.getData(config.groupsBaseUri + '?schema','groups schema',(groupsSchema) => {
-			this.onChange((prevState) => {
-				return {
-					schemas: {
-						...prevState.schemas,
-						groups: groupsSchema
-					}
-				};
+		return new Promise((resolve,reject) => {
+			cache.getDataPromise(
+				config.groupsBaseUri + '?schema',
+				'groups schema',
+				this.registerRequest,
+				false,
+				false,
+				DEFAULT_SCHEMA_CACHE_TTL
+			).then((groupsSchema) => {
+				this.onChange((prevState) => {
+					return {
+						schemas: {
+							...prevState.schemas,
+							groups: groupsSchema
+						}
+					};
+				});
+				
+				resolve(groupsSchema);
+			},(errMsg) => {
+				console.error('Unable to load groups schema');
+				reject(errMsg);
 			});
-			if(cb) {
-				cb(groupsSchema);
-			}
-		},(errMsg) => {
-			console.error('Unable to load groups schema');
-			if(ecb) {
-				ecb(errMsg);
-			}
-		},false,false,DEFAULT_SCHEMA_CACHE_TTL);
-		this.registerRequest(request);
+		});
 	}
 	
-	loadGroups(cb,ecb = undefined) {
-		let request;
-		request = cache.getData(config.groupsBaseUri,'groups',(groups) => {
-			this.onChange({groups: groups});
-			if(cb) {
-				cb(groups);
-			}
-		},(errMsg) => {
-			console.error('Unable to load groups');
-			if(ecb) {
-				ecb(errMsg);
-			}
+	groupsPromise() {
+		return new Promise((resolve,reject) => {
+			cache.getDataPromise(
+				config.groupsBaseUri,
+				'groups',
+				this.registerRequest
+			).then((groups) => {
+				this.onChange({groups: groups});
+				
+				resolve(groups);
+			},(errMsg) => {
+				console.error('Unable to load groups');
+				
+				reject(errMsg);
+			});
 		});
-		this.registerRequest(request);
 	}
 	
 	// The list of groups is invalidated
@@ -232,19 +245,19 @@ class AbstractFetchedDataContainer extends React.Component {
 		cache.invalidateData(config.groupsBaseUri);
 	}
 	
-	loadGroup(groupname,cb,ecb = undefined) {
-		let request;
-		request = cache.getData(config.composeGroupURI(groupname),'group ' + groupname,(group) => {
-			if(cb) {
-				cb(group);
-			}
-		},(errMsg) => {
-			console.error('Unable to load group ' + groupname);
-			if(ecb) {
-				ecb(errMsg);
-			}
+	groupPromise(groupname) {
+		return new Promise((resolve,reject) => {
+			cache.getDataPromise(
+				config.composeGroupURI(groupname),
+				'group ' + groupname,
+				this.registerRequest
+			).then((group) => {
+				resolve(group);
+			},(errMsg) => {
+				console.error('Unable to load group ' + groupname);
+				reject(errMsg);
+			});
 		});
-		this.registerRequest(request);
 	}
 	
 	// When a group is invalidated, the cache of all groups should also be invalidated
@@ -268,36 +281,34 @@ class AbstractFetchedDataContainer extends React.Component {
 			});
 	}
 	
-	loadSelectableOrganizationalUnits(cb = undefined,ecb = undefined) {
-		this.loadOrganizationalUnits((organizationalUnits) => {
-			let selectableOUs = organizationalUnits.map((ou) => {
-				return {
-					label: ou.description + ' (' + ou.organizationalUnit + ')',
-					value: ou.organizationalUnit
-				};
+	selectableOrganizationalUnitsPromise() {
+		return this.organizationalUnitsPromise()
+			.then((organizationalUnits) => {
+				let selectableOUs = organizationalUnits.map((ou) => {
+					return {
+						label: ou.description + ' (' + ou.organizationalUnit + ')',
+						value: ou.organizationalUnit
+					};
+				});
+				this.onChange({ selectableOUs: selectableOUs });
+				
+				return selectableOUs;
 			});
-			this.onChange({ selectableOUs: selectableOUs });
-			
-			if(cb) {
-				cb(selectableOUs);
-			}
-		},ecb);
 	}
 	
-	loadSelectableGroups(cb = undefined,ecb = undefined) {
-		this.loadGroups((groups) => {
-			let selectableGroups = groups.map((group) => {
-				return {
-					label: group.description + ' (' + group.cn + ')',
-					value: group.cn
-				};
+	selectableGroupsPromise() {
+		return this.groupsPromise()
+			.then((groups) => {
+				let selectableGroups = groups.map((group) => {
+					return {
+						label: group.description + ' (' + group.cn + ')',
+						value: group.cn
+					};
+				});
+				this.onChange({ selectableGroups: selectableGroups });
+				
+				return selectableGroups;
 			});
-			this.onChange({ selectableGroups: selectableGroups });
-			
-			if(cb) {
-				cb(selectableGroups);
-			}
-		},ecb);
 	}
 	
 	listDocumentsPromise(docsBaseURI,label) {
@@ -348,6 +359,7 @@ class AbstractFetchedDataContainer extends React.Component {
 		});
 	}
 	
+	// This is one of the few methods which is not going to be translated to the promises system
 	overwriteDocument(docsBaseURI,documentName,content,mime,label,cb,ecb = undefined) {
 		let fullLabel = 'doc-' + label + '-' + documentName;
 		let query = {

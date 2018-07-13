@@ -22,6 +22,7 @@ import UsersGroupsFormContainer from 'components/users/UsersGroupsFormContainer.
 
 import OrganizationalUnitsContainer from 'components/organizationalUnits/OrganizationalUnitsContainer.jsx';
 import OrganizationalUnitFormContainer from 'components/organizationalUnits/OrganizationalUnitFormContainer.jsx';
+import OrganizationalUnitEditFormContainer from 'components/organizationalUnits/OrganizationalUnitEditFormContainer.jsx';
 import OrganizationalUnitNewFormContainer from 'components/organizationalUnits/OrganizationalUnitNewFormContainer.jsx';
 import OrganizationalUnitsUsersContainer from 'components/organizationalUnits/OrganizationalUnitsUsersContainer.jsx';
 
@@ -103,7 +104,7 @@ ReactDOM.render((
                     <IndexRoute component={OrganizationalUnitsContainer}/>
                     <Route path="list" name="List Organizational Units" component={OrganizationalUnitsContainer} />
                     <Route path="addUser/:organizationalUnit" name="Add User" staticName component={UserNewFormContainer} task={'new_privileged_ou'} />
-                    <Route path="edit/:organizationalUnit" name="Edit" staticName component={OrganizationalUnitFormContainer} task={'edit'} />
+                    <Route path="edit/:organizationalUnit" name="Edit" staticName component={OrganizationalUnitEditFormContainer} task={'edit'} />
                     <Route path="view/:organizationalUnit" name="View" staticName component={OrganizationalUnitFormContainer} task={'view'} />
                     <Route path="new" name="New" component={OrganizationalUnitNewFormContainer} />
                     <Route path="users" name="Users in Organizational Units" component={OrganizationalUnitsUsersContainer} />

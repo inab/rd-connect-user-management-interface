@@ -155,10 +155,10 @@ class UMCache {
 					responseText += 'Ajax request aborted.';
 					break;
 				default:
-					responseText += 'Uncaught Error: ' + jqXhr.responseText;
+					responseText += 'Uncaught Error (' + jqXhr.status + '): ' + jqXhr.responseText;
 					break;
 			}
-			console.error(responseText);
+			console.error('ERROR',errorThrown,responseText);
 			if(ecb) {
 				ecb({label: label, error: responseText, status: jqXhr.status});
 			}

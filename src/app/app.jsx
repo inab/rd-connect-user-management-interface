@@ -38,7 +38,7 @@ import DocumentsGroupContainer from 'components/documents/DocumentsGroupContaine
 import DocumentsGroupNew from 'components/documents/DocumentsGroupNew.jsx';
 
 import MailingContainer from 'components/mailing/MailingContainer.jsx';
-import NewUserMailTemplatesContainer from 'components/mailing/NewUserMailTemplatesContainer.jsx';
+import MailTemplatesContainer from 'components/mailing/MailTemplatesContainer.jsx';
 
 //var _APP_INFO = {
 //  name: 'RD-Connect User Management Interface',
@@ -128,7 +128,7 @@ ReactDOM.render((
                 <Route path="mail" name="Mail tasks" component={Box} onEnter={requireAuth}>
 					<IndexRoute component={MailingContainer} />
 					<Route path="platformMailing" name="Send massive e-mail" component={MailingContainer} />
-					<Route path="newUserTemplatesManagement" name="New User Template Management" component={NewUserMailTemplatesContainer} />
+					<Route path="domains/:domainId" name="Mail Domain Template Management" staticName component={MailTemplatesContainer} />
                 </Route>
             </Route>
         </Router>

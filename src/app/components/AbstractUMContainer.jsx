@@ -6,6 +6,7 @@ import auth from 'components/auth.jsx';
 
 // The schemas are not going to change, so cache them harder
 const DEFAULT_SCHEMA_CACHE_TTL = 60 * 60 * 1000;
+const DEFAULT_TEMPLATE_DOMAINS_CACHE_TTL = DEFAULT_SCHEMA_CACHE_TTL;
 
 class AbstractFetchedDataContainer extends React.Component {
 	constructor(props,context) {
@@ -490,20 +491,62 @@ class AbstractFetchedDataContainer extends React.Component {
 		});
 	}
 	
-	newUserTemplateDocumentsPromise() {
-		return this.listDocumentsPromise(config.mailingBaseUri + '/newUser','newUserTemplates');
+	templateDocumentsPromise(domainId) {
+		return this.listDocumentsPromise(config.mailingBaseUri + '/' + encodeURIComponent(domainId),domainId + 'Templates');
 	}
 	
-	templateMailPromise(files) {
+	templateDomainsPromise() {
+		return new Promise((resolve,reject) => {
+			// It is not being returned through resolve or reject
+			// because we want to call them after all the content
+			cache.getDataPromise(
+				config.mailingBaseUri,
+				'Mail template domains',
+				this.registerRequest,
+				false,
+				false,
+				DEFAULT_TEMPLATE_DOMAINS_CACHE_TTL
+			).then(resolve,(errMsg) => {
+				console.error('Unable to load mail template domains');
+				
+				reject(errMsg);
+			});
+		});
+	}
+	
+	templateDomainPromise(apiKey) {
+		return new Promise((resolve,reject) => {
+			// It is not being returned through resolve or reject
+			// because we want to call them after all the content
+			cache.getDataPromise(
+				config.mailingBaseUri + '/' + encodeURIComponent(apiKey),
+				'Mail template domain ' + apiKey,
+				this.registerRequest,
+				false,
+				false,
+				DEFAULT_TEMPLATE_DOMAINS_CACHE_TTL
+			).then(resolve,(errMsg) => {
+				console.error('Unable to load mail template domain ' + apiKey);
+				
+				reject(errMsg);
+			});
+		});
+	}
+	
+	templateMailPromise(domainId,files) {
 		return new Promise((resolve,reject) => {
 			let templatePromise;
 			let promArray = [];
+			
+			let docPath = config.mailingBaseUri + '/' + encodeURIComponent(domainId);
+			let docLabel = domainId + 'Templates';
+			
 			files.forEach(file => {
 				if(file.documentClass === 'mailTemplate') {
-					templatePromise = this.documentPromise(config.mailingBaseUri + '/newUser',file,'newUserTemplates');
+					templatePromise = this.documentPromise(docPath,file,docLabel);
 				} else {
 					promArray.push(
-						this.documentPromise(config.mailingBaseUri + '/newUser',file,'newUserTemplates')
+						this.documentPromise(docPath,file,docLabel)
 					);
 				}
 			});
@@ -515,25 +558,29 @@ class AbstractFetchedDataContainer extends React.Component {
 				}
 				resolve(Promise.all(wholeP));
 			} else {
-				reject({label:'noTemplate',error:'There was no template available',status:-1});
+				reject({label:'noTemplate',error:'There was no template available in domain ' + domainId,status:-1});
 			}
 		});
 	}
 	
-	saveTemplateMailPromise(mailTemplateFile,mailTemplateAttachments) {
+	saveTemplateMailPromise(domainId,mailTemplateFile,mailTemplateAttachments) {
 		return new Promise((resolve,reject) => {
 			let files = [mailTemplateFile,...mailTemplateAttachments];
 			let promArray = [];
+			
+			let docPath = config.mailingBaseUri + '/' + encodeURIComponent(domainId);
+			let docLabel = domainId + 'Templates';
+			
 			files.forEach(file => {
 				promArray.push(
-					this.overwriteDocumentPromise(config.mailingBaseUri + '/newUser',file,'newUserTemplates')
+					this.overwriteDocumentPromise(docPath,file,docLabel)
 				);
 			});
 			// Report no template was available
 			if(promArray.length > 0) {
 				resolve(Promise.all(promArray));
 			} else {
-				reject({label:'noTemplate',error:'There was no template available',status:-1});
+				reject({label:'noTemplate',error:'There was no template available in domain ' + domainId,status:-1});
 			}
 		});
 	}

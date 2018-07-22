@@ -4,7 +4,7 @@ import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
 import { Button, ControlLabel, Glyphicon, Modal } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 
-class NewUserMailTemplatesContainer extends AbstractFetchedDataContainer {
+class MailTemplatesContainer extends AbstractFetchedDataContainer {
 	constructor(props,context) {
 		super(props,context);
 		this.history = props.history;
@@ -13,6 +13,8 @@ class NewUserMailTemplatesContainer extends AbstractFetchedDataContainer {
 	componentWillMount() {
 		super.componentWillMount();
 		this.setState({
+			domainId: this.props.params.domainId,
+			templateDomain: null,
 			modalTitle: null,
 			error: null,
 			showModal: false,
@@ -31,9 +33,16 @@ class NewUserMailTemplatesContainer extends AbstractFetchedDataContainer {
 			});
 		};
 		
-		this.newUserTemplateDocumentsPromise()
+		this.templateDomainPromise(this.state.domainId)
+			.then((templateDomain) => {
+				this.setState({
+					templateDomain: templateDomain
+				});
+				
+				return this.templateDocumentsPromise(this.state.domainId);
+			},errHandler)
 			.then((listing) => {
-				return this.templateMailPromise(listing);
+				return this.templateMailPromise(this.state.domainId,listing);
 			},errHandler)
 			.then((mailTemplateFiles) => {
 				//let mailTemplate = '<p>Component in development</p>';
@@ -46,6 +55,29 @@ class NewUserMailTemplatesContainer extends AbstractFetchedDataContainer {
 			},errHandler);
 	}
 	
+	componentWillReceiveProps(nextProps,nextContext) {
+		if(this.props.params.domainId !== nextProps.domainId) {
+			// Resetting to a default state
+			this.setState({
+				domainId: nextProps.params.domainId,
+				templateDomain: null,
+				modalTitle: null,
+				error: null,
+				showModal: false,
+				
+				mailTemplate: RichTextEditor.createEmptyValue(),
+				attachments: [],
+				loaded: false,
+			});
+		}
+	}
+	
+	componentDidUpdate(prevProps,prevState,prevContext) {
+		if(prevProps.params.domainId !== this.state.domainId) {
+			// Re-fetch the templates
+			this.componentDidMount();
+		}
+	}
 	
 	close() {
 		if(this.state.modalTitle === 'Error'){
@@ -70,13 +102,15 @@ class NewUserMailTemplatesContainer extends AbstractFetchedDataContainer {
 		
 		this.state.mailTemplateFile.content = this.state.mailTemplate.toString('html');
 		this.state.mailTemplateFile.mime = 'text/html';
-		this.saveTemplateMailPromise(this.state.mailTemplateFile,this.state.mailTemplateAttachments)
+		this.saveTemplateMailPromise(this.state.domainId,this.state.mailTemplateFile,this.state.mailTemplateAttachments)
 			.then(() => {
 				this.setState({modalTitle:'Success', error: 'Mail template (and attachments) properly stored!!', showModal: true});
 			},errHandler);
 	}
 
 	render() {
+		let loaded = this.state.loaded;
+		
 		return (
 		<div>
 			<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
@@ -90,10 +124,19 @@ class NewUserMailTemplatesContainer extends AbstractFetchedDataContainer {
 					<Button bsStyle="info" onClick={() => this.close()}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
 				</Modal.Footer>
 			</Modal>
-			{ this.state.loaded && 
+			{ loaded && 
 				<form onSubmit={this.onSubmit.bind(this)}>
-					<div style={{float: 'left',clear:'left'}}><ControlLabel>Template mail body</ControlLabel></div>
-					<div style={{float: 'right',clear:'right'}}>(accepted keywords: <b>[% username %]</b> and <b>[% fullname %]</b>)</div>
+					<div style={{float: 'left',clear:'left'}}><ControlLabel>{this.state.templateDomain.desc}</ControlLabel></div>
+					<div style={{float: 'right',clear:'right'}}>(accepted keywords: {
+						this.state.templateDomain.tokens.map((t,i) => {
+							let retval = [];
+							if(i > 0) {
+								retval.push(this.state.templateDomain.tokens.length === (i + 1) ? ' and ' : ', ');
+							}
+							retval.push(<b>{'[% ' + t + ' %]'}</b>);
+							return retval;
+						})
+					})</div>
 					<div style={{clear: 'both'}}>
 						<RichTextEditor
 							className={'umi-mailing'}
@@ -124,11 +167,16 @@ class NewUserMailTemplatesContainer extends AbstractFetchedDataContainer {
 					</div>
 				</form>
 			}
-			{ this.state.loaded || <div>Loading template...</div> }
+			{ loaded || <div>Loading template...</div> }
 		</div>
 		);
 	}
 }
 
 
-export default NewUserMailTemplatesContainer;
+MailTemplatesContainer.propTypes = {
+    params: React.PropTypes.object,
+    history:  React.PropTypes.object
+};
+
+export default MailTemplatesContainer;

@@ -169,6 +169,9 @@ class UserEditForm extends React.Component {
 		//schema.properties.userPassword2 = schema.properties.userPassword;
 		//We remove userPassword from the schema since password modifications will be done from another form
 		delete schema.properties.userPassword;
+		
+		// This structure is not going to be used in the user interface
+		delete schema.properties.management;
 
 		//First we create an array with the fields with the desired order.
 		//var order = ['username','cn','givenName','surname','userPassword','userPassword2'];
@@ -237,6 +240,29 @@ class UserEditForm extends React.Component {
 				...keysLayout
 			],
 			'username': {
+				'ui:readonly': true,
+			},
+			'acceptedGDPR': {
+				//'ui:widget': 'alt-datetime',
+				'ui:readonly': true,
+			},
+			'registeredEmails': {
+				'items': {
+					'registeredAt': {
+						'ui:widget': 'alt-datetime',
+					},
+					'lastValidatedAt': {
+						'ui:widget': 'alt-datetime',
+					},
+					'validUntil': {
+						'ui:widget': 'alt-datetime',
+					},
+					'validQuarantineCheckUntil': {
+						'ui:widget': 'alt-datetime',
+					},
+				}
+			},
+			'email': {
 				'ui:readonly': true,
 			},
 			/*'userPassword': {

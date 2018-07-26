@@ -1,11 +1,10 @@
-var Vinyl = require('vinyl'),
-    fs = require('fs'),
-    packageJSON = JSON.parse(fs.readFileSync('./package.json')),
-    git = require('git-rev-sync');
+const fs = require('fs');
+const packageJSON = JSON.parse(fs.readFileSync('./package.json'));
+const git = require('git-rev-sync');
 
 module.exports = function(opts) {
     opts                 = opts || {};
-    opts.filename		= opts.filename || buildinfo.json;
+    opts.filename		= opts.filename || 'buildinfo.json';
     opts.tag             = opts.tag || 'head';
     opts.version         = !!opts.version || true;
     opts.commit          = !!opts.commit;
@@ -71,18 +70,7 @@ module.exports = function(opts) {
 	//
 	//// Reassign the buffer
 	//file.contents = new Buffer(content);
-
-	var src = require('stream').Readable({ objectMode: true })
-	src._read = function () {
-		this.push(new Vinyl({
-			cwd: "",
-			base: null,
-			path: opts.filename,
-			contents: new Buffer(JSON.stringify(buildInfo))
-		}));
-		this.push(null);
-	};
-
-	// Notify Gulp that we are done
-	return src;
+	
+	// Save the file
+	fs.writeFileSync(opts.filename,JSON.stringify(buildInfo));
 };

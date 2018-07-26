@@ -8,7 +8,7 @@ class Main extends React.Component {
         return (
       <div>
         <header className="primary-header">
-            <Navigation projectName="react-bootstrap-starter" />
+            <Navigation projectName="RD-Connect UMI" />
         </header>
         <aside className="primary-aside" />
         <main className="container">

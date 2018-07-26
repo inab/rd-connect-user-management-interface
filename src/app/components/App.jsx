@@ -56,7 +56,7 @@ class App extends React.Component {
 									<Link to="/login">Login</Link>
 									)}
 						</div>
-						<Navigation projectName="react-bootstrap-starter" />
+						<Navigation projectName="RD-Connect UMI" />
 					</header>
 					<aside className="primary-aside" />
 					<main className = "container">

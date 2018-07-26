@@ -1,44 +1,45 @@
 import React from 'react';
+import 'main.less';
 import ReactDOM from 'react-dom';
 import { hashHistory, Router, Route, IndexRoute } from 'react-router';
 //import withExampleBasename from 'components/withExampleBasename.js';
 //import sentryConfig from './sentryConfig.js';
 
-import auth from 'components/auth.jsx';
-import App from 'components/App.jsx';
-import Login from 'components/Login.jsx';
-import Logout from 'components/Logout.jsx';
-import UserProfile from 'components/UserProfile.jsx';
+import auth from './components/auth.jsx';
+import App from './components/App.jsx';
+import Login from './components/Login.jsx';
+import Logout from './components/Logout.jsx';
+import UserProfile from './components/UserProfile.jsx';
 import injectTapEventPlugin from 'react-tap-event-plugin';
-import Box from 'components/Box.jsx';
-import UsersContainer from 'components/users/UsersContainer.jsx';
-import UserFormContainer from 'components/users/UserFormContainer.jsx';
-import PasswordContainer from 'components/users/PasswordContainer.jsx';
+import Box from './components/Box.jsx';
+import UsersContainer from './components/users/UsersContainer.jsx';
+import UserFormContainer from './components/users/UserFormContainer.jsx';
+import PasswordContainer from './components/users/PasswordContainer.jsx';
 
-import UserEditFormContainer from 'components/users/UserEditFormContainer.jsx';
-import UserNewFormContainer from 'components/users/UserNewFormContainer.jsx';
-import UsersGroupsContainer from 'components/users/UsersGroupsContainer.jsx';
-import UsersGroupsFormContainer from 'components/users/UsersGroupsFormContainer.jsx';
+import UserEditFormContainer from './components/users/UserEditFormContainer.jsx';
+import UserNewFormContainer from './components/users/UserNewFormContainer.jsx';
+import UsersGroupsContainer from './components/users/UsersGroupsContainer.jsx';
+import UsersGroupsFormContainer from './components/users/UsersGroupsFormContainer.jsx';
 
-import OrganizationalUnitsContainer from 'components/organizationalUnits/OrganizationalUnitsContainer.jsx';
-import OrganizationalUnitFormContainer from 'components/organizationalUnits/OrganizationalUnitFormContainer.jsx';
-import OrganizationalUnitEditFormContainer from 'components/organizationalUnits/OrganizationalUnitEditFormContainer.jsx';
-import OrganizationalUnitNewFormContainer from 'components/organizationalUnits/OrganizationalUnitNewFormContainer.jsx';
-import OrganizationalUnitsUsersContainer from 'components/organizationalUnits/OrganizationalUnitsUsersContainer.jsx';
+import OrganizationalUnitsContainer from './components/organizationalUnits/OrganizationalUnitsContainer.jsx';
+import OrganizationalUnitFormContainer from './components/organizationalUnits/OrganizationalUnitFormContainer.jsx';
+import OrganizationalUnitEditFormContainer from './components/organizationalUnits/OrganizationalUnitEditFormContainer.jsx';
+import OrganizationalUnitNewFormContainer from './components/organizationalUnits/OrganizationalUnitNewFormContainer.jsx';
+import OrganizationalUnitsUsersContainer from './components/organizationalUnits/OrganizationalUnitsUsersContainer.jsx';
 
-import GroupsContainer from 'components/groups/GroupsContainer.jsx';
-import GroupFormContainer from 'components/groups/GroupFormContainer.jsx';
-import GroupNewFormContainer from 'components/groups/GroupNewFormContainer.jsx';
+import GroupsContainer from './components/groups/GroupsContainer.jsx';
+import GroupFormContainer from './components/groups/GroupFormContainer.jsx';
+import GroupNewFormContainer from './components/groups/GroupNewFormContainer.jsx';
 
-import DocumentsUsersContainer from 'components/documents/DocumentsUsersContainer.jsx';
-import DocumentsUserContainer from 'components/documents/DocumentsUserContainer.jsx';
-import DocumentsUserNew from 'components/documents/DocumentsUserNew.jsx';
-import DocumentsGroupsContainer from 'components/documents/DocumentsGroupsContainer.jsx';
-import DocumentsGroupContainer from 'components/documents/DocumentsGroupContainer.jsx';
-import DocumentsGroupNew from 'components/documents/DocumentsGroupNew.jsx';
+import DocumentsUsersContainer from './components/documents/DocumentsUsersContainer.jsx';
+import DocumentsUserContainer from './components/documents/DocumentsUserContainer.jsx';
+import DocumentsUserNew from './components/documents/DocumentsUserNew.jsx';
+import DocumentsGroupsContainer from './components/documents/DocumentsGroupsContainer.jsx';
+import DocumentsGroupContainer from './components/documents/DocumentsGroupContainer.jsx';
+import DocumentsGroupNew from './components/documents/DocumentsGroupNew.jsx';
 
-import MailingContainer from 'components/mailing/MailingContainer.jsx';
-import MailTemplatesContainer from 'components/mailing/MailTemplatesContainer.jsx';
+import MailingContainer from './components/mailing/MailingContainer.jsx';
+import MailTemplatesContainer from './components/mailing/MailTemplatesContainer.jsx';
 
 //var _APP_INFO = {
 //  name: 'RD-Connect User Management Interface',

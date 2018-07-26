@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 const GitInfoReplace = require('./info-replace.js');
 
@@ -215,6 +216,7 @@ module.exports = (env, argv) => {
 			]
 		},
 		plugins: [
+			new HardSourceWebpackPlugin(),
 			new webpack.HashedModuleIdsPlugin(),
 			//new webpack.ProvidePlugin({
 			//// Parts here are needed to have bootstrap working properly

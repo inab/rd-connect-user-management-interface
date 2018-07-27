@@ -45,10 +45,10 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 				return this.templateMailPromise(this.state.domainId,listing);
 			},errHandler)
 			.then((mailTemplateFiles) => {
-				//let mailTemplate = '<p>Component in development</p>';
 				this.setState({
 					mailTemplateFile: mailTemplateFiles[0],
 					mailTemplateAttachments: (mailTemplateFiles.length > 1) ? mailTemplateFiles[1] : [],
+					attachments: (mailTemplateFiles.length > 1) ? mailTemplateFiles[1].map((file) => { return new File([file.content], file.cn, {type: file.mime}); }) : [],
 					mailTemplate: RichTextEditor.createValueFromString(mailTemplateFiles[0].content, 'html'),
 					loaded: true
 				});
@@ -89,26 +89,29 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 	}
 	
 	onDropAttachments(files) {
-		this.onChange({attachments:files});
+		this.setState((prevState,props) => {
+			return {
+				attachments: [
+					...prevState.attachments,
+					...files
+				]
+			};
+		});
 	}
-
-	attachmentsToDataURL(index,cb) {
-		if(index < this.state.attachments.length) {
-			let reader = new FileReader();
-			console.log(this.state.attachments[index]);
-			reader.addEventListener('load',() => {
-				this.state.mailTemplateAttachments[index] = {
-					content: reader.result,
-					mime: this.state.attachments[index].type,
-					cn: this.state.attachments[index].name
-				};
-				this.attachmentsToDataURL(index + 1,cb);
-			}, false);
-
-			reader.readAsDataURL(this.state.attachments[index]);
-		} else if(cb) {
-			cb();
-		}
+	
+	attachmentClick(target,f) {
+		target.setAttribute("download",f.name);
+		target.setAttribute("href",URL.createObjectURL(f));
+	}
+	
+	attachmentRemove(numF) {
+		this.setState((prevState,props) => {
+			let newAtt = [ ...prevState.attachments ];
+			newAtt.splice(numF,1);
+			return {
+				attachments: newAtt
+			};
+		});
 	}
 	
 	onSubmit() {
@@ -119,17 +122,49 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 			});
 		};
 		
-		this.mailTemplateAttachments = [];
-		this.attachmentsToDataURL(0,() => {
-			this.state.mailTemplateFile.content = this.state.mailTemplate.toString('html');
-			this.state.mailTemplateFile.mime = 'text/html';
-			this.saveTemplateMailPromise(this.state.domainId,this.state.mailTemplateFile,this.state.mailTemplateAttachments)
-				.then(() => {
-					this.setState({modalTitle:'Success', error: 'Mail template (and attachments) properly stored!!', showModal: true});
-				},errHandler);
+		let mailTemplateFile = {
+			...this.state.mailTemplateFile,
+			content: this.state.mailTemplate.toString('html'),
+			mime: 'text/html'
+		};
+		
+		// Let's identify the attachments to be erased
+		let deletedAttachments = [];
+		if(this.state.mailTemplateAttachments.length > 0) {
+			if(this.state.attachments.length > 0) {
+				deletedAttachments = this.state.mailTemplateAttachments.filter(removedAtt => this.state.attachments.every(att => att.name !== removedAtt.cn));
+			} else {
+				deletedAttachments = this.state.mailTemplateAttachments;
+			}
+		}
+		
+		// And the touched ones
+		let attachments = [];
+		if(this.state.attachments.length > 0) {
+			if(this.state.mailTemplateAttachments.length > 0) {
+				attachments = this.state.attachments.filter(att => this.state.mailTemplateAttachments.every(prevAtt => att.name !== prevAtt.cn || att !== prevAtt.content));
+			} else {
+				attachments = this.state.attachments;
+			}
+		}
+		let mailTemplateAttachments = attachments.map((att) => {
+			return {
+				content: att,
+				mime: att.type,
+				cn: att.name
+			};
 		});
+		
+		this.saveTemplateMailPromise(this.state.domainId,mailTemplateFile,mailTemplateAttachments)
+			.then(() => {
+				// Let's remove those attachments which have disappeared
+				return deletedAttachments.length > 0 ? this.deleteTemplateAttachmentsPromise(this.state.domainId,deletedAttachments) : true;
+			},errHandler)
+			.then(() => {
+				this.setState({modalTitle:'Success', error: 'Mail template (and attachments) properly stored!!', showModal: true});
+			},errHandler);
 	}
-
+	
 	render() {
 		let loaded = this.state.loaded;
 		
@@ -177,7 +212,7 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 						<div style={{float:'left'}}>
 							<ol>
 							{
-								this.state.attachments.map(f => <li key={f.name}>{f.name} <i>({f.size} bytes)</i></li>)
+								this.state.attachments.map((f,numF) => <li key={f.name}><a onClick={(e) => { this.attachmentClick(e.target,f); } }>{f.name}</a> <i>({f.size} bytes)</i> <a style={{ color: 'red' }} onClick={() => this.attachmentRemove(numF)}>remove<Glyphicon glyph="trash" /></a></li>)
 							}
 							</ol>
 						</div>

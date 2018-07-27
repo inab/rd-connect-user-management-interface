@@ -361,6 +361,61 @@ class AbstractFetchedDataContainer extends React.Component {
 		});
 	}
 	
+	deleteDocumentPromise(docsBaseURI,docDesc,label) {
+		return new Promise((resolve,reject) => {
+			let documentName = typeof docDesc === 'string' ? docDesc : docDesc.cn;
+			let fullLabel = 'doc-' + label + '-' + documentName;
+			let query = {
+				url: docsBaseURI + '/documents/' + documentName,
+				type: 'DELETE',
+				cache: false,
+				processData: false,
+				//dataType: 'text',
+				headers: auth.getAuthHeaders()
+			};
+			
+			// The cached document must be invalidated,
+			// so it is got fresh on next try
+			cache.invalidateData(query.url);
+			
+			let request = jQuery.ajax(query)
+			.done((data) => {
+				resolve(data);
+			})
+			.fail((jqXhr, textStatus, errorThrown) => {
+				//console.log('Failed to retrieve user Information',jqXhr);
+				let responseText = 'Failed to remove ' + fullLabel + ' Information. ';
+				switch(jqXhr.status) {
+					case 0:
+						responseText += 'Not connect: Verify Network.';
+						break;
+					case 404:
+						responseText += 'Requested User not found [404]';
+						break;
+					case 500:
+						responseText += 'Internal Server Error [500].';
+						break;
+					case 'parsererror':
+						responseText += 'Requested JSON parse failed.';
+						break;
+					case 'timeout':
+						responseText += 'Time out error.';
+						break;
+					case 'abort':
+						responseText += 'Ajax request aborted.';
+						break;
+					default:
+						responseText += 'Uncaught Error: ' + jqXhr.responseText;
+						break;
+				}
+				console.error(responseText);
+				reject({label: label, error: responseText, status: jqXhr.status});
+			});
+			
+			this.registerRequest(request);
+		});
+	}
+	
 	// This is one of the few methods which is not going to be translated to the promises system
 	overwriteDocument(docsBaseURI,documentName,content,mime,label,cb,ecb = undefined) {
 		let fullLabel = 'doc-' + label + '-' + documentName;
@@ -563,6 +618,17 @@ class AbstractFetchedDataContainer extends React.Component {
 				reject({label:'noTemplate',error:'There was no template available in domain ' + domainId,status:-1});
 			}
 		});
+	}
+
+	deleteTemplateAttachmentsPromise(domainId,files) {
+		let docPath = config.mailingBaseUri + '/' + encodeURIComponent(domainId);
+		let docLabel = domainId + 'Templates';
+		
+		let promArray = files.map(file => {
+			return this.deleteDocumentPromise(docPath,file,docLabel)
+		});
+		
+		return Promise.all(promArray);
 	}
 	
 	saveTemplateMailPromise(domainId,mailTemplateFile,mailTemplateAttachments) {

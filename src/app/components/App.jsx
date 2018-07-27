@@ -18,21 +18,16 @@ class App extends React.Component {
 			canSubmit: false,
 			validationErrors: {}
 		});
-		auth.onChange = (loggedIn) => this.updateAuth(loggedIn);
-		//auth.login();
+		auth.onChangeListener((loggedIn) => this.updateAuth(loggedIn));
 	}
 	
 	updateAuth(loggedIn) {
 		this.setState({loggedIn: !!loggedIn,loginData: loggedIn ? loggedIn : {}});
-		//auth.getLoginData((loginData) => {
-		//	this.setState({
-		//		loginData: loginData
-		//	});
-		//});
 	}
 	
 	scheduleUserViewRedirect() {
-		auth.getLoginData((loginData) => {
+		auth.getLoginDataP()
+		.then((loginData) => {
 			this.history.push('/users/view/' + encodeURIComponent(loginData.username));
 		});
 	}

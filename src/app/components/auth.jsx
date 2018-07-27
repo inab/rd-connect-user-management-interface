@@ -14,15 +14,21 @@ class Auth {
 		this.userProps = null;
 		
 		// Forcing to get the login information
-		this.getLoginData(() => {
+		let setInit = () => {
 			this.initialized = true;
-		});
+		};
+		this.getLoginDataP()
+		.then(setInit,setInit);
 	}
 	
 	getAuthHeaders() {
 		return {
 			'X-RDConnect-UserManagement-Session': this.token
 		};
+	}
+	
+	onChangeListener(cb) {
+		this.onChange = cb;
 	}
 	
 	invalidateSession() {
@@ -52,110 +58,100 @@ class Auth {
 	}
 	
 	// This is an informational method
-	getLoginData(cb,ecb) {
-		if(this.userProps === null) {
-			if(this.token !== null) {
-				// Let's validate the session status, in a synchronous way
+	getLoginDataP() {
+		return new Promise((resolve,reject) => {
+			if(this.userProps === null) {
+				if(this.token !== null) {
+					// Let's validate the session status, in a synchronous way
+					jQuery.ajax({
+						type: 'GET',
+						url: config.apiBaseUri + '/login',
+						dataType: 'json',
+						//processData: false,
+						contentType: 'application/json',
+						headers: this.getAuthHeaders()
+					})
+					.done((newUserProps) => {
+						// Setting new data
+						this.setLoginData(newUserProps);
+						resolve(this.userProps);
+					})
+					.fail((xhr, status, err) => {
+						// As we cannot fetch the user information, remove
+						// all the session traces
+						this.invalidateSession();
+						reject({xhr: xhr, status: status, err: err});
+					});
+				} else {
+					reject({xhr: {},status: 401,err: 'Unauthorized'});
+				}
+			} else {
+				resolve(this.userProps);
+			}
+		});
+	}
+	
+	getLoginTokenP() {
+		// We validate the session here
+		return new Promise((resolve,reject) => {
+			this.getLoginDataP()
+			.then(() => {
+				resolve(this.token);
+			}, (err) => {
+				reject(err);
+			});
+		});
+	}
+	
+	login(username, password) {
+		//cb = arguments[arguments.length - 1];
+		return new Promise((resolve,reject) => {
+			if(localStorage.token) {
+				resolve(this.userProps);
+			}
+			pretendRequest(username, password)
+			.then((res) => {
+				this.setLoginData(res.userProps);
+				this.onChange(res.userProps);
+				resolve(res.userProps);
+			},(res) => {
+				this.onChange(false);
+				reject({status: res.status,errorMsg: res.errorMsg});
+			});
+		});
+	}
+	
+	logout() {
+		return new Promise((resolve,reject) => {
+			if(this.loggedIn()) {
+				let doInvalidateDone = () => {
+					this.invalidateSession();
+					this.onChange(false);
+					resolve();
+				};
+				
+				let doInvalidateFail = () => {
+					this.invalidateSession();
+					this.onChange(false);
+					reject();
+				};
+				
+				// Let's invalidate the session status
 				jQuery.ajax({
 					type: 'GET',
-					url: config.apiBaseUri + '/login',
+					url: config.apiBaseUri + '/logout',
 					dataType: 'json',
 					//processData: false,
 					contentType: 'application/json',
 					headers: this.getAuthHeaders()
 				})
-				.done((newUserProps) => {
-					// Setting new data
-					this.setLoginData(newUserProps);
-					if(cb !== undefined) {
-						cb(this.userProps);
-					}
-				})
-				.fail((xhr, status, err) => {
-					// As we cannot fetch the user information, remove
-					// all the session traces
-					this.invalidateSession();
-					if(ecb !== undefined) {
-						ecb(xhr, status, err);
-					}
-				});
-			} else if(ecb !== undefined) {
-				ecb({},401,'Unauthorized');
-			}
-		} else if(cb !== undefined) {
-			cb(this.userProps);
-		}
-		
-		// Let's return whatever we have
-		return this.userProps;
-	}
-	
-	getLoginToken(cb) {
-		// We validate the session here
-		this.getLoginData(() => {
-				if(cb !== undefined) {
-					cb(this.token);
-				}
-			}, () => {
-				if(cb !== undefined) {
-					cb(null);
-				}
-			}
-		);
-	}
-	
-	login(username, password, cb) {
-		//cb = arguments[arguments.length - 1];
-		if(localStorage.token) {
-			if(cb) {
-				cb(true);
-			}
-			this.onChange(true);
-			return;
-		}
-		pretendRequest(username, password, (res) => {
-			if(res.authenticated) {
-				this.setLoginData(res.userProps);
-				if(cb) {
-					cb(res.userProps,null,null);
-				}
-				this.onChange(res.userProps);
+				.done(doInvalidateDone)
+				.fail(doInvalidateFail);
 			} else {
-				if(cb) {
-					cb(false,res.status,res.errorMsg);
-				}
 				this.onChange(false);
+				resolve();
 			}
 		});
-	}
-	
-	logout(cb) {
-		if(this.loggedIn()) {
-			let doInvalidate = () => {
-				this.invalidateSession();
-				if(cb) {
-					cb();
-				}
-				this.onChange(false);
-			};
-			
-			// Let's invalidate the session status
-			jQuery.ajax({
-				type: 'GET',
-				url: config.apiBaseUri + '/logout',
-				dataType: 'json',
-				//processData: false,
-				contentType: 'application/json',
-				headers: this.getAuthHeaders()
-			})
-			.done(doInvalidate)
-			.fail(doInvalidate);
-		} else {
-			if(cb) {
-				cb();
-			}
-			this.onChange(false);
-		}
 	}
 	
 	loggedIn() {
@@ -165,27 +161,29 @@ class Auth {
 	onChange() {}
 }
 
-function pretendRequest(username, password, cb) {
-	jQuery.ajax({
-		type: 'POST',
-		url: config.apiBaseUri + '/login',
-		dataType: 'json',
-		//processData: false,
-		contentType: 'application/json',
-		data: JSON.stringify({
-			username: username,
-			password: password,
-			service: config.getService()
+function pretendRequest(username, password) {
+	return new Promise((resolve,reject) => {
+		jQuery.ajax({
+			type: 'POST',
+			url: config.apiBaseUri + '/login',
+			dataType: 'json',
+			//processData: false,
+			contentType: 'application/json',
+			data: JSON.stringify({
+				username: username,
+				password: password,
+				service: config.getService()
+			})
 		})
-	})
-	.done((newUserProps) => {
-		cb({
-			authenticated: true,
-			userProps: newUserProps
+		.done((newUserProps) => {
+			resolve({
+				authenticated: true,
+				userProps: newUserProps
+			});
+		})
+		.fail((xhr, status, err) => {
+			reject({ authenticated: false, status: xhr.status, errorMsg: err });
 		});
-	})
-	.fail((xhr, status, err) => {
-		cb({ authenticated: false, status: xhr.status, errorMsg: err });
 	});
 	
 	/*

@@ -17,7 +17,8 @@ class UserProfile extends React.Component {
 	}
 	
 	componentDidMount() {
-		auth.getLoginData((loginData) => {
+		auth.getLoginDataP()
+		.then((loginData) => {
 			this.setState({loginData: loginData, loaded: true });
 			//this.history.push('/users/view/' + encodeURIComponent(loginData.username));
 		}, () => {

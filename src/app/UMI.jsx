@@ -59,9 +59,10 @@ Raven.config(sentryURL, {
 const history = hashHistory;
 
 function requireAuth(nextState, replace, callback) {
-	auth.getLoginData((userProps) => {
+	auth.getLoginDataP()
+	.then((userProps) => {
 		callback();
-	},(xhr, status, err) => {
+	},({xhr, status, err}) => {
 		replace({
 			pathname: '/login',
 			state: { nextPathname: nextState.location.pathname }

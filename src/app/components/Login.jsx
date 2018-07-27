@@ -76,17 +76,17 @@ class Login extends React.Component {
       const username = model.username;
       //const pass = this.refs.pass.value;
       const password = model.password;
-      auth.login(username, password, (loggedIn,status,errorMsg) => {
-        if(!loggedIn){
-          return this.setState({ error: true, errorMsg: errorMsg, status: status });
-        }
-        const location = this.props.location;
-        if(location.state && location.state.nextPathname) {
-          this.props.router.replace(location.state.nextPathname);
-        } else {
-          this.props.router.replace('/users/view/' + encodeURIComponent(username));
-        }
-      });
+		auth.login(username, password)
+		.then(() => {
+			const location = this.props.location;
+			if(location.state && location.state.nextPathname) {
+				this.props.router.replace(location.state.nextPathname);
+			} else {
+				this.props.router.replace('/users/view/' + encodeURIComponent(username));
+			}
+		},({status,errorMsg}) => {
+			return this.setState({ error: true, errorMsg: errorMsg, status: status });
+		});
     }
 	
     render() {

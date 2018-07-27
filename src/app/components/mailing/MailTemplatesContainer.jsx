@@ -91,6 +91,25 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 	onDropAttachments(files) {
 		this.onChange({attachments:files});
 	}
+
+	attachmentsToDataURL(index,cb) {
+		if(index < this.state.attachments.length) {
+			let reader = new FileReader();
+			console.log(this.state.attachments[index]);
+			reader.addEventListener('load',() => {
+				this.state.mailTemplateAttachments[index] = {
+					content: reader.result,
+					mime: this.state.attachments[index].type,
+					cn: this.state.attachments[index].name
+				};
+				this.attachmentsToDataURL(index + 1,cb);
+			}, false);
+
+			reader.readAsDataURL(this.state.attachments[index]);
+		} else if(cb) {
+			cb();
+		}
+	}
 	
 	onSubmit() {
 		let errHandler = (err) => {
@@ -100,12 +119,15 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 			});
 		};
 		
-		this.state.mailTemplateFile.content = this.state.mailTemplate.toString('html');
-		this.state.mailTemplateFile.mime = 'text/html';
-		this.saveTemplateMailPromise(this.state.domainId,this.state.mailTemplateFile,this.state.mailTemplateAttachments)
-			.then(() => {
-				this.setState({modalTitle:'Success', error: 'Mail template (and attachments) properly stored!!', showModal: true});
-			},errHandler);
+		this.mailTemplateAttachments = [];
+		this.attachmentsToDataURL(0,() => {
+			this.state.mailTemplateFile.content = this.state.mailTemplate.toString('html');
+			this.state.mailTemplateFile.mime = 'text/html';
+			this.saveTemplateMailPromise(this.state.domainId,this.state.mailTemplateFile,this.state.mailTemplateAttachments)
+				.then(() => {
+					this.setState({modalTitle:'Success', error: 'Mail template (and attachments) properly stored!!', showModal: true});
+				},errHandler);
+		});
 	}
 
 	render() {

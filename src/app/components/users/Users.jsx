@@ -36,10 +36,10 @@ class Users extends React.Component {
 					{groupedData.map((ouUsers,i) => {
 						var organizationalUnit = ouUsers[0].organizationalUnit;
 						return (
-							<Panel collapsible defaultExpanded center header={
+							<Panel collapsible defaultExpanded header={
 									<div style={{width:'100%'}}>
 										{organizationalUnit}
-										<div style={{float: 'right',cleaer: 'right'}}>
+										<div style={{float: 'right',clear: 'right'}}>
 											<Link className="btn btn-primary" role="button" to={'/organizationalUnits/addUser/' + encodeURIComponent(organizationalUnit)}>Create User &nbsp;<Glyphicon glyph="user" /></Link>
 										</div>
 									</div>

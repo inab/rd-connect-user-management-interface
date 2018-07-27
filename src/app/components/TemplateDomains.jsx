@@ -30,7 +30,7 @@ class TemplateDomains extends AbstractFetchedDataContainer {
 			return (
 					<NavDropdown id="NavDropdown-TemplateDomains" eventKey={6.3} title={<Glyphicon glyph="envelope"> Templates</Glyphicon>}>{
 						this.state.templateDomains.map((templateDomain) => {
-								return <LinkContainer to={'/mail/domains/' + encodeURIComponent(templateDomain.apiKey)}><MenuItem>{templateDomain.desc}</MenuItem></LinkContainer>;
+								return <LinkContainer key={templateDomain.apiKey} to={'/mail/domains/' + encodeURIComponent(templateDomain.apiKey)}><MenuItem>{templateDomain.desc}</MenuItem></LinkContainer>;
 						})
 					}</NavDropdown>
 			);

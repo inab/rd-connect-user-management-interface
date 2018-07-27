@@ -39,7 +39,7 @@ class Navigation extends React.Component {
 						</NavDropdown>
 					</Nav>
 					<Nav pullRight>
-						<NavDropdown id="NavDropdown-Mailing" eventKey={6} title={<Glyphicon glyph="envelope"> <span style={{wordSpacing: "-0.5em"}}>Mail tasks</span></Glyphicon>}>
+						<NavDropdown id="NavDropdown-Mailing" eventKey={6} title={<Glyphicon glyph="envelope"> <span style={{wordSpacing: '-0.5em'}}>Mail tasks</span></Glyphicon>}>
 							<LinkContainer to="/mail/platformMailing"><MenuItem eventKey={6.1}>Send e-mail to the platform</MenuItem></LinkContainer>
 							<MenuItem divider />
 							<TemplateDomains />

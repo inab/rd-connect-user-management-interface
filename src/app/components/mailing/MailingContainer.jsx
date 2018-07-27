@@ -110,7 +110,29 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	}
 	
 	onDropAttachments(files) {
-		this.onChange({attachments:files});
+		this.setState((prevState,props) => {
+			return {
+				attachments: [
+					...prevState.attachments,
+					...files
+				]
+			};
+		});
+	}
+	
+	attachmentClick(target,f) {
+		target.setAttribute("download",f.name);
+		target.setAttribute("href",URL.createObjectURL(f));
+	}
+	
+	attachmentRemove(numF) {
+		this.setState((prevState,props) => {
+			let newAtt = [ ...prevState.attachments ];
+			newAtt.splice(numF,1);
+			return {
+				attachments: newAtt
+			};
+		});
 	}
 	
 	getSubjectValidationState() {
@@ -265,7 +287,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 								<div style={{float:'left'}}>
 									<ol>
 									{
-										this.state.attachments.map(f => <li key={f.name}>{f.name} <i>({f.size} bytes)</i></li>)
+										this.state.attachments.map(f => <li key={f.name}><a onClick={(e) => { this.attachmentClick(e.target,f); } }>{f.name}</a> <i>({f.size} bytes)</i></li>)
 									}
 									</ol>
 								</div>

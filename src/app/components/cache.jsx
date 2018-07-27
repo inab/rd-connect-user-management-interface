@@ -55,7 +55,7 @@ class UMCache {
 		}
 	}
 	
-	getRawDataPromise(url,label,registerRequest = undefined,isAuth = false,fresh = false,ttl = DEFAULT_TTL) {
+	getRawDataPromise(url,label,asBlob = true,registerRequest = undefined,isAuth = false,fresh = false,ttl = DEFAULT_TTL) {
 		return new Promise((resolve,reject) => {
 			if(url in this.cache) {
 				// Clean cache entries whenever it is needed
@@ -73,7 +73,7 @@ class UMCache {
 					mime: this.cache[url].mime
 				});
 			} else {
-				resolve(this.loadDataPromise(url,'text',registerRequest,isAuth,label,ttl));
+				resolve(this.loadDataPromise(url,asBlob ? 'blob' : 'text',registerRequest,isAuth,label,ttl));
 			}
 		});
 	}
@@ -94,8 +94,14 @@ class UMCache {
 			url: url,
 			type: 'GET',
 			cache: false,
-			dataType: dataType,
 		};
+		if(dataType === 'blob') {
+			query.xhrFields = {
+				responseType: 'blob'
+			};
+		} else {
+			query.dataType = dataType;
+		}
 		if(isAuth) {
 			query.headers = auth.getAuthHeaders();
 		}
@@ -119,7 +125,7 @@ class UMCache {
 			}
 			if(cb) {
 				let retData;
-				if(dataType === 'text') {
+				if(dataType === 'text' || dataType === 'blob') {
 					// Do not know how to properly clone it
 					retData = {
 						content: data,

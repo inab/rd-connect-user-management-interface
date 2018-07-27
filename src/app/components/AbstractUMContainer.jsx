@@ -327,7 +327,7 @@ class AbstractFetchedDataContainer extends React.Component {
 		});
 	}
 	
-	documentPromise(docsBaseURI,docDesc,label) {
+	documentPromise(docsBaseURI,docDesc,label,asBlob = false) {
 		return new Promise((resolve,reject) => {
 			let documentName = typeof docDesc === 'string' ? docDesc : docDesc.cn;
 			let documentURL = docsBaseURI + '/documents/' + documentName;
@@ -335,6 +335,7 @@ class AbstractFetchedDataContainer extends React.Component {
 			let rawProm = cache.getRawDataPromise(
 				documentURL,
 				'doc-' + label + '-' + documentName,
+				asBlob,
 				this.registerRequest,
 				true
 			);
@@ -369,7 +370,8 @@ class AbstractFetchedDataContainer extends React.Component {
 			cache: false,
 			contentType: mime,
 			data: content,
-			dataType: 'text',
+			processData: false,
+			//dataType: 'text',
 			headers: auth.getAuthHeaders()
 		};
 		
@@ -546,7 +548,7 @@ class AbstractFetchedDataContainer extends React.Component {
 					templatePromise = this.documentPromise(docPath,file,docLabel);
 				} else {
 					promArray.push(
-						this.documentPromise(docPath,file,docLabel)
+						this.documentPromise(docPath,file,docLabel,true)
 					);
 				}
 			});

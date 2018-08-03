@@ -121,8 +121,8 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	}
 	
 	attachmentClick(target,f) {
-		target.setAttribute("download",f.name);
-		target.setAttribute("href",URL.createObjectURL(f));
+		target.setAttribute('download',f.name);
+		target.setAttribute('href',URL.createObjectURL(f));
 	}
 	
 	attachmentRemove(numF) {
@@ -287,7 +287,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 								<div style={{float:'left'}}>
 									<ol>
 									{
-										this.state.attachments.map(f => <li key={f.name}><a onClick={(e) => { this.attachmentClick(e.target,f); } }>{f.name}</a> <i>({f.size} bytes)</i></li>)
+										this.state.attachments.map(f => <li key={f.name}><a onClick={(e) => { this.attachmentClick(e.target,f); }}>{f.name}</a> <i>({f.size} bytes)</i></li>)
 									}
 									</ol>
 								</div>

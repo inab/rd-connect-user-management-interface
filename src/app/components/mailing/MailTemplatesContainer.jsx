@@ -100,8 +100,8 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 	}
 	
 	attachmentClick(target,f) {
-		target.setAttribute("download",f.name);
-		target.setAttribute("href",URL.createObjectURL(f));
+		target.setAttribute('download',f.name);
+		target.setAttribute('href',URL.createObjectURL(f));
 	}
 	
 	attachmentRemove(numF) {
@@ -212,7 +212,7 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 						<div style={{float:'left'}}>
 							<ol>
 							{
-								this.state.attachments.map((f,numF) => <li key={f.name}><a onClick={(e) => { this.attachmentClick(e.target,f); } }>{f.name}</a> <i>({f.size} bytes)</i> <a style={{ color: 'red' }} onClick={() => this.attachmentRemove(numF)}>remove<Glyphicon glyph="trash" /></a></li>)
+								this.state.attachments.map((f,numF) => <li key={f.name}><a onClick={(e) => { this.attachmentClick(e.target,f); }}>{f.name}</a> <i>({f.size} bytes)</i> <a style={{ color: 'red' }} onClick={() => this.attachmentRemove(numF)}>remove<Glyphicon glyph="trash" /></a></li>)
 							}
 							</ol>
 						</div>

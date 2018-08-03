@@ -625,7 +625,7 @@ class AbstractFetchedDataContainer extends React.Component {
 		let docLabel = domainId + 'Templates';
 		
 		let promArray = files.map(file => {
-			return this.deleteDocumentPromise(docPath,file,docLabel)
+			return this.deleteDocumentPromise(docPath,file,docLabel);
 		});
 		
 		return Promise.all(promArray);

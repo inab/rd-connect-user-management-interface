@@ -31,12 +31,14 @@ import GroupsContainer from './components/groups/GroupsContainer.jsx';
 import GroupFormContainer from './components/groups/GroupFormContainer.jsx';
 import GroupNewFormContainer from './components/groups/GroupNewFormContainer.jsx';
 
+/* The routes using these components have been disabled
 import DocumentsUsersContainer from './components/documents/DocumentsUsersContainer.jsx';
 import DocumentsUserContainer from './components/documents/DocumentsUserContainer.jsx';
 import DocumentsUserNew from './components/documents/DocumentsUserNew.jsx';
 import DocumentsGroupsContainer from './components/documents/DocumentsGroupsContainer.jsx';
 import DocumentsGroupContainer from './components/documents/DocumentsGroupContainer.jsx';
 import DocumentsGroupNew from './components/documents/DocumentsGroupNew.jsx';
+*/
 
 import MailingContainer from './components/mailing/MailingContainer.jsx';
 import MailTemplatesContainer from './components/mailing/MailTemplatesContainer.jsx';
@@ -118,6 +120,16 @@ ReactDOM.render((
                     <Route path="view/:groupName" name="View" staticName component={GroupFormContainer} task={'view'} />
                     <Route path="new" name="New" component={GroupNewFormContainer} />
                 </Route>
+                <Route path="mail" name="Mail tasks" component={Box} onEnter={requireAuth}>
+					<IndexRoute component={MailingContainer} />
+					<Route path="platformMailing" name="Send massive e-mail" component={MailingContainer} />
+					<Route path="domains/:domainId" name="Mail Domain Template Management" staticName component={MailTemplatesContainer} />
+                </Route>
+            </Route>
+        </Router>
+ ), document.getElementById('content'));
+
+/* These routes are disabled
                 <Route path="documents" name="Documents" component={Box} onEnter={requireAuth}>
                     <IndexRoute component={DocumentsUsersContainer} />
                     <Route path="users" name="Users" component={DocumentsUsersContainer} />
@@ -127,11 +139,4 @@ ReactDOM.render((
                     <Route path="groups/:groupName" name="List Group Documents" component={DocumentsGroupContainer} />
                     <Route path="groups/:groupName/new" name="New Group Document" component={DocumentsGroupNew} />
                 </Route>
-                <Route path="mail" name="Mail tasks" component={Box} onEnter={requireAuth}>
-					<IndexRoute component={MailingContainer} />
-					<Route path="platformMailing" name="Send massive e-mail" component={MailingContainer} />
-					<Route path="domains/:domainId" name="Mail Domain Template Management" staticName component={MailTemplatesContainer} />
-                </Route>
-            </Route>
-        </Router>
- ), document.getElementById('content'));
+ */

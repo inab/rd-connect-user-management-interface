@@ -21,7 +21,6 @@ class Navigation extends React.Component {
 							<LinkContainer to="/users/new-unprivileged"><MenuItem eventKey={2.3}>New User (unprivileged)</MenuItem></LinkContainer>
 							<MenuItem divider />
 							<LinkContainer to="/users/groups/list"><MenuItem eventKey={2.4}>User's list of groups</MenuItem></LinkContainer>
-							<LinkContainer to="/documents/users"><MenuItem eventKey={2.5}>User's Documents </MenuItem></LinkContainer>
 						</NavDropdown>
 						<NavDropdown id="NavDropdown-Organizations" eventKey={3} title={<Glyphicon glyph="education"> Organizations</Glyphicon>}>
 							<LinkContainer to="/organizationalUnits/list"><MenuItem eventKey={3.1}>List Organizations</MenuItem></LinkContainer>
@@ -32,10 +31,6 @@ class Navigation extends React.Component {
 						<NavDropdown id="NavDropdown-Groups" eventKey={4} title={<Glyphicon glyph="tags"> Groups</Glyphicon>}>
 							<LinkContainer to="/groups/list"><MenuItem eventKey={4.1}>List Groups</MenuItem></LinkContainer>
 							<LinkContainer to="/groups/new"><MenuItem eventKey={4.2}>New Group</MenuItem></LinkContainer>
-						</NavDropdown>
-						<NavDropdown id="NavDropdown-Documents" eventKey={5} title={<Glyphicon glyph="folder-open"> Documents</Glyphicon>}>
-								<LinkContainer to="/documents/users"><MenuItem eventKey={5.1}>Users</MenuItem></LinkContainer>
-								<LinkContainer to="/documents/groups"><MenuItem eventKey={5.2}>Groups</MenuItem></LinkContainer>
 						</NavDropdown>
 					</Nav>
 					<Nav pullRight>
@@ -50,6 +45,16 @@ class Navigation extends React.Component {
         );
     }
 }
+
+/* These menu items have been removed, as they are not properly implemented yet
+							<LinkContainer to="/documents/users"><MenuItem eventKey={2.5}>User's Documents </MenuItem></LinkContainer>
+ *
+						<NavDropdown id="NavDropdown-Documents" eventKey={5} title={<Glyphicon glyph="folder-open"> Documents</Glyphicon>}>
+								<LinkContainer to="/documents/users"><MenuItem eventKey={5.1}>Users</MenuItem></LinkContainer>
+								<LinkContainer to="/documents/groups"><MenuItem eventKey={5.2}>Groups</MenuItem></LinkContainer>
+						</NavDropdown>
+*/
+
 
 Navigation.propTypes = {
 	projectName: React.PropTypes.string.isRequired

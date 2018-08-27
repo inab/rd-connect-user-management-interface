@@ -65,7 +65,6 @@
     "webpack-cli": "^3.1.0"
   },
   "dependencies": {
-    "auth0-lock": "10.14.x",
     "bootstrap": "^3.3.7",
     "dropzone": "^4.3.0",
     "formsy-react": "^0.18.1",
@@ -90,7 +89,6 @@
     "react-rte": "^0.16.1",
     "react-select": "^1.2.1",
     "react-tap-event-plugin": "^2.0.1",
-    "superagent": "^2.2.0",
     "tipso": "^1.0.8",
     "underscore": "^1.8.3",
     "zxcvbn": "^4.4.1"

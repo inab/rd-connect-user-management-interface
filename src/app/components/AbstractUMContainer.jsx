@@ -593,6 +593,7 @@ class AbstractFetchedDataContainer extends React.Component {
 	templateMailPromise(domainId,files) {
 		return new Promise((resolve,reject) => {
 			let templatePromise;
+			let templateSubjectPromise;
 			let promArray = [];
 			
 			let docPath = config.mailingBaseUri + '/' + encodeURIComponent(domainId);
@@ -601,6 +602,8 @@ class AbstractFetchedDataContainer extends React.Component {
 			files.forEach(file => {
 				if(file.documentClass === 'mailTemplate') {
 					templatePromise = this.documentPromise(docPath,file,docLabel);
+				} else if(file.documentClass === 'mailTemplateTitle') {
+					templateSubjectPromise = this.documentPromise(docPath,file,docLabel);
 				} else {
 					promArray.push(
 						this.documentPromise(docPath,file,docLabel,true)
@@ -609,7 +612,7 @@ class AbstractFetchedDataContainer extends React.Component {
 			});
 			// Report no template was available
 			if(templatePromise) {
-				let wholeP = [ templatePromise ];
+				let wholeP = [ templateSubjectPromise, templatePromise ];
 				if(promArray.length > 0) {
 					wholeP.push(Promise.all(promArray));
 				}
@@ -631,9 +634,9 @@ class AbstractFetchedDataContainer extends React.Component {
 		return Promise.all(promArray);
 	}
 	
-	saveTemplateMailPromise(domainId,mailTemplateFile,mailTemplateAttachments) {
+	saveTemplateMailPromise(domainId,mailTemplateSubject,mailTemplateFile,mailTemplateAttachments) {
 		return new Promise((resolve,reject) => {
-			let files = [mailTemplateFile,...mailTemplateAttachments];
+			let files = [mailTemplateSubject,mailTemplateFile,...mailTemplateAttachments];
 			let promArray = [];
 			
 			let docPath = config.mailingBaseUri + '/' + encodeURIComponent(domainId);

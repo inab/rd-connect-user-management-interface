@@ -1,7 +1,7 @@
 import React from 'react';
 import RichTextEditor from 'react-rte';
 import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
-import { Button, ControlLabel, Glyphicon, Modal } from 'react-bootstrap';
+import { Button, ControlLabel, FormControl, FormGroup, Glyphicon, Modal } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 
 class MailTemplatesContainer extends AbstractFetchedDataContainer {
@@ -19,6 +19,7 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 			error: null,
 			showModal: false,
 			
+			templateSubject: '(empty)',
 			mailTemplate: RichTextEditor.createEmptyValue(),
 			attachments: [],
 			loaded: false,
@@ -46,10 +47,12 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 			},errHandler)
 			.then((mailTemplateFiles) => {
 				this.setState({
-					mailTemplateFile: mailTemplateFiles[0],
-					mailTemplateAttachments: (mailTemplateFiles.length > 1) ? mailTemplateFiles[1] : [],
-					attachments: (mailTemplateFiles.length > 1) ? mailTemplateFiles[1].map((file) => { return new File([file.content], file.cn, {type: file.mime}); }) : [],
-					mailTemplate: RichTextEditor.createValueFromString(mailTemplateFiles[0].content, 'html'),
+					mailTemplateSubject: mailTemplateFiles[0],
+					mailTemplateFile: mailTemplateFiles[1],
+					mailTemplateAttachments: (mailTemplateFiles.length > 2) ? mailTemplateFiles[2] : [],
+					attachments: (mailTemplateFiles.length > 2) ? mailTemplateFiles[2].map((file) => { return new File([file.content], file.cn, {type: file.mime}); }) : [],
+					mailTemplate: RichTextEditor.createValueFromString(mailTemplateFiles[1].content, 'html'),
+					templateSubject: mailTemplateFiles[0].content,
 					loaded: true
 				});
 			},errHandler);
@@ -114,6 +117,11 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 		});
 	}
 	
+	getTemplateSubjectValidationState() {
+		const length = this.state.templateSubject.length;
+		return (length > 0) ? 'success' : 'warning';
+	}
+	
 	onSubmit() {
 		let errHandler = (err) => {
 			this.setState({
@@ -126,6 +134,12 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 			...this.state.mailTemplateFile,
 			content: this.state.mailTemplate.toString('html'),
 			mime: 'text/html'
+		};
+		
+		let mailTemplateSubject = {
+			...this.state.mailTemplateSubject,
+			content: this.state.templateSubject,
+			mime: 'text/plain',
 		};
 		
 		// Let's identify the attachments to be erased
@@ -155,7 +169,7 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 			};
 		});
 		
-		this.saveTemplateMailPromise(this.state.domainId,mailTemplateFile,mailTemplateAttachments)
+		this.saveTemplateMailPromise(this.state.domainId,mailTemplateSubject,mailTemplateFile,mailTemplateAttachments)
 			.then(() => {
 				// Let's remove those attachments which have disappeared
 				return deletedAttachments.length > 0 ? this.deleteTemplateAttachmentsPromise(this.state.domainId,deletedAttachments) : true;
@@ -183,40 +197,54 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 			</Modal>
 			{ loaded && 
 				<form onSubmit={this.onSubmit.bind(this)}>
-					<div style={{float: 'left',clear:'left'}}><ControlLabel>{this.state.templateDomain.desc}</ControlLabel></div>
-					<div style={{float: 'right',clear:'right'}}>(accepted keywords: {
-						this.state.templateDomain.tokens.map((t,i) => {
-							let retval = [];
-							if(i > 0) {
-								retval.push(this.state.templateDomain.tokens.length === (i + 1) ? ' and ' : ', ');
-							}
-							retval.push(<b>{'[% ' + t + ' %]'}</b>);
-							return retval;
-						})
-					})</div>
-					<div style={{clear: 'both'}}>
-						<RichTextEditor
-							className={'umi-mailing'}
-							value={this.state.mailTemplate}
-							onChange={(value) => { this.onChange({mailTemplate: value}); }}
+					<FormGroup
+						controlId="mail"
+						validationState={this.getTemplateSubjectValidationState()}
+					>
+						<ControlLabel>Template subject</ControlLabel>
+						<FormControl
+							type="text"
+							value={this.state.templateSubject}
+							placeholder="Template subject"
+							onChange={(e) => { this.onChange({templateSubject: e.target.value}); }}
 						/>
-					</div>
-					<br />
-					<ControlLabel>Attachments</ControlLabel>
-					<div>
-						<div style={{float:'left'}}>
-							<Dropzone onDrop={this.onDropAttachments.bind(this)}>
-								<p>Click or try dropping the attachments here</p>
-							</Dropzone>
+						<br/>
+						<div style={{float: 'left',clear:'left'}}><ControlLabel>{this.state.templateDomain.desc}</ControlLabel></div>
+						<div style={{float: 'right',clear:'right'}}>(accepted keywords: {
+							this.state.templateDomain.tokens.map((t,i) => {
+								let retval = [];
+								if(i > 0) {
+									retval.push(this.state.templateDomain.tokens.length === (i + 1) ? ' and ' : ', ');
+								}
+								retval.push(<b>{'[% ' + t + ' %]'}</b>);
+								return retval;
+							})
+						})</div>
+						<div style={{clear: 'both'}}>
+							<RichTextEditor
+								className={'umi-mailing'}
+								value={this.state.mailTemplate}
+								onChange={(value) => { this.onChange({mailTemplate: value}); }}
+							/>
 						</div>
-						<div style={{float:'left'}}>
-							<ol>
-							{
-								this.state.attachments.map((f,numF) => <li key={f.name}><a onClick={(e) => { this.attachmentClick(e.target,f); }}>{f.name}</a> <i>({f.size} bytes)</i> <a style={{ color: 'red' }} onClick={() => this.attachmentRemove(numF)}>remove<Glyphicon glyph="trash" /></a></li>)
-							}
-							</ol>
+						<br />
+						<ControlLabel>Attachments</ControlLabel>
+						<div>
+							<div style={{float:'left'}}>
+								<Dropzone onDrop={this.onDropAttachments.bind(this)}>
+									<p>Click or try dropping the attachments here</p>
+								</Dropzone>
+							</div>
+							<div style={{float:'left'}}>
+								<ol>
+								{
+									this.state.attachments.map((f,numF) => <li key={f.name}><a onClick={(e) => { this.attachmentClick(e.target,f); }}>{f.name}</a> <i>({f.size} bytes)</i> <a style={{ color: 'red' }} onClick={() => this.attachmentRemove(numF)}>remove<Glyphicon glyph="trash" /></a></li>)
+								}
+								</ol>
+							</div>
 						</div>
-					</div>
+						<FormControl.Feedback />
+					</FormGroup>
 					
 					<div className="button-submit">
 						<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>

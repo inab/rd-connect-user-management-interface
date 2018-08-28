@@ -1,9 +1,10 @@
 import React from 'react';
 import Form from 'react-jsonschema-form';
 import { Glyphicon, Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
-import Select from 'react-select';
 
 import GroupManagement from '../GroupManagement.jsx';
+
+import { genCustomUsersWidgetInstance } from '../SelectableUsersWidget.jsx';
 
 function groupValidation(formData,errors) {
 	console.log(errors);
@@ -100,18 +101,7 @@ class GroupNewForm extends React.Component {
 		delete schema.title;
 		//console.log(schema);
 		
-		const CustomUsersWidget = (props) => {
-			return (
-				<Select
-					disabled={props.disabled}
-					placeholder="Select the user(s)"
-					options={this.state.selectableUsers}
-					value={props.value}
-					onChange={(values) => props.onChange(values)}
-					multi
-				/>
-			);
-		};
+		const SelectableUsersWidget = genCustomUsersWidgetInstance(this.state.selectableUsers);
 		
 		// Tweak to for the rendering
 		schema.properties.owner.type = 'string';
@@ -125,10 +115,10 @@ class GroupNewForm extends React.Component {
 		
 		const uiSchema = {
 			owner: {
-				'ui:widget': CustomUsersWidget
+				'ui:widget': SelectableUsersWidget
 			},
 			members: {
-				'ui:widget': CustomUsersWidget
+				'ui:widget': SelectableUsersWidget
 			}
 		};
 		

@@ -20,7 +20,7 @@
 	cd rd-connect-user-management-interface
 	npm install --no-save
 	export PATH="${PWD}/node_modules/.bin:$PATH"
-	gulp build
+	webpack -p
 	```
 
 3. Install the web user interface, for instance as /user_management:

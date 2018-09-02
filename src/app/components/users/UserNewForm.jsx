@@ -84,9 +84,35 @@ class UserNewForm extends React.Component {
 		var arrayOfUsers = this.state.users;
 		var usersRepeated = jQuery.grep(arrayOfUsers, function(e){ return e.username === username; });
 		if(usersRepeated.length !== 0 ){
-			errors.username.addError('The username is in use. Please choose a different one');
+			errors.username.addError('The username is already in use. Please choose a different one');
 		}
-
+		
+		// Check whether there is at least one given name
+		if(formData.givenName === undefined || formData.givenName === null || formData.givenName.length === 0) {
+			errors.givenName.addError('At least one given name is needed');
+		}
+		
+		// Check whether there is at least one surname
+		if(formData.surname === undefined || formData.surname === null || formData.surname.length === 0) {
+			errors.surname.addError('At least one surname is needed');
+		}
+		
+		// Check whether there is at least one e-mail
+		if(formData.email === undefined || formData.email === null || formData.email.length === 0) {
+			errors.email.addError('At least one e-mail is needed');
+		}
+		
+		// Check whether there is a selected organizational unit
+		if(formData.organizationalUnit === undefined || formData.organizationalUnit === null || formData.organizationalUnit.length === 0) {
+			errors.organizationalUnit.addError('Please choose an organizational unit');
+		}
+		
+		// Check whether there is a selected user category
+		if(formData.userCategory === undefined || formData.userCategory === null || formData.userCategory.length === 0) {
+			errors.userCategory.addError('Please set the user category');
+		}
+		
+		
 		//Now we test if email exists...
 		var email = formData.email;
 		var arrayOfUsers = this.state.users;
@@ -232,8 +258,15 @@ class UserNewForm extends React.Component {
 		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
 		delete schema.properties.groups;
 		delete schema.title;
+		
 		//We remove picture from the schema since this will be managed by react-dropzone component
 		delete schema.properties.picture;
+		
+		// We move the minLength propery from registeredEmails to email
+		schema.properties.email.minItems = schema.properties.registeredEmails.minItems;
+		delete schema.properties.registeredEmails;
+		
+		delete schema.properties.management;
 		
 		let userImage = this.state.picture;
 		if(typeof userImage === 'undefined'){
@@ -356,16 +389,16 @@ class UserNewForm extends React.Component {
 				<Row className="show-grid">
 					<Col xs={12} md={9}>
 						<Form schema={schema}
-						uiSchema={uiSchema}
-						formData={this.state.formData}
-						fields={fields}
-						onChange={({formData}) => this.setState({formData})}
-						//onChange={log('changed')}
-						onSubmit={onSubmit}
-						onError={onError}
-						validate={(formData,errors) => this.userValidation(formData,errors)}
-						liveValidate
-						showErrorList={false}
+							uiSchema={uiSchema}
+							formData={this.state.formData}
+							fields={fields}
+							onChange={({formData}) => this.setState({formData})}
+							//onChange={log('changed')}
+							onSubmit={onSubmit}
+							onError={onError}
+							validate={(formData,errors) => this.userValidation(formData,errors)}
+							liveValidate={true}
+							showErrorList={false}
 						>
 							<div className="button-submit">
 								<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>

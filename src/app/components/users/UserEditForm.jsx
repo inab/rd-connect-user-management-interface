@@ -14,6 +14,30 @@ function userValidation(formData,errors) {
 	if(formData.userPassword !== formData.userPassword2) {
 		errors.userPassword2.addError('Passwords don\'t match');
 	}
+	
+	// Now test there is at least one registered e-mail
+	if(formData.registeredEmails === undefined || formData.registeredEmails === null || formData.registeredEmails.length === 0) {
+		// Now test there is at least one valid e-mail
+		if(formData.email === undefined || formData.email === null || formData.email.length === 0) {
+			errors.registeredEmails.addError('At least one registered e-mail is needed');
+		}
+	}
+		
+	// Check whether there is at least one given name
+	if(formData.givenName === undefined || formData.givenName === null || formData.givenName.length === 0) {
+		errors.givenName.addError('At least one given name is needed');
+	}
+	
+	// Check whether there is at least one surname
+	if(formData.surname === undefined || formData.surname === null || formData.surname.length === 0) {
+		errors.surname.addError('At least one surname is needed');
+	}
+	
+	// Check whether there is a selected user category
+	if(formData.userCategory === undefined || formData.userCategory === null || formData.userCategory.length === 0) {
+		errors.userCategory.addError('Please set the user category');
+	}
+	
 	return errors;
 }
 
@@ -331,7 +355,8 @@ class UserEditForm extends React.Component {
 							onSubmit={onSubmit}
 							onError={onError}
 							validate={userValidation}
-							liveValidate
+							liveValidate={false}
+							showErrorList={false}
 						>
 							<div className="button-submit">
 								<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>

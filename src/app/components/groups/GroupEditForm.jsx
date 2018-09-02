@@ -13,6 +13,12 @@ function groupValidation(formData,errors) {
 	if(formData.owner.length === 0) {
 		errors.owner.addError('Please select at least one owner');
 	}
+	
+	// Check whether there is a selected group purpose
+	if(formData.groupPurpose === undefined || formData.groupPurpose === null || formData.groupPurpose.length === 0) {
+		errors.groupPurpose.addError('Please set the group purpose');
+	}
+	
 	return errors;
 }
 

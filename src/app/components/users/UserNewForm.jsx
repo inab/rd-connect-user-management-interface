@@ -49,6 +49,22 @@ class UserNewForm extends React.Component {
 			}
 		}
 		
+		// Pre-processing the props
+		let schema = this.props.schema;
+
+		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
+		delete schema.properties.groups;
+		delete schema.title;
+		
+		//We remove picture from the schema since this will be managed by react-dropzone component
+		delete schema.properties.picture;
+		
+		// We move the minLength propery from registeredEmails to email
+		schema.properties.email.minItems = schema.properties.registeredEmails.minItems;
+		delete schema.properties.registeredEmails;
+		
+		delete schema.properties.management;
+		
 		this.setState({
 			modalTitle: null,
 			error: null,
@@ -253,21 +269,6 @@ class UserNewForm extends React.Component {
 	}
 	
 	render() {
-		let schema = this.state.schema;
-
-		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
-		delete schema.properties.groups;
-		delete schema.title;
-		
-		//We remove picture from the schema since this will be managed by react-dropzone component
-		delete schema.properties.picture;
-		
-		// We move the minLength propery from registeredEmails to email
-		schema.properties.email.minItems = schema.properties.registeredEmails.minItems;
-		delete schema.properties.registeredEmails;
-		
-		delete schema.properties.management;
-		
 		let userImage = this.state.picture;
 		if(typeof userImage === 'undefined'){
 			userImage = imageNotFound.src;

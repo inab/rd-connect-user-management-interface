@@ -50,7 +50,9 @@ class UserNewForm extends React.Component {
 		}
 		
 		// Pre-processing the props
-		let schema = this.props.schema;
+		let schema = {
+			...this.props.schema
+		};
 
 		//we delete groups from new user form since  'ui:widget' : 'hidden' doesn't work for arrays
 		delete schema.properties.groups;
@@ -65,6 +67,93 @@ class UserNewForm extends React.Component {
 		
 		delete schema.properties.management;
 		
+		//We generate the enums property for the Organizational Units extracting the info from data
+		let arrayOUobjects = this.props.organizationalUnits;
+		arrayOUobjects.sort((a,b) => { return a.value.localeCompare(b.value); });
+		let ouEnum = arrayOUobjects.map((ou) => { return ou.value; });
+		let ouEnumLabel = arrayOUobjects.map((ou) => { return ou.label; });
+		schema.properties.organizationalUnit.enum = ouEnum;
+		schema.properties.organizationalUnit.enumNames = ouEnumLabel;
+		
+		//Replicating userPassword for schema validation and Ordering Schema for ui:order
+		//Adding a userPassword2 field to validate userPassword change
+		schema.properties.userPassword2 = JSON.parse(JSON.stringify(schema.properties.userPassword));
+		schema.properties.userPassword2.title += ' (again)';
+		
+		//First we create an array with the fields with the desired order.
+		var order = ['username','cn','title','givenName','surname','userPassword','userPassword2','organizationalUnit','userCategory','enabled','email','telephoneNumber','facsimileTelephoneNumber','links'];
+		//We filter all the properties retrieving only the elements that are not in 'order' array
+		let userSchemaKeys = Object.keys(schema.properties).filter(function(elem) {
+			return order.indexOf(elem) === -1;
+		});
+		
+		let keysLayout = userSchemaKeys.map((key) => {
+			let retval = {};
+			retval[key] = {md:12};
+			return retval;
+		});
+
+		//var data = this.props.data;
+		//delete data.userPassword;
+		//console.log(schema);
+		const uiSchema = {
+			'ui:field': 'layout',
+			'ui:layout': [
+				{
+					'username': { md: 6},
+					'organizationalUnit': { md: 6 },
+				},
+				{
+					'userPassword': { md: 6 },
+					'userPassword2': { md: 6 }
+				},
+				{
+					'title': { md: 12 },
+				},
+				{
+					'givenName': { md: 6},
+					'surname': { md: 6},
+				},
+				{
+					'userCategory': { md: 5 },
+					'enabled': { md: 2 },
+					'email': { md: 5 },
+				},
+				{
+					'links': { md: 6 },
+					'telephoneNumber': { md: 3 },
+					'facsimileTelephoneNumber': { md: 3 },
+				},
+				...keysLayout
+			],
+			'userPassword': {
+				'ui:widget': 'password',
+				'ui:placeholder': '************'
+			},
+			'userPassword2': {
+				'ui:widget': 'password',
+				'ui:placeholder': '************'
+			},
+			'cn': {
+				'ui:widget': 'hidden',
+			},
+			'organizationalUnit': {
+				'ui:widget': 'select',
+				'type': 'string'
+			},
+			'enabled': {
+				'ui:widget': 'radio'
+			},
+			'registeredAddress': {
+				'ui:widget': 'textarea',
+				'type': 'string'
+			},
+			'postalAddress': {
+				'ui:widget': 'textarea',
+				'type': 'string'
+			}
+		};
+		
 		this.setState({
 			modalTitle: null,
 			error: null,
@@ -72,9 +161,8 @@ class UserNewForm extends React.Component {
 			files: [],
 			in: false,
 			picture: imageNotFound.src,
-			schema: {
-				...this.props.schema
-			},
+			schema: schema,
+			uiSchema: uiSchema,
 			selectableOUs: this.props.organizationalUnits,
 			users: this.props.users,
 			selectableGroups: this.props.groups,
@@ -131,7 +219,6 @@ class UserNewForm extends React.Component {
 		
 		//Now we test if email exists...
 		var email = formData.email;
-		var arrayOfUsers = this.state.users;
 		//console.log('arrayOfUsers contains: ', arrayOfUsers);
 		jQuery.grep(arrayOfUsers, function(e){
 			//console.log('e contains: ', e );
@@ -273,94 +360,9 @@ class UserNewForm extends React.Component {
 		if(typeof userImage === 'undefined'){
 			userImage = imageNotFound.src;
 		}
-		//We generate the enums property for the Organizational Units extracting the info from data
-		let arrayOUobjects = this.state.selectableOUs;
-		arrayOUobjects.sort((a,b) => { return a.value.localeCompare(b.value); });
-		let ouEnum = arrayOUobjects.map((ou) => { return ou.value; });
-		let ouEnumLabel = arrayOUobjects.map((ou) => { return ou.label; });
-		schema.properties.organizationalUnit.enum = ouEnum;
-		schema.properties.organizationalUnit.enumNames = ouEnumLabel;
-		
-		//Replicating userPassword for schema validation and Ordering Schema for ui:order
-		//Adding a userPassword2 field to validate userPassword change
-		schema.properties.userPassword2 = JSON.parse(JSON.stringify(schema.properties.userPassword));
-		schema.properties.userPassword2.title += ' (again)';
-		//First we create an array with the fields with the desired order.
-		var order = ['username','cn','title','givenName','surname','userPassword','userPassword2','organizationalUnit','userCategory','enabled','email','telephoneNumber','facsimileTelephoneNumber','links'];
-		//We filter all the properties retrieving only the elements that are not in 'order' array
-		let userSchemaKeys = Object.keys(schema.properties).filter(function(elem) {
-			return order.indexOf(elem) === -1;
-		});
-		
-		let keysLayout = userSchemaKeys.map((key) => {
-			let retval = {};
-			retval[key] = {md:12};
-			return retval;
-		});
 		
 		const fields = {
 			layout: LayoutField
-		};
-
-		//var data = this.props.data;
-		//delete data.userPassword;
-		//console.log(schema);
-		const uiSchema = {
-			'ui:field': 'layout',
-			'ui:layout': [
-				{
-					'username': { md: 6},
-					'organizationalUnit': { md: 6 },
-				},
-				{
-					'userPassword': { md: 6 },
-					'userPassword2': { md: 6 }
-				},
-				{
-					'title': { md: 12 },
-				},
-				{
-					'givenName': { md: 6},
-					'surname': { md: 6},
-				},
-				{
-					'userCategory': { md: 5 },
-					'enabled': { md: 2 },
-					'email': { md: 5 },
-				},
-				{
-					'links': { md: 6 },
-					'telephoneNumber': { md: 3 },
-					'facsimileTelephoneNumber': { md: 3 },
-				},
-				...keysLayout
-			],
-			'userPassword': {
-				'ui:widget': 'password',
-				'ui:placeholder': '************'
-			},
-			'userPassword2': {
-				'ui:widget': 'password',
-				'ui:placeholder': '************'
-			},
-			'cn': {
-				'ui:widget': 'hidden',
-			},
-			'organizationalUnit': {
-				'ui:widget': 'select',
-				'type': 'string'
-			},
-			'enabled': {
-				'ui:widget': 'radio'
-			},
-			'registeredAddress': {
-				'ui:widget': 'textarea',
-				'type': 'string'
-			},
-			'postalAddress': {
-				'ui:widget': 'textarea',
-				'type': 'string'
-			}
 		};
 		
 		const onSubmit = () => this.addUserData();
@@ -389,8 +391,8 @@ class UserNewForm extends React.Component {
 				</Collapse>
 				<Row className="show-grid">
 					<Col xs={12} md={9}>
-						<Form schema={schema}
-							uiSchema={uiSchema}
+						<Form schema={this.state.schema}
+							uiSchema={this.state.uiSchema}
 							formData={this.state.formData}
 							fields={fields}
 							onChange={({formData}) => this.setState({formData})}

@@ -56,7 +56,9 @@ class UserEditForm extends React.Component {
 	}
 	
 	componentWillMount() {
-		var schema = this.props.schema;
+		var schema = {
+			...this.props.schema
+		};
 		
 		// Replicating userPassword for schema validation and Ordering Schema for ui:order
 		//Adding a userPassword2 field to validate userPassword change
@@ -66,13 +68,124 @@ class UserEditForm extends React.Component {
 		
 		// This structure is not going to be used in the user interface
 		delete schema.properties.management;
+
+		//We remove picture from the schema since this will be managed by react-dropzone component
+		//var schemaPicture = schema.properties.picture;
+		delete schema.properties.picture;
+		//First we create an array with the fields with the desired order.
+		//var order = ['username','cn','givenName','surname','userPassword','userPassword2'];
+		var order = ['username','cn','title','givenName','surname','organizationalUnit','userCategory','enabled','email','telephoneNumber','facsimileTelephoneNumber','groups','links'];
+
+		//We filter all the properties retrieving only the elements that are not in 'order' array
+		var userSchemaKeys = Object.keys(schema.properties).filter(function(elem) {
+			return order.indexOf(elem) === -1;
+		});
+		
+		let keysLayout = userSchemaKeys.map((key) => {
+			let retval = {};
+			retval[key] = {md:12};
+			return retval;
+		});
+
+		const uiSchema = {
+			'ui:field': 'layout',
+			'ui:layout': [
+				{
+					'username': { md: 6},
+					'cn': { md: 6},
+				},
+				{
+					'title': { md: 12 },
+				},
+				{
+					'givenName': { md: 6},
+					'surname': { md: 6},
+				},
+				{
+					'organizationalUnit': { md: 5 },
+					'userCategory': { md: 5 },
+					'enabled': { md: 2 }
+				},
+				{
+					'email': { md: 6 },
+					'telephoneNumber': { md: 3 },
+					'facsimileTelephoneNumber': { md: 3 },
+				},
+				{
+					'groups': { md: 6 },
+					'links': { md: 6 }
+				},
+				...keysLayout
+			],
+			'username': {
+				'ui:readonly': true,
+			},
+			'acceptedGDPR': {
+				//'ui:widget': 'alt-datetime',
+				'ui:readonly': true,
+			},
+			'registeredEmails': {
+				'items': {
+					'registeredAt': {
+						'ui:widget': 'alt-datetime',
+					},
+					'lastValidatedAt': {
+						'ui:widget': 'alt-datetime',
+					},
+					'validUntil': {
+						'ui:widget': 'alt-datetime',
+					},
+					'validQuarantineCheckUntil': {
+						'ui:widget': 'alt-datetime',
+					},
+				}
+			},
+			'email': {
+				'ui:readonly': true,
+			},
+			/*'userPassword': {
+				'ui:widget': 'password',
+				'ui:placeholder': '************',
+				'ui:help': 'Hint: Make it strong!'
+			},
+			'userPassword2': {
+				'ui:widget': 'password',
+				'ui:placeholder': '************',
+				'ui:help': 'Passwords have to match!'
+			},*/
+			'cn': {
+				'ui:readonly': true,
+			},
+			'organizationalUnit': {
+				'ui:readonly': true,
+			},
+			'groups': {
+				'ui:readonly': true,
+			},
+			'enabled': {
+				'ui:widget': 'radio'
+			},
+			'registeredAddress': {
+				'ui:widget': 'textarea',
+				'type': 'string'
+			},
+			'postalAddress': {
+				'ui:widget': 'textarea',
+				'type': 'string'
+			}/*,
+			'picture': {
+				'ui:widget': 'file'
+			}*/
+		};
 		
 		this.setState({
 			modalTitle: null,
 			error: null,
 			showModal: false,
-			schema: {
-				...this.props.schema
+			schema: schema,
+			uiSchema: uiSchema,
+			user: {
+				...this.props.user
 			},
 			files: [],
 			picture: this.props.user.picture ? this.props.user.picture : imageNotFoundSrc,
@@ -197,26 +310,7 @@ class UserEditForm extends React.Component {
 	}
 	
 	render() {
-		//First we create an array with the fields with the desired order.
-		//var order = ['username','cn','givenName','surname','userPassword','userPassword2'];
-		var order = ['username','cn','title','givenName','surname','organizationalUnit','userCategory','enabled','email','telephoneNumber','facsimileTelephoneNumber','groups','links'];
-
-		//We remove picture from the schema since this will be managed by react-dropzone component
-		//var schemaPicture = schema.properties.picture;
-		delete schema.properties.picture;
-
-		//We filter all the properties retrieving only the elements that are not in 'order' array
-		var userSchemaKeys = Object.keys(schema.properties).filter(function(elem) {
-			return order.indexOf(elem) === -1;
-		});
-		
-		let keysLayout = userSchemaKeys.map((key) => {
-			let retval = {};
-			retval[key] = {md:12};
-			return retval;
-		});
-
-		var data = this.props.user;
+		var data = this.state.user;
 		//console.log('Picture en el state contiene: ', this.state.picture);
 		//console.log('File en el state contiene: ', this.state.files);
 		//Once we already have picture value, we remove from data since we have removed it from schema.
@@ -233,96 +327,6 @@ class UserEditForm extends React.Component {
 		
 		
 		
-		const uiSchema = {
-			'ui:field': 'layout',
-			'ui:layout': [
-				{
-					'username': { md: 6},
-					'cn': { md: 6},
-				},
-				{
-					'title': { md: 12 },
-				},
-				{
-					'givenName': { md: 6},
-					'surname': { md: 6},
-				},
-				{
-					'organizationalUnit': { md: 5 },
-					'userCategory': { md: 5 },
-					'enabled': { md: 2 }
-				},
-				{
-					'email': { md: 6 },
-					'telephoneNumber': { md: 3 },
-					'facsimileTelephoneNumber': { md: 3 },
-				},
-				{
-					'groups': { md: 6 },
-					'links': { md: 6 }
-				},
-				...keysLayout
-			],
-			'username': {
-				'ui:readonly': true,
-			},
-			'acceptedGDPR': {
-				//'ui:widget': 'alt-datetime',
-				'ui:readonly': true,
-			},
-			'registeredEmails': {
-				'items': {
-					'registeredAt': {
-						'ui:widget': 'alt-datetime',
-					},
-					'lastValidatedAt': {
-						'ui:widget': 'alt-datetime',
-					},
-					'validUntil': {
-						'ui:widget': 'alt-datetime',
-					},
-					'validQuarantineCheckUntil': {
-						'ui:widget': 'alt-datetime',
-					},
-				}
-			},
-			'email': {
-				'ui:readonly': true,
-			},
-			/*'userPassword': {
-				'ui:widget': 'password',
-				'ui:placeholder': '************',
-				'ui:help': 'Hint: Make it strong!'
-			},
-			'userPassword2': {
-				'ui:widget': 'password',
-				'ui:placeholder': '************',
-				'ui:help': 'Passwords have to match!'
-			},*/
-			'cn': {
-				'ui:readonly': true,
-			},
-			'organizationalUnit': {
-				'ui:readonly': true,
-			},
-			'groups': {
-				'ui:readonly': true,
-			},
-			'enabled': {
-				'ui:widget': 'radio'
-			},
-			'registeredAddress': {
-				'ui:widget': 'textarea',
-				'type': 'string'
-			},
-			'postalAddress': {
-				'ui:widget': 'textarea',
-				'type': 'string'
-			}/*,
-			'picture': {
-				'ui:widget': 'file'
-			}*/
-		};
 		//const log = (type) => console.log.bind(console, type);
 		const onSubmit = ({formData}) => this.updateUserData(formData);
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
@@ -347,8 +351,8 @@ class UserEditForm extends React.Component {
 				</Modal>
 				<Row className="show-grid">
 					<Col xs={12} md={9}>
-						<Form schema={schema}
-							uiSchema={uiSchema}
+						<Form schema={this.state.schema}
+							uiSchema={this.state.uiSchema}
 							fields={fields}
 							formData={data}
 							//onChange={({formData}) => this.setState({formData})}

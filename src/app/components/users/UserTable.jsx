@@ -1,7 +1,6 @@
 import React from 'react';
 import { Glyphicon, Table } from 'react-bootstrap';
 import { Link } from 'react-router';
-import imageNotFoundSrc from './defaultNoImageFound.jsx';
 //import User from './User.jsx';
 
 

@@ -1,8 +1,9 @@
 import React from 'react';
 import Form from 'react-jsonschema-form';
 import { Modal, Row, Col, Button, Glyphicon } from 'react-bootstrap';
-import imageNotFoundSrc from '../users/defaultNoImageFound.jsx';
 //import ModalError from './ModalError.jsx';
+
+const NoImageAvailable = 'images/No_image_available.svg';
 
 function organizationalUnitValidation(formData,errors) {
 	//if(formData.userPassword !== formData.userPassword2) {
@@ -26,7 +27,7 @@ class OrganizationalUnitViewForm extends React.Component {
 				...this.props.schema
 			},
 			files: [],
-			picture:  this.props.data.picture ? this.props.data.picture : imageNotFoundSrc,
+			picture:  this.props.data.picture ? this.props.data.picture : NoImageAvailable,
 		});
 	}
 	

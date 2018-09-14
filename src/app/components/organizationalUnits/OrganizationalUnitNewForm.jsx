@@ -1,12 +1,13 @@
 import React from 'react';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
-import { Glyphicon, Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem, ControlLabel  } from 'react-bootstrap';
+import { Glyphicon, Modal, Row, Col, Button, ButtonGroup, Collapse, ListGroup, ListGroupItem, ControlLabel  } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
-import imageNotFoundSrc from '../users/defaultNoImageFound.jsx';
 import { Link } from 'react-router';
 
 import OrganizationalUnitManagement from '../OrganizationalUnitManagement.jsx';
+
+const NoImageAvailable = 'images/No_image_available.svg';
 
 function organizationalUnitValidation(formData,errors) {
 	return errors;
@@ -35,7 +36,7 @@ class OrganizationalUnitNewForm extends React.Component {
 				...this.props.schema
 			},
 			files: [],
-			picture: imageNotFoundSrc,
+			picture: null,
 		});
 	}
 	
@@ -63,20 +64,29 @@ class OrganizationalUnitNewForm extends React.Component {
     }
     
 	ouImageDropHandler(files) {
-        files.forEach((file)=> {
-			let error = validateImageInput(file);
-			if(!error){
-				this.setState({files: files});
-				this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
-			} else {
-				this.setState({modalTitle: 'Error', error: error, showModal: true});
-			}
-        });
+		if(Array.isArray(files) && files.length > 0) {
+			//console.log('Received files: ', files);
+			files.forEach((file)=> {
+				let error = validateImageInput(file);
+				if(!error){
+					this.setState({files: files});
+					this.setState({picture: file.preview});
+				} else {
+					this.setState({modalTitle: 'Error', error: error, showModal: true});
+				}
+			});
+		} else {
+			this.setState({files: [], picture: null});
+		}
 	}
-	
+    
 	onOpenClick() {
 		this.refs.ouImageDropzone.open();
-    }
+	}
+	
+	onRemoveClick() {
+		this.ouImageDropHandler();
+	}
     
 	addOrganizationalUnitData(formData) {
 		let organizationalUnitData = Object.assign({},formData);
@@ -134,8 +144,8 @@ class OrganizationalUnitNewForm extends React.Component {
 		//console.log('Show: ', this.state.showModal);
 
 		let ouImage = this.state.picture;
-		if(typeof ouImage === 'undefined'){
-			ouImage = imageNotFoundSrc;
+		if(ouImage === null){
+			ouImage = NoImageAvailable;
 		}
 		//console.log("ouImage: ",ouImage);
 		//console.log("this.state.files.length: ",this.state.files.length);
@@ -176,14 +186,17 @@ class OrganizationalUnitNewForm extends React.Component {
 							</Form>
 					</Col>
 					<Col xs={6} md={3} >
-						<div>
+						<div style={{textAlign: 'center'}}>
 							<ControlLabel>Organizational Unit Picture</ControlLabel>
-							{this.state.files.length > 0 ? <div>
-							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} name="documentFile" width="100" alt="image_ou" className="imagePreview" /> )}</div>
-							</div> : <div><img src={ouImage} name="documentFile" width="100" alt="image_ou" className="imagePreview" /></div>}
-							<Link role="button" onClick={() => this.onOpenClick()} className="btn btn-primary changeImageButton">
-								Change picture
-							</Link>
+							<div><img src={ouImage} name="documentFile" width="100" alt="image_ou" className="imagePreview" /></div>
+							<ButtonGroup block justified>
+								<Link className="btn btn-primary btn-xs changeImageButton" role="button" onClick={() => this.onOpenClick()}>
+									Set&nbsp;<Glyphicon glyph="camera" />
+								</Link>
+								<Link className="btn btn-primary btn-xs changeImageButton" role="button" disabled={this.state.picture === null} onClick={() => this.onRemoveClick()}>
+									Remove&nbsp;<Glyphicon glyph="fire" />
+								</Link>
+							</ButtonGroup>
 							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={(images) => this.ouImageDropHandler(images)} ref="ouImageDropzone" >
 								Click here or drop image
 							</Dropzone>

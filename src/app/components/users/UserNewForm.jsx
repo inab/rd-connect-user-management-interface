@@ -2,16 +2,19 @@ import React from 'react';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import LayoutField from 'react-jsonschema-form-layout';
-import { Glyphicon, Modal, Row, Col, Button, Collapse, ControlLabel, ListGroup, ListGroupItem } from 'react-bootstrap';
+import { Glyphicon, Modal, Row, Col, Button, ButtonGroup, Collapse, ControlLabel, ListGroup, ListGroupItem } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
-import imageNotFound from './defaultNoImageFound.jsx';
 import zxcvbn from 'zxcvbn';
 import Select from 'react-select';
+import { Link } from 'react-router';
+
 
 //import ModalError from './ModalError.jsx';
 
 import UserManagement from '../UserManagement.jsx';
 import GroupManagement from '../GroupManagement.jsx';
+
+const NoImageAvailable = 'images/No_image_available.svg';
 
 function validateImageInput(image,that) {
 	let responseText = null;
@@ -160,7 +163,7 @@ class UserNewForm extends React.Component {
 			showModal: false,
 			files: [],
 			in: false,
-			picture: imageNotFound.src,
+			picture: null,
 			schema: schema,
 			uiSchema: uiSchema,
 			selectableOUs: this.props.organizationalUnits,
@@ -258,20 +261,28 @@ class UserNewForm extends React.Component {
     }
     
 	dropHandler(files) {
-        files.forEach((file)=> {
-			var error = validateImageInput(file);
-			if(!error){
-				this.setState({files: files});
-				this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
-			} else {
-				this.setState({modalTitle: 'Error', error: error, showModal: true});
-			}
-        });
+		if(Array.isArray(files) && files.length > 0) {
+			files.forEach((file)=> {
+				var error = validateImageInput(file);
+				if(!error){
+					this.setState({files: files});
+					this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
+				} else {
+					this.setState({modalTitle: 'Error', error: error, showModal: true});
+				}
+			});
+		} else {
+			this.setState({files: [],picture: null}); //So the user's image is only updated in UI if the PUT process succeed'
+		}
     }
     
 	onOpenClick() {
 		this.refs.dropzone.open();
     }
+	
+	onRemoveClick() {
+		this.dropHandler();
+	}
     
 	addUserData() {
 		//console.log('yay I\'m valid!');
@@ -357,8 +368,8 @@ class UserNewForm extends React.Component {
 	
 	render() {
 		let userImage = this.state.picture;
-		if(typeof userImage === 'undefined'){
-			userImage = imageNotFound.src;
+		if(userImage === null) {
+			userImage = NoImageAvailable;
 		}
 		
 		const fields = {
@@ -400,7 +411,7 @@ class UserNewForm extends React.Component {
 							onSubmit={onSubmit}
 							onError={onError}
 							validate={(formData,errors) => this.userValidation(formData,errors)}
-							liveValidate={true}
+							liveValidate
 							showErrorList={false}
 						>
 							<div className="button-submit">
@@ -421,12 +432,15 @@ class UserNewForm extends React.Component {
 								multi
 							/>
 							<ControlLabel>User Picture</ControlLabel>
-							{this.state.files.length > 0 ? <div>
-							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} width="100" alt="image_user" className="imagePreview" /> )}</div>
-							</div> : <div><img src={userImage} width="100" alt="image_user" className="imagePreview" /></div>}
-							<button type="button" onClick={() => this.onOpenClick()} className="changeImageButton">
-								Set user picture
-							</button>
+							<div><img src={userImage} width="100" alt="image_user" className="imagePreview" /></div>
+							<ButtonGroup block justified>
+								<Link className="btn btn-primary changeImageButton" role="button" onClick={() => this.onOpenClick()}>
+									Set&nbsp;<Glyphicon glyph="camera" />
+								</Link>
+								<Link className="btn btn-primary changeImageButton" role="button" disabled={this.state.picture === null} onClick={() => this.onRemoveClick()}>
+									Remove&nbsp;<Glyphicon glyph="fire" />
+								</Link>
+							</ButtonGroup>
 							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={(files) => this.dropHandler(files)} ref="dropzone" >
 								Click here or drop image
 							</Dropzone>

@@ -4,11 +4,13 @@ import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import LayoutField from 'react-jsonschema-form-layout';
 import Dropzone from 'react-dropzone';
-import imageNotFoundSrc from './defaultNoImageFound.jsx';
 import { Link } from 'react-router';
 
 import UserManagement from '../UserManagement.jsx';
 import GroupManagement from '../GroupManagement.jsx';
+
+const NoImageAvailable = 'images/No_image_available.svg';
+
 
 function userValidation(formData,errors) {
 	if(formData.userPassword !== formData.userPassword2) {
@@ -188,7 +190,7 @@ class UserEditForm extends React.Component {
 				...this.props.user
 			},
 			files: [],
-			picture: this.props.user.picture ? this.props.user.picture : imageNotFoundSrc,
+			picture: this.props.user.picture ? this.props.user.picture : null,
 		});
 	}
 	
@@ -207,59 +209,30 @@ class UserEditForm extends React.Component {
 	
 	userImageDropHandler(files) {
 		//console.log('Received files: ', files);
-        files.forEach((image)=> {
-			var error = validateImageInput(image);
-			//var pictureFromBlob= new File([file.preview], file.name);
-			if(!error){
-				this.setState({files: files});
-				this.setState({picture: image.preview}); //So the user's image is only updated in UI if the PUT process succeed'
-				//console.log("Picture in the state after validation: ", file.preview);
-				/*
-				var req = request
-					.put(config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username) + '/picture')
-					.type(file.type)
-					.set(auth.getAuthHeaders())
-				req.attach(file.name, file);
-				req.end(function(err, res){
-					if(!err && res){
-						this.setState({files: files});
-						this.setState({picture: file.preview}); //So the user's image is only updated in UI if the PUT process succeed'
-						//console.log("Picture in the state after validation: ", file.preview);
-					}
-					else {
-						var responseText = '';
-						if(err && err.status === 404) {
-							responseText = 'Failed to Update User\'s image. Not found [404]';
-						}
-						else if(err && err.status === 500) {
-							responseText = 'Failed to Update User\'s image. Internal Server Error [500]';
-						}
-						else if(err && err.status === 'parsererror') {
-							responseText = 'Failed to Update User\'s image. Sent JSON parse failed';
-						}
-						else if(err && err.status === 'timeout') {
-							responseText = 'Failed to Update User\'s image. Time out error';
-						}
-						else if(err && err.status === 'abort') {
-							responseText = ('Ajax request aborted');
-						}
-						else if(err) {
-							responseText = 'Ajax generic error';
-						}
-						this.setState({error: responseText, showModal: true});
-					}
-				}.bind(this));
-				*/
-			} else {
-				this.setState({modalTitle: 'Error', error: error, showModal: true});
-			}
-        });
+		if(Array.isArray(files) && files.length > 0) {
+			files.forEach((image)=> {
+				var error = validateImageInput(image);
+				if(!error){
+					this.setState({files: files});
+					this.setState({picture: image.preview}); //So the user's image is only updated in UI if the PUT process succeed'
+				} else {
+					this.setState({modalTitle: 'Error', error: error, showModal: true});
+				}
+			});
+		} else {
+			this.setState({files: [],picture: null}); //So the user's image is only updated in UI if the PUT process succeed'
+		}
     }
     
 	onOpenClick() {
       this.refs.userImageDropzone.open();
     }
-    
+	
+	onRemoveClick() {
+		console.log(this.refs.userImageDropzone);
+		this.userImageDropHandler();
+	}
+	
 	updateUserData(formData){
 		//console.log('yay I\'m valid!');
 		var userData = Object.assign({},formData);
@@ -333,8 +306,9 @@ class UserEditForm extends React.Component {
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);
 		var userImage = this.state.picture;
-		if(typeof userImage === 'undefined') {
-			userImage = imageNotFoundSrc;
+		
+		if(userImage === null) {
+			userImage = NoImageAvailable;
 		}
 		return (
 			<div>
@@ -380,12 +354,15 @@ class UserEditForm extends React.Component {
 								</Link>
 							</ButtonGroup>
 							<ControlLabel>User Picture</ControlLabel>
-							{this.state.files.length > 0 ? <div>
-							<div>{this.state.files.map((file) => <img ref="imagePreview" src={file.preview} name="documentFile" width="100" alt="image_user" className="imagePreview" /> )}</div>
-							</div> : <div><img src={userImage} name="documentFile" width="100" alt="image_user" className="imagePreview" /></div>}
-							<Link className="btn btn-primary changeImageButton" role="button" onClick={() => this.onOpenClick()}>
-								Change User Picture
-							</Link>
+							<div><img src={userImage} name="documentFile" width="100" alt="image_user" className="imagePreview" /></div>
+							<ButtonGroup block justified>
+								<Link className="btn btn-primary changeImageButton" role="button" onClick={() => this.onOpenClick()}>
+									Set&nbsp;<Glyphicon glyph="camera" />
+								</Link>
+								<Link className="btn btn-primary changeImageButton" role="button" disabled={this.state.picture === null} onClick={() => this.onRemoveClick()}>
+									Remove&nbsp;<Glyphicon glyph="fire" />
+								</Link>
+							</ButtonGroup>
 							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={(images) => this.userImageDropHandler(images)} ref="userImageDropzone" >
 								Click here or drop image for {data.username}
 							</Dropzone>

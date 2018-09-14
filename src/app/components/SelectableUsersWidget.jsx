@@ -2,7 +2,7 @@ import React from 'react';
 import Select from 'react-select';
 
 export function genCustomUsersWidgetInstance(selectableUsers) {
-	return (props) => {
+	let customUsersWidgetInstance = (props) => {
 		return (
 			<Select
 				disabled={props.disabled}
@@ -14,4 +14,11 @@ export function genCustomUsersWidgetInstance(selectableUsers) {
 			/>
 		);
 	};
+	customUsersWidgetInstance.propTypes = {
+		disabled: React.PropTypes.bool.isRequired,
+		value: React.PropTypes.any.isRequired,
+		onChange: React.PropTypes.func.isRequired
+	};
+	return customUsersWidgetInstance;
 }
+

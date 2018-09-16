@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal , Button } from 'react-bootstrap';
 import UserEditForm from './UserEditForm.jsx';
 import UserViewForm from './UserViewForm.jsx';
+import UserRemoveForm from './UserRemoveForm.jsx';
 import UserEnableDisableForm from './UserEnableDisableForm.jsx';
 
 import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
@@ -69,6 +70,9 @@ class UserFormContainer extends AbstractFetchedDataContainer {
 					//break;
 				case 'view':
 					return <UserViewForm schema={this.state.schema} user={this.state.user} history={this.history}  />;
+					//break;
+				case 'remove':
+					return <UserRemoveForm user={this.state.user} history={this.history}  />;
 					//break;
 				case 'enable_disable':
 					return <UserEnableDisableForm schema={this.state.schema} user={this.state.user} history={this.history}  />;

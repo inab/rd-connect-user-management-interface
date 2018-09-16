@@ -1,8 +1,6 @@
 import React from 'react';
-import jQuery from 'jquery';
 import { Glyphicon, Modal, Grid, Row, Col, Button, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
-import config from 'config.jsx';
-import auth from 'components/auth.jsx';
+import UserManagement from '../UserManagement.jsx';
 import zxcvbn from 'zxcvbn';
 import ReactMustache from 'react-mustache';
 
@@ -105,75 +103,19 @@ class UserPassword extends React.Component {
 	}
 	
 	changePassword(){
-		jQuery.ajax({
-				type: 'POST',
-				url: config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username) + '/resetPassword',
-				contentType: 'application/json',
-				headers: auth.getAuthHeaders(),
-				dataType: 'json',
-				data: JSON.stringify({userPassword: this.state.valuePassword1})
-			})
-			.done(function(data) {
-				//console.log('Password correctly updated!!');
-				this.setState({modalTitle:'Success', error: 'Password changed correctly!!', showModal: true});
-
-			}.bind(this))
-			.fail(function(jqXhr) {
-				//console.log('Failed to change user password',jqXhr.responseText);
-				var responseText = '';
-				if(jqXhr.status === 0) {
-					responseText = 'Failed to change user password. Not connect: Verify Network.';
-				} else if(jqXhr.status === 404) {
-					responseText = 'Failed to change user password. Not found [404]';
-				} else if(jqXhr.status === 500) {
-					responseText = 'Failed to change user password. Internal Server Error [500].';
-				} else if(jqXhr.status === 'parsererror') {
-					responseText = 'Failed to create new user. Sent JSON parse failed.';
-				} else if(jqXhr.status === 'timeout') {
-					responseText = 'Failed to create new user. Time out error.';
-				} else if(jqXhr.status === 'abort') {
-					responseText = 'Ajax request aborted.';
-				} else {
-					responseText = 'Uncaught Error: ' + jqXhr.responseText;
-				}
-				this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
-			}.bind(this))
-			.always(() => {
+		let um = new UserManagement();
+		
+		let errHandler = (err) => {
+			this.setState({
+					...err,
+					showModal: true
 			});
-		/*
-		jQuery.ajax({
-			type: 'PUT',
-			url: config.usersBaseUri,
-			dataType: 'json',
-			//processData: false,
-			contentType: 'application/json',
-			headers: auth.getAuthHeaders(),
-			data: JSON.stringify()
-		})
-		.done(function(data) {
-			self.clearForm();
-		})
-		.fail(function(jqXhr) {
-			console.log('Failed to Create New User',jqXhr);
-			var responseText = '';
-			if(jqXhr.status === 0) {
-				responseText = 'Failed to Create New User. Not connect: Verify Network.';
-			} else if(jqXhr.status === 404) {
-				responseText = 'Failed to Create New User. Not found [404]';
-			} else if(jqXhr.status === 500) {
-				responseText = 'Failed to Create New User. Internal Server Error [500].';
-			} else if(jqXhr.status === 'parsererror') {
-				responseText = 'Failed to Create New User. Sent JSON parse failed.';
-			} else if(jqXhr.status === 'timeout') {
-				responseText = 'Failed to Create New User. Time out error.';
-			} else if(jqXhr.status === 'abort') {
-				responseText = 'Ajax request aborted.';
-			} else {
-				responseText = 'Uncaught Error: ' + jqXhr.responseText;
-			}
-			this.setState({error: responseText, showModal: true});
-		}.bind(this));
-		*/
+		};
+		
+		um.changeUserPasswordPromise(this.state.user.username,this.state.valuePassword1)
+			.then(() => {
+				this.setState({modalTitle:'Password for ' + this.state.user.username + ' changed', error: 'User ' + this.state.user.cn + ' has properly changed the password', showModal: true});
+			},errHandler);
 	}
 	
 	render() {
@@ -181,7 +123,7 @@ class UserPassword extends React.Component {
 		const onSubmit = () => this.changePassword();
 		return (
 			<div>
-				<h3>Password change for user {this.props.user.username}</h3>
+				<h3>Password change for user {this.state.user.username}</h3>
 				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>

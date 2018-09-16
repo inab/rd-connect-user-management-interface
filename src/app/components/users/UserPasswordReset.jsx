@@ -1,8 +1,6 @@
 import React from 'react';
-import jQuery from 'jquery';
 import { Glyphicon, Modal, Button } from 'react-bootstrap';
-import config from 'config.jsx';
-import auth from 'components/auth.jsx';
+import UserManagement from '../UserManagement.jsx';
 
 class UserPasswordReset extends React.Component {
 	constructor(props,context) {
@@ -33,47 +31,26 @@ class UserPasswordReset extends React.Component {
 	}
 	
 	resetPassword() {
-		jQuery.ajax({
-				type: 'POST',
-				url: config.usersBaseUri + '/' + encodeURIComponent(this.props.user.username) + '/resetPassword',
-				contentType: 'application/json',
-				headers: auth.getAuthHeaders(),
-				dataType: 'json',
-				data: JSON.stringify({})
-			})
-			.done(function(data) {
-				this.setState({modalTitle:'Success', error: 'Password correctly resetted!!', showModal: true});
-
-			}.bind(this))
-			.fail(function(jqXhr) {
-				//console.log('Failed to reset password',jqXhr.responseText);
-				var responseText = '';
-				if(jqXhr.status === 0) {
-					responseText = 'Failed to change user password. Not connect: Verify Network.';
-				} else if(jqXhr.status === 404) {
-					responseText = 'Failed to change user password. Not found [404]';
-				} else if(jqXhr.status === 500) {
-					responseText = 'Failed to change user password. Internal Server Error [500].';
-				} else if(jqXhr.status === 'parsererror') {
-					responseText = 'Failed to create new user. Sent JSON parse failed.';
-				} else if(jqXhr.status === 'timeout') {
-					responseText = 'Failed to create new user. Time out error.';
-				} else if(jqXhr.status === 'abort') {
-					responseText = 'Ajax request aborted.';
-				} else {
-					responseText = 'Uncaught Error: ' + jqXhr.responseText;
-				}
-				this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
-			}.bind(this))
-			.always(() => {
+		let um = new UserManagement();
+		
+		let errHandler = (err) => {
+			this.setState({
+					...err,
+					showModal: true
 			});
+		};
+		
+		um.changeUserPasswordPromise(this.state.user.username)
+			.then(() => {
+				this.setState({modalTitle:'Password for ' + this.state.user.username + ' resetted', error: 'User ' + this.state.user.cn + ' has properly resetted the password', showModal: true});
+			},errHandler);
 	}
 	
 	render() {
 		const onSubmit = () => this.resetPassword();
 		return (
 			<div>
-				<h3>Password reset for user {this.props.user.username}</h3>
+				<h3>Password reset for user {this.state.user.username}</h3>
 				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
 					<Modal.Header closeButton>
 						<Modal.Title>{this.state.modalTitle}</Modal.Title>
@@ -86,7 +63,7 @@ class UserPasswordReset extends React.Component {
 					</Modal.Footer>
 				</Modal>
 				<form onSubmit={onSubmit}>
-					<p>Are you sure you want to reset password for user {this.props.user.username}?</p>
+					<p>Are you sure you want to reset password for user {this.state.user.username}?</p>
 					<div className="button-submit">
 						<Button bsStyle="info" onClick={() => this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
 						<Button bsStyle="danger" type="submit" className="submitCancelButtons" >Reset password&nbsp;<Glyphicon glyph="pencil" /></Button>

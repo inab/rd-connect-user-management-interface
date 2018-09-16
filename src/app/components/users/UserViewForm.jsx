@@ -56,16 +56,15 @@ class UserViewForm extends React.Component {
 					<Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(data.username)}>
 						Edit User Info&nbsp;<Glyphicon glyph="edit" />
 					</Link>
+					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/remove/' + encodeURIComponent(data.username)}>
+						Remove user<br/><Glyphicon glyph="fire" /> <b>DANGER!</b> <Glyphicon glyph="fire" />
+					</Link>
 					<br />
-					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/reset-password/' + encodeURIComponent(data.username)}>
+					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/password/' + encodeURIComponent(data.username) + '/reset'}>
 						Reset Password&nbsp;<Glyphicon glyph="alert" />
 					</Link>
-					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/password/' + encodeURIComponent(data.username)}>
+					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/password/' + encodeURIComponent(data.username) + '/change'}>
 						Change Password&nbsp;<Glyphicon glyph="pencil" />
-					</Link>
-					<br />
-					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/remove/' + encodeURIComponent(data.username)}>
-						<Glyphicon glyph="fire" />Remove user (DANGER!)<Glyphicon glyph="fire" />
 					</Link>
 				</div>
 				<Jumbotron>
@@ -170,16 +169,15 @@ class UserViewForm extends React.Component {
 					<Link className="btn btn-primary editViewButton" role="button" to={'/users/edit/' + encodeURIComponent(data.username)}>
 						Edit User Info&nbsp;<Glyphicon glyph="edit" />
 					</Link>
+					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/remove/' + encodeURIComponent(data.username)}>
+						Remove user<br/><Glyphicon glyph="fire" /> <b>DANGER!</b> <Glyphicon glyph="fire" />
+					</Link>
 					<br />
-					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/reset-password/' + encodeURIComponent(data.username)}>
+					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/password/' + encodeURIComponent(data.username) + '/reset'}>
 						Reset Password&nbsp;<Glyphicon glyph="alert" />
 					</Link>
-					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/password/' + encodeURIComponent(data.username)}>
+					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/password/' + encodeURIComponent(data.username) + '/change'}>
 						Change Password&nbsp;<Glyphicon glyph="pencil" />
-					</Link>
-					<br />
-					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/remove/' + encodeURIComponent(data.username)}>
-						<Glyphicon glyph="fire" />Remove user (DANGER!)<Glyphicon glyph="fire" />
 					</Link>
 				</div>
 			</div>

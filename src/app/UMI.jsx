@@ -17,6 +17,7 @@ import UserFormContainer from './components/users/UserFormContainer.jsx';
 import PasswordContainer from './components/users/PasswordContainer.jsx';
 
 import UserEditFormContainer from './components/users/UserEditFormContainer.jsx';
+import UserRemoveFormContainer from './components/users/UserRemoveFormContainer.jsx';
 import UserNewFormContainer from './components/users/UserNewFormContainer.jsx';
 import UsersGroupsContainer from './components/users/UsersGroupsContainer.jsx';
 import UsersGroupsFormContainer from './components/users/UsersGroupsFormContainer.jsx';
@@ -89,11 +90,12 @@ ReactDOM.render((
                 <Route path="users" name="Users" component={Box} onEnter={requireAuth}>
                     <IndexRoute component={UsersContainer} />
                     <Route path="list" name="List" component={UsersContainer} task={'list'} />
-                    <Route path="edit/:username" name="Edit" staticName component={UserEditFormContainer} task={'edit'}/>
                     <Route path="view/:username" name="View" staticName component={UserFormContainer} task={'view'}/>
+                    <Route path="edit/:username" name="Edit" staticName component={UserEditFormContainer} task={'edit'}/>
+                    <Route path="remove/:username" name="Remove" staticName component={UserRemoveFormContainer} task={'remove'}/>
                     <Route path="enable-disable/:username" name="Enable-Disable" staticName component={UserFormContainer} task={'enable_disable'}/>
-                    <Route path="password/:username" name="Change Password" staticName component={PasswordContainer} task={'passwordChange'}/>
-                    <Route path="reset-password/:username" name="Reset Password" staticName component={PasswordContainer} task={'passwordReset'}/>
+                    <Route path="password/:username/change" name="Change Password" staticName component={PasswordContainer} task={'passwordChange'}/>
+                    <Route path="password/:username/reset" name="Reset Password" staticName component={PasswordContainer} task={'passwordReset'}/>
                     <Route path="new" name="New" component={UserNewFormContainer} task={'new_privileged'}/>
                     <Route path="new-as-template/:username" name="New using a template" component={UserNewFormContainer} task={'new_as_template'} />
                     <Route path="new-unprivileged" name="New (unprivileged)" component={UserNewFormContainer} task={'new_unprivileged'} />
@@ -113,12 +115,12 @@ ReactDOM.render((
                     <Route path="new" name="New" component={OrganizationalUnitNewFormContainer} />
                     <Route path="users" name="Users in Organizational Units" component={OrganizationalUnitsUsersContainer} />
                 </Route>
-                <Route path="groups" name="Groups" component={Box} onEnter={requireAuth}>
+                <Route path="groups" name="Groups" component={Box}>
                     <IndexRoute component={GroupsContainer} />
                     <Route path="list" name="List" component={GroupsContainer} />
-                    <Route path="edit/:groupName" name="Edit" staticName component={GroupFormContainer} task={'edit'} />
+                    <Route path="edit/:groupName" name="Edit" staticName component={GroupFormContainer} onEnter={requireAuth} task={'edit'} />
                     <Route path="view/:groupName" name="View" staticName component={GroupFormContainer} task={'view'} />
-                    <Route path="new" name="New" component={GroupNewFormContainer} />
+                    <Route path="new" name="New" component={GroupNewFormContainer} onEnter={requireAuth} />
                 </Route>
                 <Route path="mail" name="Mail tasks" component={Box} onEnter={requireAuth}>
 					<IndexRoute component={MailingContainer} />

@@ -22,6 +22,10 @@ class Auth {
 	}
 	
 	getAuthHeaders() {
+		// This is to take into account sessions which have timed out
+		if(cookie.load(COOKIE_NAME) === undefined) {
+			this.invalidateSession();
+		}
 		return {
 			'X-RDConnect-UserManagement-Session': this.token
 		};
@@ -62,7 +66,7 @@ class Auth {
 		return new Promise((resolve,reject) => {
 			if(this.userProps === null) {
 				if(this.token !== null) {
-					// Let's validate the session status, in a synchronous way
+					// Let's validate the session status
 					jQuery.ajax({
 						type: 'GET',
 						url: config.apiBaseUri + '/login',
@@ -86,6 +90,8 @@ class Auth {
 					reject({xhr: {},status: 401,err: 'Unauthorized'});
 				}
 			} else {
+				// Postposing the session length in client side
+				this.renewSessionCookie();
 				resolve(this.userProps);
 			}
 		});

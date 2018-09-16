@@ -145,6 +145,11 @@ class UMCache {
 				case 0:
 					responseText += 'Not connect: Verify Network.';
 					break;
+				case 401:
+					responseText += 'Unauthorized request: you must re-login.';
+					// Invalidating local session
+					auth.invalidateSession();
+					break;
 				case 404:
 					responseText += 'Requested User not found [404]';
 					break;

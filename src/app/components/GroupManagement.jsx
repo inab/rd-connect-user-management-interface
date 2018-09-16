@@ -281,7 +281,7 @@ class GroupManagement {
 			})
 			.done(resolve)
 			.fail((jqXhr) => {
-				let responseText = 'Failed to rename group ' + groupname + ' to ' + existingGroupname + '. ';
+				let responseText = 'Failed to merge group ' + groupname + ' into ' + existingGroupname + '. ';
 				//console.log('Failed to change user password',jqXhr.responseText);
 				switch(jqXhr.status) {
 					case 0:

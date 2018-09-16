@@ -44,7 +44,7 @@ class GroupRenameFormContainer extends AbstractFetchedDataContainer {
 	componentWillUnmount() {
 		super.componentWillUnmount();
 		
-		this.invalidateGroups();
+		this.invalidateGroup(this.props.params.groupName);
 	}
 	
 	close() {

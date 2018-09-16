@@ -1,24 +1,11 @@
 import React from 'react';
+import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import { Glyphicon, Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
 
 import GroupManagement from '../GroupManagement.jsx';
 
 import { genCustomUsersWidgetInstance } from '../SelectableUsersWidget.jsx';
-
-function groupValidation(formData,errors) {
-	console.log(errors);
-	if(formData.owner.length === 0) {
-		errors.owner.addError('At least one owner is needed');
-	}
-	
-	// Check whether there is a selected group purpose
-	if(formData.groupPurpose === undefined || formData.groupPurpose === null || formData.groupPurpose.length === 0) {
-		errors.groupPurpose.addError('Please set the group purpose');
-	}
-	
-	return errors;
-}
 
 class GroupNewForm extends React.Component {
 	constructor(props,context) {
@@ -34,6 +21,7 @@ class GroupNewForm extends React.Component {
 			in: false,
 			schema: this.props.schema,
 			selectableUsers: this.props.users,
+			existingGroups: this.props.groups,
 			group: {
 				cn: '',
 				description: '',
@@ -66,6 +54,27 @@ class GroupNewForm extends React.Component {
 			this.toggle();
 		}, 3000);
     }
+
+	groupValidation(formData,errors) {
+		//Now we test if user exists...
+		var groupname = formData.cn;
+		var arrayOfGroups = this.state.existingGroups;
+		var groupsRepeated = jQuery.grep(arrayOfGroups, function(e){ return e.cn === groupname; });
+		if(groupsRepeated.length !== 0 ){
+			errors.cn.addError('The group name is already in use. Please choose a different one');
+		}
+		
+		if(formData.owner.length === 0) {
+			errors.owner.addError('At least one owner is needed');
+		}
+		
+		// Check whether there is a selected group purpose
+		if(formData.groupPurpose === undefined || formData.groupPurpose === null || formData.groupPurpose.length === 0) {
+			errors.groupPurpose.addError('Please set the group purpose');
+		}
+		
+		return errors;
+	}
     
 	addGroupData(){
 		let groupData = Object.assign({},this.state.group);
@@ -157,11 +166,10 @@ class GroupNewForm extends React.Component {
 								uiSchema={uiSchema}
 								formData={this.state.group}
 								onChange={({formData}) => this.setState({group: formData})}
-								//onChange={log('changed')}
 								onSubmit={onSubmit}
 								//onError={onError}
-								validate={groupValidation}
-								liveValidate={false}
+								validate={(formData,errors) => this.groupValidation(formData,errors)}
+								liveValidate
 								showErrorList={false}
 							>
 								<div className="button-submit">
@@ -180,6 +188,7 @@ class GroupNewForm extends React.Component {
 GroupNewForm.propTypes = {
 	schema: React.PropTypes.object.isRequired,
 	users: React.PropTypes.array.isRequired,
+	groups: React.PropTypes.array.isRequired,
 	history:  React.PropTypes.object.isRequired
 };
 

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 
-import GroupNewForm from './GroupNewForm.jsx';
+import GroupRenameForm from './GroupRenameForm.jsx';
+import GroupMergeForm from './GroupMergeForm.jsx';
 import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
 
-class GroupNewFormContainer extends AbstractFetchedDataContainer {
+class GroupRenameFormContainer extends AbstractFetchedDataContainer {
 	constructor(props,context) {
 		super(props,context);
 		this.history = props.history;
@@ -13,7 +14,7 @@ class GroupNewFormContainer extends AbstractFetchedDataContainer {
 	componentWillMount() {
 		super.componentWillMount();
 		this.setState({
-			schema: null,
+			task: this.props.route.task,
 			error: null,
 			loaded: false,
 			showModal: false
@@ -28,14 +29,9 @@ class GroupNewFormContainer extends AbstractFetchedDataContainer {
 			});
 		};
 		
-		this.groupsSchemaPromise()
-			.then((groupsSchema) => {
-				this.onChange({schema: groupsSchema});
-				
-				return this.selectableUsersPromise();
-			}, errHandler)
-			.then((selectableUsers) => {
-				this.setState({selectableUsers: selectableUsers});
+		this.groupPromise(this.props.params.groupName)
+			.then((group) => {
+				this.setState({group: group});
 				
 				return this.selectableGroupsPromise();
 			}, errHandler)
@@ -61,11 +57,16 @@ class GroupNewFormContainer extends AbstractFetchedDataContainer {
 	
 	render() {
 		if(this.state.loaded) {
-			return (
-				<div>
-					<GroupNewForm schema={this.state.schema} users={this.state.selectableUsers} groups={this.state.selectableGroups} history={this.history} />
-				</div>
-			);
+			switch(this.state.task) {
+				case 'rename':
+					return (
+						<GroupRenameForm group={this.state.group} groups={this.state.selectableGroups} history={this.history} />
+					);
+				case 'merge':
+					return (
+						<GroupMergeForm group={this.state.group} groups={this.state.selectableGroups} history={this.history} />
+					);
+			}
 		}
 		if(this.state.error) {
 			return (
@@ -88,4 +89,4 @@ class GroupNewFormContainer extends AbstractFetchedDataContainer {
 	}
 }
 
-export default GroupNewFormContainer;
+export default GroupRenameFormContainer;

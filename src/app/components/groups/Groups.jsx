@@ -71,10 +71,19 @@ const Groups = ({groups}) => {
                           })}
                       </td>
                       <td>
-                        <Link className="btn btn-primary editViewButton" role="button" to={'/groups/edit/' + encodeURIComponent(`${group.cn}`)}>
-                          Edit&nbsp;
-							<Glyphicon glyph="edit" />
+                        <Link className="btn btn-primary editViewButton" role="button" to={'/groups/edit/' + encodeURIComponent(group.cn)}>
+							Edit&nbsp;<Glyphicon glyph="edit" />
                         </Link>
+						<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/groups/remove/' + encodeURIComponent(group.cn)}>
+							Remove group<br/><Glyphicon glyph="fire" /> <b>DANGER!</b> <Glyphicon glyph="fire" />
+						</Link>
+						<br />
+						<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/groups/rename/' + encodeURIComponent(group.cn)}>
+							Rename&nbsp;<Glyphicon glyph="pencil" />
+						</Link>
+						<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/groups/merge/' + encodeURIComponent(group.cn)}>
+							Merge&nbsp;<Glyphicon glyph="road" />
+						</Link>
                       </td>
                     </tr>
                     </tbody>

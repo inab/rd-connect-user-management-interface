@@ -185,6 +185,135 @@ class GroupManagement {
 	addOwnersToGroupPromise(groupname, ownersToAdd) {
 		return this.addUsersToGroupPromise(groupname,ownersToAdd,'owners');
 	}
+	
+	removeGroupPromise(groupname) {
+		return new Promise((resolve,reject) => {
+			jQuery.ajax({
+				type: 'DELETE',
+				url: config.composeGroupURI(groupname),
+				headers: auth.getAuthHeaders(),
+			})
+			.done(resolve)
+			.fail((jqXhr) => {
+				let responseText = 'Failed to remove group ' + groupname + '. ';
+				//console.log('Failed to change user password',jqXhr.responseText);
+				switch(jqXhr.status) {
+					case 0:
+						responseText += 'Not connect: Verify Network.';
+						break;
+					case 401:
+						responseText += 'You do not have enough privileges [401]';
+						break;
+					case 404:
+						responseText += 'Not found [404]';
+						break;
+					case 500:
+						responseText += 'Internal Server Error [500].';
+						break;
+					case 'parsererror':
+						responseText += 'Sent JSON parse failed.';
+						break;
+					case 'timeout':
+						responseText += 'Time out error.';
+						break;
+					case 'abort':
+						responseText = 'Ajax request aborted.';
+						break;
+					default:
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+						break;
+				}
+				
+				reject({ modalTitle: 'Error', error: responseText});
+			});
+		});
+	}
+	
+	renameGroupPromise(groupname,newGroupname) {
+		return new Promise((resolve,reject) => {
+			jQuery.ajax({
+				type: 'POST',
+				url: config.composeGroupURI(groupname) + '/renamesTo/' + encodeURIComponent(newGroupname),
+				headers: auth.getAuthHeaders(),
+			})
+			.done(resolve)
+			.fail((jqXhr) => {
+				let responseText = 'Failed to rename group ' + groupname + ' to ' + newGroupname + '. ';
+				//console.log('Failed to change user password',jqXhr.responseText);
+				switch(jqXhr.status) {
+					case 0:
+						responseText += 'Not connect: Verify Network.';
+						break;
+					case 401:
+						responseText += 'You do not have enough privileges [401]';
+						break;
+					case 404:
+						responseText += 'Not found [404]';
+						break;
+					case 500:
+						responseText += 'Internal Server Error [500].';
+						break;
+					case 'parsererror':
+						responseText += 'Sent JSON parse failed.';
+						break;
+					case 'timeout':
+						responseText += 'Time out error.';
+						break;
+					case 'abort':
+						responseText = 'Ajax request aborted.';
+						break;
+					default:
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+						break;
+				}
+				
+				reject({ modalTitle: 'Error', error: responseText});
+			});
+		});
+	}
+	
+	mergeGroupPromise(groupname,existingGroupname) {
+		return new Promise((resolve,reject) => {
+			jQuery.ajax({
+				type: 'POST',
+				url: config.composeGroupURI(groupname) + '/mergesTo/' + encodeURIComponent(existingGroupname),
+				headers: auth.getAuthHeaders(),
+			})
+			.done(resolve)
+			.fail((jqXhr) => {
+				let responseText = 'Failed to rename group ' + groupname + ' to ' + existingGroupname + '. ';
+				//console.log('Failed to change user password',jqXhr.responseText);
+				switch(jqXhr.status) {
+					case 0:
+						responseText += 'Not connect: Verify Network.';
+						break;
+					case 401:
+						responseText += 'You do not have enough privileges [401]';
+						break;
+					case 404:
+						responseText += 'Not found [404]';
+						break;
+					case 500:
+						responseText += 'Internal Server Error [500].';
+						break;
+					case 'parsererror':
+						responseText += 'Sent JSON parse failed.';
+						break;
+					case 'timeout':
+						responseText += 'Time out error.';
+						break;
+					case 'abort':
+						responseText = 'Ajax request aborted.';
+						break;
+					default:
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+						break;
+				}
+				
+				reject({ modalTitle: 'Error', error: responseText});
+			});
+		});
+	}
 }
 
 export default GroupManagement;

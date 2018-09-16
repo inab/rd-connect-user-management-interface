@@ -116,4 +116,4 @@ UserRemoveForm.propTypes = {
 };
 
 
-module.exports = UserRemoveForm;
+export default UserRemoveForm;

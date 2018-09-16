@@ -1,6 +1,7 @@
 import React from 'react';
 import Form from 'react-jsonschema-form';
-import { Row, Col, Button} from 'react-bootstrap';
+import { Row, Col, Button, Glyphicon } from 'react-bootstrap';
+import { Link } from 'react-router';
 
 //import ModalError from './ModalError.jsx';
 
@@ -9,6 +10,11 @@ function groupValidation(formData,errors) {
 }
 
 class GroupViewForm extends React.Component {
+	constructor(props,context) {
+		super(props,context);
+		this.history = props.history;
+	}
+	
 	render() {
 		var schema = this.props.schema;
 		var data = this.props.group;
@@ -37,6 +43,24 @@ class GroupViewForm extends React.Component {
 		return (
 			<div>
 				<Row className="show-grid">
+					<div className="right">
+						<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons"><Glyphicon glyph="step-backward" />&nbsp;Back</Button>
+						<Link className="btn btn-primary editViewButton" role="button" to={'/groups/edit/' + encodeURIComponent(data.cn)}>
+							Edit&nbsp;<Glyphicon glyph="edit" />
+						</Link>
+						<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/groups/remove/' + encodeURIComponent(data.cn)}>
+							Remove group<br/><Glyphicon glyph="fire" /> <b>DANGER!</b> <Glyphicon glyph="fire" />
+						</Link>
+						<br />
+						<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/groups/rename/' + encodeURIComponent(data.cn)}>
+							Rename&nbsp;<Glyphicon glyph="pencil" />
+						</Link>
+						<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/groups/merge/' + encodeURIComponent(data.cn)}>
+							Merge&nbsp;<Glyphicon glyph="road" />
+						</Link>
+					</div>
+				</Row>
+				<Row className="show-grid">
 					<Col xs={12} md={8}>
 						<Form
 								schema={schema}
@@ -47,15 +71,29 @@ class GroupViewForm extends React.Component {
 								onError={onError}
 								validate={groupValidation}
 								liveValidate
-						>
-						<div>
-								<Button>Back</Button>
-							</div>
-						</Form>
+						/>
 					</Col>
 					<Col xs={6} md={4}>
 						<code />
 					</Col>
+				</Row>
+				<Row className="show-grid">
+					<div className="right">
+						<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons"><Glyphicon glyph="step-backward" />&nbsp;Back</Button>
+						<Link className="btn btn-primary editViewButton" role="button" to={'/groups/edit/' + encodeURIComponent(data.cn)}>
+							Edit&nbsp;<Glyphicon glyph="edit" />
+						</Link>
+						<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/groups/remove/' + encodeURIComponent(data.cn)}>
+							Remove group<br/><Glyphicon glyph="fire" /> <b>DANGER!</b> <Glyphicon glyph="fire" />
+						</Link>
+						<br />
+						<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/groups/rename/' + encodeURIComponent(data.cn)}>
+							Rename&nbsp;<Glyphicon glyph="pencil" />
+						</Link>
+						<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/groups/merge/' + encodeURIComponent(data.cn)}>
+							Merge&nbsp;<Glyphicon glyph="road" />
+						</Link>
+					</div>
 				</Row>
 			</div>
 		);
@@ -64,7 +102,8 @@ class GroupViewForm extends React.Component {
 
 GroupViewForm.propTypes = {
 	schema: React.PropTypes.object.isRequired,
-	group: React.PropTypes.object.isRequired
+	group: React.PropTypes.object.isRequired,
+	history:  React.PropTypes.object.isRequired
 };
 
 export default GroupViewForm;

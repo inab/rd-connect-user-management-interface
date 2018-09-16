@@ -30,6 +30,9 @@ import OrganizationalUnitsUsersContainer from './components/organizationalUnits/
 
 import GroupsContainer from './components/groups/GroupsContainer.jsx';
 import GroupFormContainer from './components/groups/GroupFormContainer.jsx';
+import GroupEditFormContainer from './components/groups/GroupEditFormContainer.jsx';
+import GroupRemoveFormContainer from './components/groups/GroupRemoveFormContainer.jsx';
+import GroupRenameFormContainer from './components/groups/GroupRenameFormContainer.jsx';
 import GroupNewFormContainer from './components/groups/GroupNewFormContainer.jsx';
 
 /* The routes using these components have been disabled
@@ -87,39 +90,42 @@ ReactDOM.render((
                 <Route path="login" component={Login} name="Login" />
                 <Route path="logout" component={Logout} name="Logout" />
                 <Route path="userProfile" component={UserProfile} name="User's Profile" />
-                <Route path="users" name="Users" component={Box} onEnter={requireAuth}>
+                <Route path="users" name="Users" component={Box}>
                     <IndexRoute component={UsersContainer} />
                     <Route path="list" name="List" component={UsersContainer} task={'list'} />
                     <Route path="view/:username" name="View" staticName component={UserFormContainer} task={'view'}/>
-                    <Route path="edit/:username" name="Edit" staticName component={UserEditFormContainer} task={'edit'}/>
-                    <Route path="remove/:username" name="Remove" staticName component={UserRemoveFormContainer} task={'remove'}/>
-                    <Route path="enable-disable/:username" name="Enable-Disable" staticName component={UserFormContainer} task={'enable_disable'}/>
-                    <Route path="password/:username/change" name="Change Password" staticName component={PasswordContainer} task={'passwordChange'}/>
-                    <Route path="password/:username/reset" name="Reset Password" staticName component={PasswordContainer} task={'passwordReset'}/>
-                    <Route path="new" name="New" component={UserNewFormContainer} task={'new_privileged'}/>
-                    <Route path="new-as-template/:username" name="New using a template" component={UserNewFormContainer} task={'new_as_template'} />
+                    <Route path="edit/:username" name="Edit" staticName component={UserEditFormContainer} onEnter={requireAuth} task={'edit'}/>
+                    <Route path="remove/:username" name="Remove" staticName component={UserRemoveFormContainer} onEnter={requireAuth} task={'remove'}/>
+                    <Route path="enable-disable/:username" name="Enable-Disable" staticName component={UserFormContainer} onEnter={requireAuth} task={'enable_disable'}/>
+                    <Route path="password/:username/change" name="Change Password" staticName component={PasswordContainer} onEnter={requireAuth} task={'passwordChange'}/>
+                    <Route path="password/:username/reset" name="Reset Password" staticName component={PasswordContainer} onEnter={requireAuth} task={'passwordReset'}/>
+                    <Route path="new" name="New" component={UserNewFormContainer} onEnter={requireAuth} task={'new_privileged'}/>
+                    <Route path="new-as-template/:username" name="New using a template" component={UserNewFormContainer} onEnter={requireAuth} task={'new_as_template'} />
                     <Route path="new-unprivileged" name="New (unprivileged)" component={UserNewFormContainer} task={'new_unprivileged'} />
                     <Route path="groups" name="Users in groups" component={Box} >
                         <IndexRoute component={UsersGroupsContainer}/>
                         <Route path="list" name="View Users in group" staticName component={UsersGroupsContainer} task={'list'}/>
                         <Route path="view/:username" name="View Users in group" staticName component={UsersGroupsFormContainer} task={'users_groups_view'} />
-                        <Route path="edit/:username" name="Edit Users in group" staticName component={UsersGroupsFormContainer} task={'users_groups_edit'} />
+                        <Route path="edit/:username" name="Edit Users in group" staticName component={UsersGroupsFormContainer} onEnter={requireAuth} task={'users_groups_edit'} />
                     </Route>
                 </Route>
-                <Route path="organizationalUnits" name="Organizational Units" component={Box} onEnter={requireAuth}>
+                <Route path="organizationalUnits" name="Organizational Units" component={Box}>
                     <IndexRoute component={OrganizationalUnitsContainer}/>
                     <Route path="list" name="List Organizational Units" component={OrganizationalUnitsContainer} />
-                    <Route path="addUser/:organizationalUnit" name="Add User" staticName component={UserNewFormContainer} task={'new_privileged_ou'} />
-                    <Route path="edit/:organizationalUnit" name="Edit" staticName component={OrganizationalUnitEditFormContainer} task={'edit'} />
+                    <Route path="addUser/:organizationalUnit" name="Add User" staticName component={UserNewFormContainer} onEnter={requireAuth} task={'new_privileged_ou'} />
+                    <Route path="edit/:organizationalUnit" name="Edit" staticName component={OrganizationalUnitEditFormContainer} onEnter={requireAuth} task={'edit'} />
                     <Route path="view/:organizationalUnit" name="View" staticName component={OrganizationalUnitFormContainer} task={'view'} />
-                    <Route path="new" name="New" component={OrganizationalUnitNewFormContainer} />
+                    <Route path="new" name="New" component={OrganizationalUnitNewFormContainer} onEnter={requireAuth} />
                     <Route path="users" name="Users in Organizational Units" component={OrganizationalUnitsUsersContainer} />
                 </Route>
                 <Route path="groups" name="Groups" component={Box}>
                     <IndexRoute component={GroupsContainer} />
                     <Route path="list" name="List" component={GroupsContainer} />
-                    <Route path="edit/:groupName" name="Edit" staticName component={GroupFormContainer} onEnter={requireAuth} task={'edit'} />
+                    <Route path="edit/:groupName" name="Edit" staticName component={GroupEditFormContainer} onEnter={requireAuth} task={'edit'} />
+                    <Route path="remove/:groupName" name="Remove" staticName component={GroupRemoveFormContainer} onEnter={requireAuth} task={'remove'} />
                     <Route path="view/:groupName" name="View" staticName component={GroupFormContainer} task={'view'} />
+                    <Route path="rename/:groupName" name="Rename" staticName component={GroupRenameFormContainer} onEnter={requireAuth} task={'rename'} />
+                    <Route path="merge/:groupName" name="Merge" staticName component={GroupRenameFormContainer} onEnter={requireAuth} task={'merge'} />
                     <Route path="new" name="New" component={GroupNewFormContainer} onEnter={requireAuth} />
                 </Route>
                 <Route path="mail" name="Mail tasks" component={Box} onEnter={requireAuth}>

@@ -4,6 +4,7 @@ import { Modal, Button } from 'react-bootstrap';
 import GroupNewFormContainer from './GroupNewFormContainer.jsx';
 import GroupEditForm from './GroupEditForm.jsx';
 import GroupViewForm from './GroupViewForm.jsx';
+import GroupRemoveForm from './GroupRemoveForm.jsx';
 
 class GroupFormContainer extends GroupNewFormContainer {
 	constructor(props,context) {
@@ -58,6 +59,10 @@ class GroupFormContainer extends GroupNewFormContainer {
 				case 'view':
 					return (
 							<GroupViewForm schema={this.state.schema} group={this.state.group} history={this.history} />
+					);
+				case 'remove':
+					return (
+							<GroupRemoveForm group={this.state.group} history={this.history} />
 					);
 			}
 		}

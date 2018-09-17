@@ -178,6 +178,92 @@ class UserManagement {
 			});
 		});
 	}
+	
+	renameUserPromise(username,newUsername) {
+		return new Promise((resolve,reject) => {
+			jQuery.ajax({
+				type: 'POST',
+				url: config.composeUserURI(username) + '/renamesTo/' + encodeURIComponent(newUsername),
+				headers: auth.getAuthHeaders(),
+			})
+			.done(resolve)
+			.fail((jqXhr) => {
+				let responseText = 'Failed to rename user ' + username + ' to ' + newUsername + '. ';
+				//console.log('Failed to change user password',jqXhr.responseText);
+				switch(jqXhr.status) {
+					case 0:
+						responseText += 'Not connect: Verify Network.';
+						break;
+					case 401:
+						responseText += 'You do not have enough privileges [401]';
+						break;
+					case 404:
+						responseText += 'Not found [404]';
+						break;
+					case 500:
+						responseText += 'Internal Server Error [500].';
+						break;
+					case 'parsererror':
+						responseText += 'Sent JSON parse failed.';
+						break;
+					case 'timeout':
+						responseText += 'Time out error.';
+						break;
+					case 'abort':
+						responseText = 'Ajax request aborted.';
+						break;
+					default:
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+						break;
+				}
+				
+				reject({ modalTitle: 'Error', error: responseText});
+			});
+		});
+	}
+	
+	migrateUserPromise(username,existingOrganizationalUnit) {
+		return new Promise((resolve,reject) => {
+			jQuery.ajax({
+				type: 'POST',
+				url: config.composeUserURI(username) + '/migratesTo/' + encodeURIComponent(existingOrganizationalUnit),
+				headers: auth.getAuthHeaders(),
+			})
+			.done(resolve)
+			.fail((jqXhr) => {
+				let responseText = 'Failed to migrate user ' + username + ' to organizational unit ' + existingOrganizationalUnit + '. ';
+				//console.log('Failed to change user password',jqXhr.responseText);
+				switch(jqXhr.status) {
+					case 0:
+						responseText += 'Not connect: Verify Network.';
+						break;
+					case 401:
+						responseText += 'You do not have enough privileges [401]';
+						break;
+					case 404:
+						responseText += 'Not found [404]';
+						break;
+					case 500:
+						responseText += 'Internal Server Error [500].';
+						break;
+					case 'parsererror':
+						responseText += 'Sent JSON parse failed.';
+						break;
+					case 'timeout':
+						responseText += 'Time out error.';
+						break;
+					case 'abort':
+						responseText = 'Ajax request aborted.';
+						break;
+					default:
+						responseText = 'Uncaught Error: ' + jqXhr.responseText;
+						break;
+				}
+				
+				reject({ modalTitle: 'Error', error: responseText});
+			});
+		});
+	}
 }
 
 export default UserManagement;

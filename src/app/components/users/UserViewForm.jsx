@@ -66,6 +66,13 @@ class UserViewForm extends React.Component {
 					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/password/' + encodeURIComponent(data.username) + '/change'}>
 						Change Password&nbsp;<Glyphicon glyph="pencil" />
 					</Link>
+					<br />
+					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/rename/' + encodeURIComponent(data.username)}>
+						Rename&nbsp;<Glyphicon glyph="pencil" />
+					</Link>
+					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/migrate/' + encodeURIComponent(data.username)}>
+						Migrate to other OU&nbsp;<Glyphicon glyph="plane" />
+					</Link>
 				</div>
 				<Jumbotron>
 					<Row className="show-grid">
@@ -178,6 +185,13 @@ class UserViewForm extends React.Component {
 					</Link>
 					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/password/' + encodeURIComponent(data.username) + '/change'}>
 						Change Password&nbsp;<Glyphicon glyph="pencil" />
+					</Link>
+					<br />
+					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/rename/' + encodeURIComponent(data.username)}>
+						Rename&nbsp;<Glyphicon glyph="pencil" />
+					</Link>
+					<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/users/migrate/' + encodeURIComponent(data.username)}>
+						Migrate to other OU&nbsp;<Glyphicon glyph="plane" />
 					</Link>
 				</div>
 			</div>

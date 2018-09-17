@@ -18,6 +18,8 @@ import PasswordContainer from './components/users/PasswordContainer.jsx';
 
 import UserEditFormContainer from './components/users/UserEditFormContainer.jsx';
 import UserRemoveFormContainer from './components/users/UserRemoveFormContainer.jsx';
+import UserRenameFormContainer from './components/users/UserRenameFormContainer.jsx';
+import UserMigrationFormContainer from './components/users/UserMigrationFormContainer.jsx';
 import UserNewFormContainer from './components/users/UserNewFormContainer.jsx';
 import UsersGroupsContainer from './components/users/UsersGroupsContainer.jsx';
 import UsersGroupsFormContainer from './components/users/UsersGroupsFormContainer.jsx';
@@ -98,6 +100,8 @@ ReactDOM.render((
                     <Route path="edit/:username" name="Edit" staticName component={UserEditFormContainer} onEnter={requireAuth} task={'edit'}/>
                     <Route path="remove/:username" name="Remove" staticName component={UserRemoveFormContainer} onEnter={requireAuth} task={'remove'}/>
                     <Route path="enable-disable/:username" name="Enable-Disable" staticName component={UserFormContainer} onEnter={requireAuth} task={'enable_disable'}/>
+                    <Route path="rename/:username" name="Rename" staticName component={UserRenameFormContainer} onEnter={requireAuth} />
+                    <Route path="migrate/:username" name="Migrate" staticName component={UserMigrationFormContainer} onEnter={requireAuth} />
                     <Route path="password/:username/change" name="Change Password" staticName component={PasswordContainer} onEnter={requireAuth} task={'passwordChange'}/>
                     <Route path="password/:username/reset" name="Reset Password" staticName component={PasswordContainer} onEnter={requireAuth} task={'passwordReset'}/>
                     <Route path="new" name="New" component={UserNewFormContainer} onEnter={requireAuth} task={'new_privileged'}/>

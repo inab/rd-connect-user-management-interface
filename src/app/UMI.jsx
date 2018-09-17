@@ -25,6 +25,7 @@ import UsersGroupsFormContainer from './components/users/UsersGroupsFormContaine
 import OrganizationalUnitsContainer from './components/organizationalUnits/OrganizationalUnitsContainer.jsx';
 import OrganizationalUnitFormContainer from './components/organizationalUnits/OrganizationalUnitFormContainer.jsx';
 import OrganizationalUnitEditFormContainer from './components/organizationalUnits/OrganizationalUnitEditFormContainer.jsx';
+import OrganizationalUnitRenameFormContainer from './components/organizationalUnits/OrganizationalUnitRenameFormContainer.jsx';
 import OrganizationalUnitNewFormContainer from './components/organizationalUnits/OrganizationalUnitNewFormContainer.jsx';
 import OrganizationalUnitsUsersContainer from './components/organizationalUnits/OrganizationalUnitsUsersContainer.jsx';
 
@@ -115,6 +116,8 @@ ReactDOM.render((
                     <Route path="addUser/:organizationalUnit" name="Add User" staticName component={UserNewFormContainer} onEnter={requireAuth} task={'new_privileged_ou'} />
                     <Route path="edit/:organizationalUnit" name="Edit" staticName component={OrganizationalUnitEditFormContainer} onEnter={requireAuth} task={'edit'} />
                     <Route path="view/:organizationalUnit" name="View" staticName component={OrganizationalUnitFormContainer} task={'view'} />
+                    <Route path="rename/:organizationalUnit" name="Rename" staticName component={OrganizationalUnitRenameFormContainer} onEnter={requireAuth} task={'rename'} />
+                    <Route path="merge/:organizationalUnit" name="Merge" staticName component={OrganizationalUnitRenameFormContainer} onEnter={requireAuth} task={'merge'} />
                     <Route path="new" name="New" component={OrganizationalUnitNewFormContainer} onEnter={requireAuth} />
                     <Route path="users" name="Users in Organizational Units" component={OrganizationalUnitsUsersContainer} />
                 </Route>

@@ -80,6 +80,13 @@ class OrganizationalUnits extends React.Component {
 											<Link className="btn btn-primary" role="button" to={'/organizationalUnits/addUser/' + encodeURIComponent(objOrganizationalUnit.organizationalUnit)}>
 												Create User &nbsp;<Glyphicon glyph="user" />
 											</Link>
+											<br />
+											<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/organizationalUnits/rename/' + encodeURIComponent(objOrganizationalUnit.organizationalUnit)}>
+												Rename&nbsp;<Glyphicon glyph="pencil" />
+											</Link>
+											<Link className="btn btn-danger editViewButton btn-xs" role="button" to={'/organizationalUnits/merge/' + encodeURIComponent(objOrganizationalUnit.organizationalUnit)}>
+												Merge&nbsp;<Glyphicon glyph="road" />
+											</Link>
 										</td>
 									</tr>
 								</tbody>

@@ -126,6 +126,12 @@ class UserEditForm extends React.Component {
 				//'ui:widget': 'alt-datetime',
 				'ui:readonly': true,
 			},
+			'creationTimestamp': {
+				'ui:readonly': true
+			},
+			'modificationTimestamp': {
+				'ui:readonly': true
+			},
 			'registeredEmails': {
 				'items': {
 					'registeredAt': {

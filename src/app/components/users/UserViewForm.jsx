@@ -77,45 +77,75 @@ class UserViewForm extends React.Component {
 				<Jumbotron>
 					<Row className="show-grid">
 						<Col xs={16} md={10}>
-							<Panel header="Full Name">
-								<p>{data.cn}</p>
-							</Panel>
-							<Panel header="Username">
-								<p>{data.username}</p>
-							</Panel>
-							<Panel header="First/Given Name">
-								{data.givenName.map(function(name, i){
-									return (
-										<p key={i}>{name}</p>
-									);
-								})}
-							</Panel>
-							<Panel header="Surname">
-								{data.surname.map(function(name, j){
-									return (
-										<p key={j}>{name}</p>
-									);
-								})}
-							</Panel>
-							<Panel header="Organizational Unit">
-								<p>{data.organizationalUnit}</p>
-							</Panel>
-							<Panel header="Email Addresses">
-								{data.email.map(function(mail, k){
-									return (
-										<p key={k}><a href={'mailto:' + mail} target="_blank">{mail}</a></p>
-									);
-								})}
-							</Panel>
-							<Panel header="Is the user enabled?">
-								<p>{isChecked.toString()}</p>
-							</Panel>
-							<Panel header="User Category">
-								<p>{data.userCategory}</p>
-							</Panel>
-							<Panel header="Preferred way to address the user">
-								<p>{data.title}</p>
-							</Panel>
+							<Col xs={16} md={5}>
+								<Panel header="Full Name">
+									<p>{data.cn}</p>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="Username">
+									<p>{data.username}</p>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="First/Given Name">
+									{data.givenName.map(function(name, i){
+										return (
+											<p key={i}>{name}</p>
+										);
+									})}
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="Surname">
+									{data.surname.map(function(name, j){
+										return (
+											<p key={j}>{name}</p>
+										);
+									})}
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="Organizational Unit">
+									<p><Link to={'/organizationalUnits/view/' + encodeURIComponent(data.organizationalUnit)}>{data.organizationalUnit}</Link></p>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="Email Addresses">
+									{data.email.map(function(mail, k){
+										return (
+											<p key={k}><a href={'mailto:' + mail} target="_blank">{mail}</a></p>
+										);
+									})}
+									<Link to={'/mail/platformMailing/user/' + encodeURIComponent(data.username)}>Send e-mail to user <Glyphicon glyph="envelope" /></Link>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="Created at">
+									<p>{data.creationTimestamp}</p>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="Last modified at">
+									<p>{data.modificationTimestamp}</p>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="Is the user enabled?">
+									<p>{isChecked.toString()}</p>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="User Category">
+									<p>{data.userCategory}</p>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="Preferred way to address the user">
+									<p>{data.title}</p>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
 							{typeof data.telephoneNumber !== 'undefined'
 								? <Panel header="Contact Phone Number">
 										{data.telephoneNumber.map(function(telephone, l){
@@ -126,6 +156,8 @@ class UserViewForm extends React.Component {
 									</Panel>
 								: <Panel header="Contact Phone Number"/>
 							}
+							</Col>
+							<Col xs={16} md={5}>
 							{typeof data.facsimileTelephoneNumber !== 'undefined'
 								? <Panel header="Fax Number">
 										{data.facsimileTelephoneNumber.map(function(fax, m){
@@ -136,12 +168,18 @@ class UserViewForm extends React.Component {
 									</Panel>
 								: <Panel header="Fax Number"/>
 							}
-							<Panel header="Address to physically reach the user:">
-								<p>{data.registeredAddress}</p>
-							</Panel>
-							<Panel header="Address to send traditional mail to the user">
-								<p>{data.postalAddress}</p>
-							</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="Address to physically reach the user:">
+									<p>{data.registeredAddress}</p>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
+								<Panel header="Address to send traditional mail to the user">
+									<p>{data.postalAddress}</p>
+								</Panel>
+							</Col>
+							<Col xs={16} md={5}>
 							{typeof data.links !== 'undefined'
 								? <Panel header="Links related to the user">
 										{data.links.map(function(link, n){
@@ -152,11 +190,13 @@ class UserViewForm extends React.Component {
 									</Panel>
 								: <Panel header="Links related to the user"/>
 							}
+							</Col>
+							<Col xs={16} md={5}>
 							{typeof data.groups !== 'undefined'
 								? <Panel header="List of groups where the user is registered in">
 										{data.groups.map(function(group, o){
 											return (
-												<p key={o}>{group}</p>
+												<p key={o}><Link to={'/groups/view/' + encodeURIComponent(group)}>{group}</Link></p>
 											);
 										})}
 										<Link className="btn btn-primary editViewButton" role="button" to={'/users/groups/edit/' + encodeURIComponent(data.username)}>
@@ -165,6 +205,7 @@ class UserViewForm extends React.Component {
 									</Panel>
 								: <Panel header="List of groups where the user is registered in"/>
 							}
+							</Col>
 						</Col>
 						<Col>
 							<img src={userImage} width="100" alt="image_user" />

@@ -61,6 +61,11 @@ class UserNewForm extends React.Component {
 		delete schema.properties.groups;
 		delete schema.title;
 		
+		// Also removing new creationTimestamp and modificationTimestamp attributes
+		// as they do not make sense when a user is being created
+		delete schema.properties.creationTimestamp;
+		delete schema.properties.modificationTimestamp;
+		
 		//We remove picture from the schema since this will be managed by react-dropzone component
 		delete schema.properties.picture;
 		

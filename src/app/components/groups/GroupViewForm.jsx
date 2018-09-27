@@ -33,6 +33,12 @@ class GroupViewForm extends React.Component {
 			'owner': {
 				'ui:readonly': true
 			},
+			'creationTimestamp': {
+				'ui:readonly': true
+			},
+			'modificationTimestamp': {
+				'ui:readonly': true
+			},
 			'description': {
 				'ui:readonly': true
 			},

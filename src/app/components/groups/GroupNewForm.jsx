@@ -14,12 +14,45 @@ class GroupNewForm extends React.Component {
 	}
 	
 	componentWillMount() {
+		// Pre-processing the props
+		let schema = {
+			...this.props.schema
+		};
+		delete schema.title;
+		
+		// Also removing new creationTimestamp and modificationTimestamp attributes
+		// as they do not make sense when a group is being created
+		delete schema.properties.creationTimestamp;
+		delete schema.properties.modificationTimestamp;
+		
+		const SelectableUsersWidget = genCustomUsersWidgetInstance(this.props.users);
+		
+		// Tweak to for the rendering
+		schema.properties.owner.type = 'string';
+		delete schema.properties.owner.items;
+		delete schema.properties.owner.minItems;
+		delete schema.properties.owner.uniqueItems;
+		schema.properties.members.type = 'string';
+		delete schema.properties.members.items;
+		delete schema.properties.members.minItems;
+		delete schema.properties.members.uniqueItems;
+		
+		const uiSchema = {
+			owner: {
+				'ui:widget': SelectableUsersWidget
+			},
+			members: {
+				'ui:widget': SelectableUsersWidget
+			}
+		};
+		
 		this.setState({
 			modalTitle: null,
 			error: null,
 			showModal: false,
 			in: false,
-			schema: this.props.schema,
+			schema: schema,
+			uiSchema: uiSchema,
 			selectableUsers: this.props.users,
 			existingGroups: this.props.groups,
 			group: {
@@ -111,32 +144,6 @@ class GroupNewForm extends React.Component {
 	}
 	
 	render() {
-		var schema = this.state.schema;
-		//console.log('Schema: ', schema);
-		delete schema.title;
-		//console.log(schema);
-		
-		const SelectableUsersWidget = genCustomUsersWidgetInstance(this.state.selectableUsers);
-		
-		// Tweak to for the rendering
-		schema.properties.owner.type = 'string';
-		delete schema.properties.owner.items;
-		delete schema.properties.owner.minItems;
-		delete schema.properties.owner.uniqueItems;
-		schema.properties.members.type = 'string';
-		delete schema.properties.members.items;
-		delete schema.properties.members.minItems;
-		delete schema.properties.members.uniqueItems;
-		
-		const uiSchema = {
-			owner: {
-				'ui:widget': SelectableUsersWidget
-			},
-			members: {
-				'ui:widget': SelectableUsersWidget
-			}
-		};
-		
 		const onSubmit = () => this.addGroupData();
 		//const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
@@ -162,8 +169,8 @@ class GroupNewForm extends React.Component {
 				</Collapse>
 				<Row className="show-grid">
 					<Col xs={12} md={8}>
-							<Form schema={schema}
-								uiSchema={uiSchema}
+							<Form schema={this.state.schema}
+								uiSchema={this.state.uiSchema}
 								formData={this.state.group}
 								onChange={({formData}) => this.setState({group: formData})}
 								onSubmit={onSubmit}

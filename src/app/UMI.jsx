@@ -138,6 +138,9 @@ ReactDOM.render((
                 <Route path="mail" name="Mail tasks" component={Box} onEnter={requireAuth}>
 					<IndexRoute component={MailingContainer} />
 					<Route path="platformMailing" name="Send massive e-mail" component={MailingContainer} />
+					<Route path="platformMailing/user/:username" name="Send e-mail to user" component={MailingContainer} />
+					<Route path="platformMailing/group/:groupName" name="Send e-mail to group" component={MailingContainer} />
+					<Route path="platformMailing/organizationalUnit/:ouName" name="Send e-mail to organizational unit" component={MailingContainer} />
 					<Route path="domains/:domainId" name="Mail Domain Template Management" staticName component={MailTemplatesContainer} />
                 </Route>
             </Route>

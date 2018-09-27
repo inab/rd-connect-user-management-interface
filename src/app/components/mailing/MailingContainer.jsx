@@ -79,6 +79,9 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	
 	componentWillMount() {
 		super.componentWillMount();
+		
+		let allControls = !(this.props.params.username || this.props.params.groupName || this.props.params.ouName);
+		
 		this.setState({
 			modalTitle: null,
 			error: null,
@@ -90,6 +93,13 @@ class MailingContainer extends AbstractFetchedDataContainer {
 			selectedUsers: [],
 			selectedOUs: [],
 			selectedGroups: [],
+			allControls: allControls,
+			username: this.props.params.username,
+			groupName: this.props.params.groupName,
+			ouName: this.props.params.ouName,
+			user: null,
+			organizationalUnit: null,
+			group: null,
 			attachments: [],
 			dataUrlAttachments: []
 		});
@@ -97,12 +107,28 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	
 	componentDidMount() {
 		//super.componentDidMount();
-		
-		this.selectableUsersPromise();
-		
-		this.selectableOrganizationalUnitsPromise();
-		
-		this.selectableGroupsPromise();
+		let errHandler = (err) => {
+			this.setState({
+				...err,
+				showModal: true
+			});
+		};
+		if(this.state.allControls) {
+			this.selectableUsersPromise().catch(errHandler);
+			
+			this.selectableOrganizationalUnitsPromise().catch(errHandler);
+			
+			this.selectableGroupsPromise().catch(errHandler);
+		} else if(this.state.username) {
+			this.userPromise(this.state.username)
+				.then((user) => this.setState({user: user, selectedUsers:[{value: user.username}]}),errHandler);
+		} else if(this.state.groupName) {
+			this.groupPromise(this.state.groupName)
+				.then((group) => this.setState({group: group, selectedGroups:[{value: group.cn}]}),errHandler);
+		} else if(this.state.ouName) {
+			this.organizationalUnitPromise(this.state.ouName)
+				.then((ou) => this.setState({organizationalUnit: ou, selectedOUs:[{value: ou.organizationalUnit}]}),errHandler);
+		}
 	}
 	
 	onSubjectChange(e) {
@@ -239,6 +265,53 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	}
 	
 	render() {
+		let ctrlSet = <p>Loading...</p>;
+		if(this.state.allControls) {
+			ctrlSet = <FormGroup
+				controlId="recipients"
+				validationState={this.getRecipientsValidationState()}
+			>
+				<ControlLabel>Recipients</ControlLabel>
+				<Select
+					disabled={this.state.selectableUsers.length === 0}
+					placeholder="Select the user(s)"
+					options={this.state.selectableUsers}
+					value={this.state.selectedUsers}
+					onChange={(values) => this.onChange({selectedUsers: values})}
+					multi
+				/>
+				<br/>
+				<Select
+					disabled={this.state.selectableOUs.length === 0}
+					placeholder="Select the organizational unit(s)"
+					options={this.state.selectableOUs}
+					value={this.state.selectedOUs}
+					onChange={(values) => this.onChange({selectedOUs: values})}
+					multi
+				/>
+				<br/>
+				<Select
+					disabled={this.state.selectableGroups.length === 0}
+					placeholder="Select the group(s)"
+					options={this.state.selectableGroups}
+					value={this.state.selectedGroups}
+					onChange={(values) => this.onChange({selectedGroups: values})}
+					multi
+				/>
+			</FormGroup>
+		} else {
+			ctrlSet = [
+				<ControlLabel>Recipient</ControlLabel>
+			];
+			if(this.state.user) {
+				ctrlSet.push(<p>User {this.state.user.cn} ({this.state.user.organizationalUnit})</p>);
+			} else if(this.state.group) {
+				ctrlSet.push(<p>Group {this.state.group.description} ({this.state.group.cn})</p>);
+			} else if(this.state.organizationalUnit) {
+				ctrlSet.push(<p>Organizational Unit {this.state.organizationalUnit.description} ({this.state.organizationalUnit.organizationalUnit})</p>);
+			}
+		}
+
 		return (
 		<div>
 				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
@@ -296,38 +369,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 						</FormGroup>
 					</Col>
 					<Col sm={12} md={4}>
-						<FormGroup
-							controlId="recipients"
-							validationState={this.getRecipientsValidationState()}
-						>
-							<ControlLabel>Recipients</ControlLabel>
-							<Select
-								disabled={this.state.selectableUsers.length === 0}
-								placeholder="Select the user(s)"
-								options={this.state.selectableUsers}
-								value={this.state.selectedUsers}
-								onChange={(values) => this.onChange({selectedUsers: values})}
-								multi
-							/>
-							<br/>
-							<Select
-								disabled={this.state.selectableOUs.length === 0}
-								placeholder="Select the organizational unit(s)"
-								options={this.state.selectableOUs}
-								value={this.state.selectedOUs}
-								onChange={(values) => this.onChange({selectedOUs: values})}
-								multi
-							/>
-							<br/>
-							<Select
-								disabled={this.state.selectableGroups.length === 0}
-								placeholder="Select the group(s)"
-								options={this.state.selectableGroups}
-								value={this.state.selectedGroups}
-								onChange={(values) => this.onChange({selectedGroups: values})}
-								multi
-							/>
-						</FormGroup>
+						{ctrlSet}
 					</Col>
 				</Row>
 				<div className="button-submit">
@@ -341,5 +383,10 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	}
 }
 
+
+MailingContainer.propTypes = {
+    params: React.PropTypes.object,
+    history:  React.PropTypes.object
+};
 
 export default MailingContainer;

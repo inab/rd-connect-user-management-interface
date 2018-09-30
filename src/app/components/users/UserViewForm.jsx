@@ -112,12 +112,12 @@ class UserViewForm extends React.Component {
 							</Col>
 							<Col xs={16} md={5}>
 								<Panel header="Email Addresses">
+									<Link to={'/mail/platformMailing/user/' + encodeURIComponent(data.username)}>Send e-mail to user <Glyphicon glyph="envelope" /></Link>
 									{data.email.map(function(mail, k){
 										return (
 											<p key={k}><a href={'mailto:' + mail} target="_blank">{mail}</a></p>
 										);
 									})}
-									<Link to={'/mail/platformMailing/user/' + encodeURIComponent(data.username)}>Send e-mail to user <Glyphicon glyph="envelope" /></Link>
 								</Panel>
 							</Col>
 							<Col xs={16} md={5}>

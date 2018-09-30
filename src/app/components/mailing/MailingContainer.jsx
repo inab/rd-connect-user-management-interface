@@ -267,7 +267,8 @@ class MailingContainer extends AbstractFetchedDataContainer {
 	render() {
 		let ctrlSet = <p>Loading...</p>;
 		if(this.state.allControls) {
-			ctrlSet = <FormGroup
+			ctrlSet = (
+			<FormGroup
 				controlId="recipients"
 				validationState={this.getRecipientsValidationState()}
 			>
@@ -299,6 +300,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 					multi
 				/>
 			</FormGroup>
+			);
 		} else {
 			ctrlSet = [
 				<ControlLabel>Recipient</ControlLabel>

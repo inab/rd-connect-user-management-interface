@@ -138,7 +138,7 @@ class OrganizationalUnitNewForm extends React.Component {
 		const data = undefined;
 		//console.log(schema);
 		//const log = (type) => console.log.bind(console, type);
-		const onSubmit = ({formData}) => this.addOrganizationalUnitData({formData});
+		const onSubmit = ({formData}) => this.addOrganizationalUnitData(formData);
 		const onError = (errors) => console.log('I have', errors.length, 'errors to fix');
 		//console.log('Error: ', this.state.error);
 		//console.log('Show: ', this.state.showModal);

@@ -4,6 +4,7 @@ import Form from 'react-jsonschema-form';
 import { Glyphicon, Modal, Row, Col, Button, ButtonGroup, Collapse, ListGroup, ListGroupItem, ControlLabel  } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import { Link } from 'react-router';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import OrganizationalUnitManagement from '../OrganizationalUnitManagement.jsx';
 
@@ -159,6 +160,16 @@ class OrganizationalUnitNewForm extends React.Component {
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
+						{ this.state.trace !== undefined ?
+							<CopyToClipboard
+								text={this.state.trace}
+								onCopy={() => this.setState({copied: true})}
+							>
+								<Button>Copy trace&nbsp;<Glyphicon glyph="copy" /></Button>
+							</CopyToClipboard>
+							:
+							null
+						}
 						<Button onClick={() => this.close()}>Close</Button>
 					</Modal.Footer>
 				</Modal>

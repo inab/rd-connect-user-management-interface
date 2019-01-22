@@ -1,5 +1,7 @@
 import React from 'react';
 import { Glyphicon, Modal, Button } from 'react-bootstrap';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 import UserManagement from '../UserManagement.jsx';
 
 class UserPasswordReset extends React.Component {
@@ -59,6 +61,16 @@ class UserPasswordReset extends React.Component {
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
+						{ this.state.trace !== undefined ?
+							<CopyToClipboard
+								text={this.state.trace}
+								onCopy={() => this.setState({copied: true})}
+							>
+								<Button>Copy trace&nbsp;<Glyphicon glyph="copy" /></Button>
+							</CopyToClipboard>
+							:
+							null
+						}
 						<Button bsStyle="info" onClick={() => this.close()}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
 					</Modal.Footer>
 				</Modal>

@@ -79,6 +79,7 @@
     "react-breadcrumbs": "1.3.x",
     "react-confirm2": "^0.1.5",
     "react-cookie": "^0.4.8",
+    "react-copy-to-clipboard": "^5.0.1",
     "react-dom": "15.4.x",
     "react-dropzone": "3.12.3",
     "react-input-autosize": "1.1.0",

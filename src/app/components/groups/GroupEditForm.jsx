@@ -2,6 +2,7 @@ import React from 'react';
 import Form from 'react-jsonschema-form';
 import { Glyphicon, Modal, Row, Col, Button, Collapse, ListGroup, ListGroupItem  } from 'react-bootstrap';
 import Underscore from 'underscore';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import GroupManagement from '../GroupManagement.jsx';
 
@@ -204,6 +205,16 @@ class GroupEditForm extends React.Component {
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
+						{ this.state.trace !== undefined ?
+							<CopyToClipboard
+								text={this.state.trace}
+								onCopy={() => this.setState({copied: true})}
+							>
+								<Button>Copy trace&nbsp;<Glyphicon glyph="copy" /></Button>
+							</CopyToClipboard>
+							:
+							null
+						}
 						<Button onClick={() => this.close()}>Close</Button>
 					</Modal.Footer>
 				</Modal>

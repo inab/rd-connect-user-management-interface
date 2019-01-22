@@ -7,6 +7,7 @@ import Dropzone from 'react-dropzone';
 import zxcvbn from 'zxcvbn';
 import Select from 'react-select';
 import { Link } from 'react-router';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 
 //import ModalError from './ModalError.jsx';
@@ -396,6 +397,16 @@ class UserNewForm extends React.Component {
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
+						{ this.state.trace !== undefined ?
+							<CopyToClipboard
+								text={this.state.trace}
+								onCopy={() => this.setState({copied: true})}
+							>
+								<Button>Copy trace&nbsp;<Glyphicon glyph="copy" /></Button>
+							</CopyToClipboard>
+							:
+							null
+						}
 						<Button onClick={() => this.close()}>Close</Button>
 					</Modal.Footer>
 				</Modal>

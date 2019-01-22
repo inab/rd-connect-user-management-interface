@@ -1,5 +1,7 @@
 import React from 'react';
-import { Modal , Button } from 'react-bootstrap';
+import { Modal , Button, Glyphicon } from 'react-bootstrap';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 import UserEditForm from './UserEditForm.jsx';
 import UserViewForm from './UserViewForm.jsx';
 import UserRemoveForm from './UserRemoveForm.jsx';
@@ -92,6 +94,16 @@ class UserFormContainer extends AbstractFetchedDataContainer {
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
+						{ this.state.trace !== undefined ?
+							<CopyToClipboard
+								text={this.state.trace}
+								onCopy={() => this.setState({copied: true})}
+							>
+								<Button>Copy trace&nbsp;<Glyphicon glyph="copy" /></Button>
+							</CopyToClipboard>
+							:
+							null
+						}
 						<Button onClick={()=>this.history.goBack()}>Close</Button>
 					</Modal.Footer>
 				</Modal>

@@ -3,6 +3,7 @@ import RichTextEditor from 'react-rte';
 import AbstractFetchedDataContainer from '../AbstractUMContainer.jsx';
 import { Button, ControlLabel, FormControl, FormGroup, Glyphicon, Modal } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 class MailTemplatesContainer extends AbstractFetchedDataContainer {
 	constructor(props,context) {
@@ -192,6 +193,16 @@ class MailTemplatesContainer extends AbstractFetchedDataContainer {
 					<h4>{this.state.error}</h4>
 				</Modal.Body>
 				<Modal.Footer>
+					{ this.state.trace !== undefined ?
+						<CopyToClipboard
+							text={this.state.trace}
+							onCopy={() => this.setState({copied: true})}
+						>
+							<Button>Copy trace&nbsp;<Glyphicon glyph="copy" /></Button>
+						</CopyToClipboard>
+						:
+						null
+					}
 					<Button bsStyle="info" onClick={() => this.close()}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
 				</Modal.Footer>
 			</Modal>

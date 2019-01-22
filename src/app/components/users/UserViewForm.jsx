@@ -1,5 +1,6 @@
 import React from 'react';
 import { Glyphicon, Modal, Row, Col, Button, Jumbotron, Panel } from 'react-bootstrap';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router';
 //import ModalError from './ModalError.jsx';
 import { withRouter } from 'react-router';
@@ -48,6 +49,16 @@ class UserViewForm extends React.Component {
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
+						{ this.state.trace !== undefined ?
+							<CopyToClipboard
+								text={this.state.trace}
+								onCopy={() => this.setState({copied: true})}
+							>
+								<Button>Copy trace&nbsp;<Glyphicon glyph="copy" /></Button>
+							</CopyToClipboard>
+							:
+							null
+						}
 						<Button onClick={() => this.close()}>Close</Button>
 					</Modal.Footer>
 				</Modal>

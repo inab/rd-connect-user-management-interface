@@ -1,8 +1,10 @@
 import React from 'react';
 import { Glyphicon, Modal, Grid, Row, Col, Button, FormGroup, ControlLabel, FormControl, HelpBlock } from 'react-bootstrap';
-import UserManagement from '../UserManagement.jsx';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import zxcvbn from 'zxcvbn';
 import ReactMustache from 'react-mustache';
+
+import UserManagement from '../UserManagement.jsx';
 
 class UserPassword extends React.Component {
 	constructor(props,context) {
@@ -132,6 +134,16 @@ class UserPassword extends React.Component {
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
+						{ this.state.trace !== undefined ?
+							<CopyToClipboard
+								text={this.state.trace}
+								onCopy={() => this.setState({copied: true})}
+							>
+								<Button>Copy trace&nbsp;<Glyphicon glyph="copy" /></Button>
+							</CopyToClipboard>
+							:
+							null
+						}
 						<Button bsStyle="info" onClick={() => this.close()}><Glyphicon glyph="step-backward" />&nbsp;Close</Button>
 					</Modal.Footer>
 				</Modal>

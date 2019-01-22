@@ -2,6 +2,8 @@ import React from 'react';
 import jQuery from 'jquery';
 import Form from 'react-jsonschema-form';
 import { Glyphicon, Modal, Row, Col, Button } from 'react-bootstrap';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+
 import MultiselectField from './Multiselect.jsx';
 import { hashHistory } from 'react-router';
 
@@ -148,6 +150,16 @@ var UsersGroupsEditForm = React.createClass({
 						<h4>{this.state.error}</h4>
 					</Modal.Body>
 					<Modal.Footer>
+						{ this.state.trace !== undefined ?
+							<CopyToClipboard
+								text={this.state.trace}
+								onCopy={() => this.setState({copied: true})}
+							>
+								<Button>Copy trace&nbsp;<Glyphicon glyph="copy" /></Button>
+							</CopyToClipboard>
+							:
+							null
+						}
 						<Button onClick={this.close}>Close</Button>
 					</Modal.Footer>
 				</Modal>

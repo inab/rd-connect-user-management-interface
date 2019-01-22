@@ -408,7 +408,8 @@ class AbstractFetchedDataContainer extends React.Component {
 						responseText += 'Uncaught Error: ' + jqXhr.responseText;
 						break;
 				}
-				console.error(responseText);
+				console.log('deleteDocument REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Returned: ',jqXhr.responseText);
 				reject({label: label, error: responseText, status: jqXhr.status});
 			});
 			
@@ -466,7 +467,8 @@ class AbstractFetchedDataContainer extends React.Component {
 					responseText += 'Uncaught Error: ' + jqXhr.responseText;
 					break;
 			}
-			console.error(responseText);
+			console.log('overwriteDocument REST Error (status ' + jqXhr.status + '): ' + responseText);
+			console.log('Returned: ',jqXhr.responseText);
 			if(ecb) {
 				ecb({label: label, error: responseText, status: jqXhr.status});
 			}
@@ -522,7 +524,8 @@ class AbstractFetchedDataContainer extends React.Component {
 					responseText += 'Uncaught Error: ' + jqXhr.responseText;
 					break;
 			}
-			console.error(responseText);
+			console.log('overwriteDocumentMetadata REST Error (status ' + jqXhr.status + '): ' + responseText);
+			console.log('Returned: ',jqXhr.responseText);
 			if(ecb) {
 				ecb({label: label, error: responseText, status: jqXhr.status});
 			}

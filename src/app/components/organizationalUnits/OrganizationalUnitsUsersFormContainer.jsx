@@ -45,6 +45,8 @@ var OrganizationalUnitsUsersFormContainer = React.createClass({
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
 			}
+			console.log('OrganizationalUnitsUsers REST Error (status ' + jqXhr.status + '): ' + responseText);
+			console.log('Returned: ',jqXhr.responseText);
 			this.setState({error: responseText});
 		}.bind(this));
 },

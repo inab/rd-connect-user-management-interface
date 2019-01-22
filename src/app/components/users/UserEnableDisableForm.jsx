@@ -60,6 +60,8 @@ var UserEnableDisableForm = React.createClass({
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
 			}
+			console.log('UserEnableDisable REST Error (status ' + jqXhr.status + '): ' + responseText);
+			console.log('Returned: ',jqXhr.responseText);
 			this.setState({error: responseText, showModal: true});
 		}.bind(this));
 	},

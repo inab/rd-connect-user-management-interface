@@ -316,6 +316,28 @@ class UserEditForm extends React.Component {
 		if(userImage === null) {
 			userImage = NoImageAvailable;
 		}
+		
+		/*
+		var formref;
+		function doSubmit() {
+			if(formref!==undefined) {
+				console.log(formref);
+				formref.submit();
+			}
+		}
+							//ref={(form) => { formref = form; }}
+
+
+							<ButtonGroup block justified>
+								<Link className="btn btn-info submitCancelButtons" role="button" onClick={()=>this.history.goBack()}>
+									<Glyphicon glyph="step-backward" />&nbsp;Cancel
+								</Link>
+								<Link className="btn btn-primary submitCancelButtons" role="button" onClick={doSubmit}>
+									Submit&nbsp;<Glyphicon glyph="pencil" />
+								</Link>
+							</ButtonGroup>
+		*/
+		
 		return (
 			<div>
 				<Modal show={this.state.showModal} onHide={() => this.close()} error={this.state.error}>
@@ -350,15 +372,6 @@ class UserEditForm extends React.Component {
 					</Col>
 					<Col xs={6} md={3} >
 						<div style={{textAlign: 'center'}}>
-							<ControlLabel>Password</ControlLabel>
-							<ButtonGroup block justified>
-								<Link className="btn btn-danger changePasswordButton" role="button" to={'/users/reset-password/' + encodeURIComponent(data.username)}>
-									Reset&nbsp;<Glyphicon glyph="alert" />
-								</Link>
-								<Link className="btn btn-danger changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(data.username)}>
-									Change&nbsp;<Glyphicon glyph="pencil" />
-								</Link>
-							</ButtonGroup>
 							<ControlLabel>User Picture</ControlLabel>
 							<div><img src={userImage} name="documentFile" width="100" alt="image_user" className="imagePreview" /></div>
 							<ButtonGroup block justified>
@@ -372,6 +385,15 @@ class UserEditForm extends React.Component {
 							<Dropzone className="dropzoneEditNew" disableClick={false} multiple={false} accept={'image/*'} onDrop={(images) => this.userImageDropHandler(images)} ref="userImageDropzone" >
 								Click here or drop image for {data.username}
 							</Dropzone>
+							<ControlLabel style={{paddingTop: '3em'}}>Password</ControlLabel>
+							<ButtonGroup block justified>
+								<Link className="btn btn-danger changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(data.username) + '/reset'}>
+									Reset&nbsp;<Glyphicon glyph="alert" />
+								</Link>
+								<Link className="btn btn-danger changePasswordButton" role="button" to={'/users/password/' + encodeURIComponent(data.username) + '/change'}>
+									Change&nbsp;<Glyphicon glyph="pencil" />
+								</Link>
+							</ButtonGroup>
 						</div>
 					</Col>
 				</Row>

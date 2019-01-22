@@ -246,6 +246,8 @@ class MailingContainer extends AbstractFetchedDataContainer {
 								responseText = 'Uncaught Error: ' + jqXhr.responseText;
 								break;
 						}
+						console.log('MailingContainer REST Error (status ' + jqXhr.status + '): ' + responseText);
+						console.log('Sent: ',mailMessage,'Returned: ',jqXhr.responseText);
 						this.setState({ modalTitle: 'Error', error: responseText, showModal: true});
 					}.bind(this))
 					.always(() => {

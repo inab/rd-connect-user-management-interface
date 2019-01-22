@@ -170,6 +170,8 @@ class UMCache {
 					break;
 			}
 			console.error('ERROR',errorThrown,responseText);
+			console.log('loadData REST Error (status ' + jqXhr.status + '): ' + responseText);
+			console.log('URL',url,'Returned: ',jqXhr.responseText);
 			if(ecb) {
 				ecb({label: label, error: responseText, status: jqXhr.status});
 			}

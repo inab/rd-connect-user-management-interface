@@ -44,6 +44,8 @@ class UserManagement {
 						break;
 				}
 				
+				console.log('createUser REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Sent: ',user,'Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -85,6 +87,8 @@ class UserManagement {
 						break;
 				}
 				
+				console.log('modifyUser REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Sent: ',user,'Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -131,6 +135,8 @@ class UserManagement {
 						break;
 				}
 				
+				console.log('changeUserPassword REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -174,6 +180,8 @@ class UserManagement {
 						break;
 				}
 				
+				console.log('removeUser REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -217,6 +225,8 @@ class UserManagement {
 						break;
 				}
 				
+				console.log('renameUser REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -260,6 +270,8 @@ class UserManagement {
 						break;
 				}
 				
+				console.log('migrateUser REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});

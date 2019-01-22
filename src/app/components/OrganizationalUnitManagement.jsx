@@ -44,6 +44,8 @@ class OrganizationalUnitManagement {
 						break;
 				}
 				
+				console.log('createOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Sent',organizationalUnitData,'Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -85,6 +87,8 @@ class OrganizationalUnitManagement {
 						break;
 				}
 				
+				console.log('modifyOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Sent',ou,'Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -128,6 +132,8 @@ class OrganizationalUnitManagement {
 						break;
 				}
 				
+				console.log('renameOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -171,6 +177,8 @@ class OrganizationalUnitManagement {
 						break;
 				}
 				
+				console.log('mergeOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});

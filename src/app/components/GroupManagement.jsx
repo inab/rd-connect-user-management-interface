@@ -42,6 +42,8 @@ class GroupManagement {
 						break;
 				}
 				
+				console.log('createGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Sent: ',group,'Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -83,6 +85,8 @@ class GroupManagement {
 						break;
 				}
 				
+				console.log('modifyGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Sent: ',group,'Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -124,6 +128,8 @@ class GroupManagement {
 						break;
 				}
 				
+				console.log('removeUsersFromGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Sent: ',usersToRemove,'Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -173,6 +179,8 @@ class GroupManagement {
 						break;
 				}
 				
+				console.log('addUsersToGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Sent: ',usersToAdd,'Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -224,6 +232,8 @@ class GroupManagement {
 						break;
 				}
 				
+				console.log('removeGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -267,6 +277,8 @@ class GroupManagement {
 						break;
 				}
 				
+				console.log('renameGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});
@@ -310,6 +322,8 @@ class GroupManagement {
 						break;
 				}
 				
+				console.log('mergeGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				console.log('Returned: ',jqXhr.responseText);
 				reject({ modalTitle: 'Error', error: responseText});
 			});
 		});

@@ -44,9 +44,11 @@ class OrganizationalUnitManagement {
 						break;
 				}
 				
-				console.log('createOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'createOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Sent',organizationalUnitData,'Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nSent:\n' + JSON.stringify(organizationalUnitData) + '\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -87,9 +89,11 @@ class OrganizationalUnitManagement {
 						break;
 				}
 				
-				console.log('modifyOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'modifyOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Sent',ou,'Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nSent:\n' + JSON.stringify(ou) + '\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -132,9 +136,11 @@ class OrganizationalUnitManagement {
 						break;
 				}
 				
-				console.log('renameOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'renameOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -177,9 +183,11 @@ class OrganizationalUnitManagement {
 						break;
 				}
 				
-				console.log('mergeOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'mergeOrganizationalUnit REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}

@@ -44,9 +44,11 @@ class UserManagement {
 						break;
 				}
 				
-				console.log('createUser REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'createUser REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Sent: ',user,'Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nSent:\n' + JSON.stringify(user) + '\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -87,9 +89,11 @@ class UserManagement {
 						break;
 				}
 				
-				console.log('modifyUser REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'modifyUser REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Sent: ',user,'Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nSent:\n' + JSON.stringify(user) + '\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -135,9 +139,11 @@ class UserManagement {
 						break;
 				}
 				
-				console.log('changeUserPassword REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'changeUserPassword REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -180,9 +186,11 @@ class UserManagement {
 						break;
 				}
 				
-				console.log('removeUser REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'removeUser REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -225,9 +233,11 @@ class UserManagement {
 						break;
 				}
 				
-				console.log('renameUser REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'renameUser REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -270,9 +280,11 @@ class UserManagement {
 						break;
 				}
 				
-				console.log('migrateUser REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'migrateUser REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}

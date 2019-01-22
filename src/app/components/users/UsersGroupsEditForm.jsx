@@ -76,9 +76,11 @@ var UsersGroupsEditForm = React.createClass({
 			} else {
 				responseText = 'Uncaught Error: ' + jqXhr.responseText;
 			}
-			console.log('UsersGroupsEdit REST Error (status ' + jqXhr.status + '): ' + responseText);
+			let trace = 'UsersGroupsEdit REST Error (status ' + jqXhr.status + '): ' + responseText;
+			console.log(trace);
 			console.log('Sent: ',userData,'Returned: ',jqXhr.responseText);
-			this.setState({error: responseText, showModal: true});
+			trace += '\n\nSent: ' + JSON.stringify(userData) + '\nReturned:\n' + jqXhr.responseText;
+			this.setState({error: responseText, showModal: true, trace: trace});
 		}.bind(this));
 	},
 	handleChangeSelected:function(value){

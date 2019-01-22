@@ -408,9 +408,11 @@ class AbstractFetchedDataContainer extends React.Component {
 						responseText += 'Uncaught Error: ' + jqXhr.responseText;
 						break;
 				}
-				console.log('deleteDocument REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'deleteDocument REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Returned: ',jqXhr.responseText);
-				reject({label: label, error: responseText, status: jqXhr.status});
+				trace += '\n\nReturned:\n' + jqXhr.responseText;
+				reject({label: label, error: responseText, status: jqXhr.status, trace: trace});
 			});
 			
 			this.registerRequest(request);
@@ -467,10 +469,12 @@ class AbstractFetchedDataContainer extends React.Component {
 					responseText += 'Uncaught Error: ' + jqXhr.responseText;
 					break;
 			}
-			console.log('overwriteDocument REST Error (status ' + jqXhr.status + '): ' + responseText);
-			console.log('Returned: ',jqXhr.responseText);
+			let trace = 'overwriteDocument REST Error (status ' + jqXhr.status + '): ' + responseText;
+			console.log(trace);
+			console.log('Sent: ',content,'Returned: ',jqXhr.responseText);
 			if(ecb) {
-				ecb({label: label, error: responseText, status: jqXhr.status});
+				trace += '\n\nSent:\n' + JSON.stringify(content) + '\nReturned:\n' + jqXhr.responseText;
+				ecb({label: label, error: responseText, status: jqXhr.status, trace: trace});
 			}
 		});
 		
@@ -524,10 +528,12 @@ class AbstractFetchedDataContainer extends React.Component {
 					responseText += 'Uncaught Error: ' + jqXhr.responseText;
 					break;
 			}
-			console.log('overwriteDocumentMetadata REST Error (status ' + jqXhr.status + '): ' + responseText);
-			console.log('Returned: ',jqXhr.responseText);
+			let trace = 'overwriteDocumentMetadata REST Error (status ' + jqXhr.status + '): ' + responseText;
+			console.log(trace);
+			console.log('Sent: ',docMeta,'Returned: ',jqXhr.responseText);
 			if(ecb) {
-				ecb({label: label, error: responseText, status: jqXhr.status});
+				trace += '\n\nSent:\n' + JSON.stringify(docMeta) + '\nReturned:\n' + jqXhr.responseText;
+				ecb({label: label, error: responseText, status: jqXhr.status, trace: trace});
 			}
 		});
 		
@@ -621,7 +627,7 @@ class AbstractFetchedDataContainer extends React.Component {
 				}
 				resolve(Promise.all(wholeP));
 			} else {
-				reject({label:'noTemplate',error:'There was no template available in domain ' + domainId,status:-1});
+				reject({label:'noTemplate',error:'There was no template available in domain ' + domainId, status:-1});
 			}
 		});
 	}

@@ -42,9 +42,11 @@ class GroupManagement {
 						break;
 				}
 				
-				console.log('createGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'createGroup REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Sent: ',group,'Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nSent:\n' + JSON.stringify(group) + '\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -85,9 +87,11 @@ class GroupManagement {
 						break;
 				}
 				
-				console.log('modifyGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'modifyGroup REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Sent: ',group,'Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nSent:\n' + JSON.stringify(group) + '\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -128,9 +132,11 @@ class GroupManagement {
 						break;
 				}
 				
-				console.log('removeUsersFromGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'removeUsersFromGroup REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Sent: ',usersToRemove,'Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nSent:\n' + JSON.stringify(usersToRemove) + '\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -179,9 +185,11 @@ class GroupManagement {
 						break;
 				}
 				
-				console.log('addUsersToGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'addUsersToGroup REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Sent: ',usersToAdd,'Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nSent:\n' + JSON.stringify(usersToAdd) + '\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -232,9 +240,11 @@ class GroupManagement {
 						break;
 				}
 				
-				console.log('removeGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'removeGroup REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -277,9 +287,11 @@ class GroupManagement {
 						break;
 				}
 				
-				console.log('renameGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'renameGroup REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}
@@ -322,9 +334,11 @@ class GroupManagement {
 						break;
 				}
 				
-				console.log('mergeGroup REST Error (status ' + jqXhr.status + '): ' + responseText);
+				let trace = 'mergeGroup REST Error (status ' + jqXhr.status + '): ' + responseText;
+				console.log(trace);
 				console.log('Returned: ',jqXhr.responseText);
-				reject({ modalTitle: 'Error', error: responseText});
+				trace += '\n\nReturned:\n' + jqXhr.responseText;
+				reject({ modalTitle: 'Error', error: responseText, trace: trace});
 			});
 		});
 	}

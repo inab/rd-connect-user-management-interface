@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal, Button, Glyphicon } from 'react-bootstrap';
 import Formsy from 'formsy-react';
 import { Input } from 'formsy-react-components';
 
@@ -15,6 +15,7 @@ class Login extends React.Component {
 		this.setState({
 			error: false,
 			canSubmit: false,
+			loggingIn: false,
 			showModal:true,
 			validationErrors: {}
 		});
@@ -73,11 +74,13 @@ class Login extends React.Component {
     handleSubmit(model) {
       //event.preventDefault();
       //const email = this.refs.email.value;
+      this.setState({loggingIn: true});
       const username = model.username;
       //const pass = this.refs.pass.value;
       const password = model.password;
 		auth.login(username, password)
 		.then(() => {
+			this.setState({loggingIn: false});
 			const location = this.props.location;
 			if(location.state && location.state.nextPathname) {
 				this.props.router.replace(location.state.nextPathname);
@@ -85,7 +88,7 @@ class Login extends React.Component {
 				this.props.router.replace('/users/view/' + encodeURIComponent(username));
 			}
 		},({status,errorMsg}) => {
-			return this.setState({ error: true, errorMsg: errorMsg, status: status });
+			return this.setState({ error: true, errorMsg: errorMsg, status: status, loggingIn: false });
 		});
     }
 	
@@ -136,7 +139,7 @@ class Login extends React.Component {
 						required
 					/>
                 </fieldset>
-				<Button type="submit" bsStyle="primary" className="right" disabled={!this.state.canSubmit} >Login</Button>
+				<Button type="submit" bsStyle="primary" className="right" disabled={!this.state.canSubmit} >{this.state.loggingIn ? <span>Logging in...&nbsp;<Glyphicon glyph="refresh spin" /></span> : 'Login'}</Button>
               </Formsy.Form>
             </Modal.Body>
             <Modal.Footer className="login">

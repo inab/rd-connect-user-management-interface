@@ -334,7 +334,7 @@ class MailingContainer extends AbstractFetchedDataContainer {
 								text={this.state.trace}
 								onCopy={() => this.setState({copied: true})}
 							>
-								<Button>Copy trace&nbsp;<Glyphicon glyph="copy" /></Button>
+								<Button>{this.state.copied ? 'Copied!' : 'Copy trace'}&nbsp;<Glyphicon glyph="copy" /></Button>
 							</CopyToClipboard>
 							:
 							null

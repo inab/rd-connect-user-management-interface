@@ -185,7 +185,7 @@ class UserPassword extends React.Component {
 					</Grid>
 					<div className="button-submit">
 						<Button bsStyle="info" onClick={()=>this.history.goBack()} className="submitCancelButtons" ><Glyphicon glyph="step-backward" />&nbsp;Cancel</Button>
-						<Button bsStyle="danger" type="submit" className="submitCancelButtons" >Change password&nbsp;<Glyphicon glyph="pencil" /></Button>
+						<Button bsStyle="danger" type="submit" className="submitCancelButtons" disabled={this.getValidationPassword2() !== 'success'}>Change password&nbsp;<Glyphicon glyph="pencil" /></Button>
 					</div>
 				</form>
 				<ReactMustache template={this.state.template} data={zxcvbn(this.state.valuePassword1)} />
